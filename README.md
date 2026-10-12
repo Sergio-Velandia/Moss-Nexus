@@ -1,8 +1,17 @@
 # Moss Nexus
 
-Librería de flujos de automatización para **n8n**, ya armados, explicados y listos para copiar. Es el proyecto hermano de [Moss](https://github.com/Sergio-Velandia/Moss): en Moss se aprende el porqué; en Nexus se copia el flujo y se usa.
+Librería de flujos de automatización para **n8n**, ya armados, explicados y listos para copiar. Está pensada para quien sabe qué quiere automatizar pero no quiere pelearse con webhooks, JSON ni tokens.
 
-**Sitio:** https://sergio-velandia.github.io/Moss-Nexus/
+**[Ver el sitio en vivo →](https://sergio-velandia.github.io/Moss-Nexus/)** · Proyecto hermano de **[Moss](https://sergio-velandia.github.io/Moss/)**: en Moss se aprende el porqué; en Nexus se copia el flujo y se usa.
+
+## Estado
+
+| Fase | Estado |
+| --- | --- |
+| Fase 1: estructura, diseño, galería y detalle | ✅ Completa (v0.1.0) |
+| Fase 2: primeros flujos reales y probados | 🛠️ En preparación |
+
+Historial completo en el [CHANGELOG](CHANGELOG.md).
 
 ## Desarrollo
 
