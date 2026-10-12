@@ -25,9 +25,24 @@ Librería/cookbook estática de plantillas de n8n. Proyecto hermano de Moss (htt
 - Cada versión se marca con un tag `vX.Y.Z` en `main`, que solo se crea con confirmación del usuario.
 
 ## Fases
-- **Fase 1 (hecha):** estructura, diseño, galería, detalle, mapa generado, copiar flujo, 2 plantillas `ejemplo: true`.
-- **Fase 2 (esperar a que se pida):** reemplazar los ejemplos por flujos reales. El primero es WhatsApp → Google Sheets → Gmail; el segundo lo define el usuario.
-- **Fase 3+:** agregar plantillas una a una. No planificar nada de esto por adelantado.
+Orden acordado. Cada fase empieza solo cuando el usuario la pide y con un plan confirmado.
+
+- **Fase 1 (hecha, v0.1.0):** estructura, diseño, galería, detalle, mapa generado, copiar flujo y 2 plantillas `ejemplo: true`.
+- **Fase 1.5 (hecha, v0.1.1):** pulido del repo, convenciones de commits, versionado y CHANGELOG.
+- **Fase 2 (v0.2.0):** reemplazar los ejemplos por 2 flujos reales y probados. El primero es WhatsApp → Google Sheets → Gmail; el segundo lo define el usuario.
+- **Fase 3+:** plantillas reales, de una en una. Cada una sube MINOR. No planificar nada de esto por adelantado.
+- **Fase Legal (MINOR):** rama `docs/legal`.
+  - Antes de redactar, auditar con evidencia qué hace el sitio con los datos: almacenamiento, terceros, formularios y qué se copia o descarga. La privacidad describe solo lo verificado.
+  - Páginas `/terminos`, `/privacidad` y `/contacto`, con carga perezosa y el mismo diseño. Contacto sin formulario: GitHub Issues más el placeholder `CONTACTO_EMAIL`, preguntando al usuario cuál usar.
+  - Footer con Términos, Privacidad, Contacto, Licencia, el aviso de n8n GmbH y el año.
+  - Licencia: presentar las opciones A (MIT), B (MIT + CC BY 4.0) o C, y preguntar antes de crear archivos.
+  - Prueba de las rutas y del footer, y comprobar la recarga directa en Pages.
+  - Actualizar CHANGELOG, README y CLAUDE.md. Al final, listar las cláusulas que conviene revisar con un profesional.
+- **Fase Repaso del inicio:** rama `docs/repaso-inicio`.
+  - Primero un informe sin cambios, en tabla: elemento / estado actual / problema / cambio propuesto. Después del OK, commits pequeños, uno por tema.
+  - Contrastar cada afirmación del sitio con la realidad: hero, cómo funciona, destacadas sin `ejemplo`, chips de herramientas con al menos una plantilla, cifras dinámicas, sello Probado, enlaces a Moss, Acerca, footer y legales, metadatos y Open Graph, README, CHANGELOG y package.json, accesibilidad y móvil.
+  - No inventar cifras ni funciones. Pedir al usuario lo que falte.
+  - Proponer PATCH o MINOR al final.
 
 ## Stack
 React 19 + Vite + TypeScript estricto, Tailwind CSS 4 (tokens en variables CSS, en `src/index.css`), React Router 7, `motion`, `lucide-react`, Vitest y oxlint. Se usa npm. Se despliega en GitHub Pages bajo `/Moss-Nexus/` y se genera `404.html` para las rutas de la SPA. No añadir dependencias sin preguntar.
