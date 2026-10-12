@@ -44,7 +44,7 @@ export function TemplateCard({ template: t, headingLevel = 3 }: { template: Temp
         <DifficultyBadge value={t.dificultad} />
         <TimeBadge minutes={t.tiempoEstimado} />
         <span className="ml-auto">
-          <TestedSeal fecha={t.probado.fecha} version={t.probado.versionN8n} compact />
+          {t.probado && <TestedSeal fecha={t.probado.fecha} version={t.probado.versionN8n} compact />}
         </span>
       </div>
     </Link>

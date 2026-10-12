@@ -81,7 +81,7 @@ export default function TemplateDetail() {
           <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2">
             <DifficultyBadge value={t.dificultad} />
             <TimeBadge minutes={t.tiempoEstimado} />
-            <TestedSeal fecha={t.probado.fecha} version={t.probado.versionN8n} compact />
+            {t.probado && <TestedSeal fecha={t.probado.fecha} version={t.probado.versionN8n} compact />}
           </div>
         </div>
       </header>
@@ -162,9 +162,11 @@ export default function TemplateDetail() {
             <div className="relative mt-6">
               <CopyFlowButton template={t} />
             </div>
-            <div className="relative mt-8 border-t border-line pt-6">
-              <TestedSeal fecha={t.probado.fecha} version={t.probado.versionN8n} />
-            </div>
+            {t.probado && (
+              <div className="relative mt-8 border-t border-line pt-6">
+                <TestedSeal fecha={t.probado.fecha} version={t.probado.versionN8n} />
+              </div>
+            )}
           </Reveal>
         </div>
 

@@ -56,6 +56,10 @@ describe('validateMeta', () => {
     expect(errors).toMatch(/"fax"/)
     expect(errors).toMatch(/categoria/)
   })
+  it('acepta plantillas sin probar (sin campo probado)', () => {
+    const { probado: _omit, ...sinProbar } = meta
+    expect(validateMeta(sinProbar, 'demo')).toEqual([])
+  })
   it('rechaza fechas con otro formato', () => {
     expect(validateMeta({ ...meta, probado: { fecha: '01/01/2026', versionN8n: '1' } }, 'demo').join()).toMatch(/probado/)
   })
@@ -79,6 +83,22 @@ describe('validateDiagram', () => {
 
 describe('buildTemplates', () => {
   const wf = () => Promise.resolve({})
+  it('ordena primero las probadas (más recientes antes) y después las sin probar', () => {
+    const { probado: _omit, ...sinProbar } = meta
+    const metas: Record<string, unknown> = {
+      vieja: { ...meta, slug: 'vieja', probado: { fecha: '2026-01-01', versionN8n: '1' } },
+      sin: { ...sinProbar, slug: 'sin' },
+      nueva: { ...meta, slug: 'nueva', probado: { fecha: '2026-06-01', versionN8n: '1' } },
+    }
+    const byPath = <T,>(file: string, value: (slug: string) => T) =>
+      Object.fromEntries(Object.keys(metas).map((slug) => [`../t/${slug}/${file}`, value(slug)]))
+    const { templates: ok } = buildTemplates(
+      byPath('meta.json', (slug) => metas[slug]),
+      byPath('diagram.json', () => diagram),
+      byPath('workflow.json', () => wf),
+    )
+    expect(ok.map((t) => t.slug)).toEqual(['nueva', 'vieja', 'sin'])
+  })
   it('omite las plantillas inválidas y reporta por carpeta', () => {
     const { templates: ok, errors } = buildTemplates(
       { '../t/demo/meta.json': meta, '../t/rota/meta.json': { ...meta, slug: 'rota', titulo: '' } },

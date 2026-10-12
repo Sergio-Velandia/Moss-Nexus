@@ -39,8 +39,13 @@ export function buildTemplates(
     })
   }
 
-  // Lo más reciente primero
-  templates.sort((a, b) => b.probado.fecha.localeCompare(a.probado.fecha) || a.titulo.localeCompare(b.titulo, 'es'))
+  // Primero las probadas, de la más reciente a la más antigua; después las que aún no se han probado
+  templates.sort(
+    (a, b) =>
+      Number(!a.probado) - Number(!b.probado) ||
+      (b.probado?.fecha ?? '').localeCompare(a.probado?.fecha ?? '') ||
+      a.titulo.localeCompare(b.titulo, 'es'),
+  )
   return { templates, errors }
 }
 

@@ -20,7 +20,8 @@ export interface TemplateMeta {
   requisitos: string[]
   escenarios: string[]
   pasos: string[]
-  probado: { fecha: string; versionN8n: string }
+  /** Solo se añade cuando el flujo se probó en una instancia real de n8n. Sin él, se muestra «Sin probar». */
+  probado?: { fecha: string; versionN8n: string }
   destacado: boolean
   /** Plantilla ficticia, solo para ver el diseño. Se muestra con una marca visible. */
   ejemplo?: boolean

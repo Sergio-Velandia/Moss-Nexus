@@ -37,14 +37,17 @@ export function validateMeta(meta: unknown, folder: string): string[] {
     'número de minutos mayor que 0',
   )
   for (const key of ['requisitos', 'escenarios', 'pasos'] as const) need(key, isTextList(meta[key]), 'lista de textos no vacía')
-  need(
-    'probado',
-    isObj(meta.probado) &&
-      typeof meta.probado.fecha === 'string' &&
-      /^\d{4}-\d{2}-\d{2}$/.test(meta.probado.fecha) &&
-      isText(meta.probado.versionN8n),
-    '{ fecha: "AAAA-MM-DD", versionN8n: "1.x.x" }',
-  )
+  // Opcional: sin él, la plantilla se publica como «Sin probar»
+  if (meta.probado !== undefined) {
+    need(
+      'probado',
+      isObj(meta.probado) &&
+        typeof meta.probado.fecha === 'string' &&
+        /^\d{4}-\d{2}-\d{2}$/.test(meta.probado.fecha) &&
+        isText(meta.probado.versionN8n),
+      '{ fecha: "AAAA-MM-DD", versionN8n: "1.x.x" }',
+    )
+  }
   need('destacado', typeof meta.destacado === 'boolean', 'true o false')
   if (meta.ejemplo !== undefined) need('ejemplo', typeof meta.ejemplo === 'boolean', 'true o false')
   return errors
