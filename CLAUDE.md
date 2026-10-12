@@ -21,7 +21,8 @@ Librería/cookbook estática de plantillas de n8n. Proyecto hermano de Moss (htt
   - **MINOR:** una fase completa o una plantilla nueva.
   - **PATCH:** correcciones y cambios de documentación.
 - `CHANGELOG.md` sigue Keep a Changelog, en español. El campo `version` de `package.json` siempre coincide con la última versión del changelog.
-- **Regla:** toda plantilla nueva sube MINOR y agrega su línea al CHANGELOG, en el mismo commit o en el inmediato.
+- **Regla:** desde la Fase 3, toda plantilla nueva sube MINOR y agrega su línea al CHANGELOG, en el mismo commit o en el inmediato. La Fase 2 contó como un solo MINOR con sus dos plantillas.
+- **Sello «Probado»:** solo se añade `probado` cuando el usuario da la fecha y la versión de n8n de su prueba. Nunca inventarlas. Marcar una plantilla existente como probada es PATCH: `fix(plantilla): marca <slug> como probada`.
 - Cada versión se marca con un tag `vX.Y.Z` en `main`, que solo se crea con confirmación del usuario.
 
 ## Fases
@@ -29,7 +30,7 @@ Orden acordado. Cada fase empieza solo cuando el usuario la pide y con un plan c
 
 - **Fase 1 (hecha, v0.1.0):** estructura, diseño, galería, detalle, mapa generado, copiar flujo y 2 plantillas `ejemplo: true`.
 - **Fase 1.5 (hecha, v0.1.1):** pulido del repo, convenciones de commits, versionado y CHANGELOG.
-- **Fase 2 (v0.2.0):** reemplazar los ejemplos por 2 flujos reales y probados. El primero es WhatsApp → Google Sheets → Gmail; el segundo lo define el usuario.
+- **Fase 2 (hecha, v0.2.0):** `whatsapp-a-sheets` (WhatsApp Cloud API oficial) y `reporte-diario-ventas`. Se publicaron «Sin probar» por decisión del usuario, y se eliminaron los ejemplos.
 - **Fase 3+:** plantillas reales, de una en una. Cada una sube MINOR. No planificar nada de esto por adelantado.
 - **Fase Legal (MINOR):** rama `docs/legal`.
   - Antes de redactar, auditar con evidencia qué hace el sitio con los datos: almacenamiento, terceros, formularios y qué se copia o descarga. La privacidad describe solo lo verificado.

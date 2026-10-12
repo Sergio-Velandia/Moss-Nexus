@@ -34,7 +34,8 @@ Librería de flujos de automatización para **n8n**, ya armados, explicados y li
 | Fase | Estado |
 | --- | --- |
 | Fase 1: estructura, diseño, galería y detalle | ✅ Completa (v0.1.0) |
-| Fase 2: primeros flujos reales y probados | 🛠️ En preparación |
+| Fase 2: primeros flujos reales | ✅ Completa (v0.2.0): 2 plantillas publicadas, pendientes de probar en n8n |
+| Fase 3+: plantillas reales, de una en una | 🛠️ Siguiente |
 
 Historial completo en el [CHANGELOG](CHANGELOG.md).
 
@@ -85,6 +86,7 @@ Agregar una plantilla es **solo crear una carpeta**. No hace falta tocar ningún
 | `dificultad` | `facil`, `media` o `avanzada` |
 | `tiempoEstimado` | Minutos para configurarla la primera vez |
 | `destacado` | `true` para que aparezca en «Destacadas» del Inicio |
+| `probado` | Opcional. Solo cuando el flujo se probó en una instancia real de n8n: `{ "fecha": "AAAA-MM-DD", "versionN8n": "1.x.x" }`. Sin él, la plantilla se muestra como «Sin probar» |
 | `ejemplo` | Opcional. `true` marca la plantilla como ficticia |
 
 ### `diagram.json`
@@ -104,10 +106,11 @@ El mapa visual se dibuja solo a partir de esta lista. No hacen falta coordenadas
 - `tipo`: `disparador`, `accion` o `logica`.
 - `conexiones[].etiqueta` es opcional y sirve para nombrar ramas (`"sí"` / `"no"`).
 - Las etiquetas de más de 21 caracteres se recortan en el mapa, así que conviene que sean cortas.
+- Si el flujo tiene más de 5 columnas (pasos en cadena), el mapa se dibuja en vertical también en escritorio.
 
 ### `workflow.json`
 
-Es el JSON exportado de n8n, tal cual: en n8n, selecciona todos los nodos, cópialos (`Ctrl + C`) y pégalos en este archivo. Es lo que copia el botón «Copiar flujo». **Revisa que no queden credenciales ni datos personales.**
+Es el JSON exportado de n8n, tal cual: en n8n, selecciona todos los nodos, cópialos (`Ctrl + C`) y pégalos en este archivo. Es lo que copia el botón «Copiar flujo». **Antes de guardarlo, quita los datos de tu instancia:** el bloque `credentials` de cada nodo, el contenido de `pinData` y `meta.instanceId`. Las pruebas fallan si alguno queda, porque el repositorio es público. Revisa también que no queden correos ni datos personales en los parámetros.
 
 3. Ejecuta `npm test`. Si algún dato es inválido (una herramienta inexistente, una conexión rota, un slug que no coincide), la prueba dice exactamente qué falla y en qué archivo. En el sitio, una plantilla inválida se omite y no rompe nada.
 

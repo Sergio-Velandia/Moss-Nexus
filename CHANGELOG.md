@@ -6,6 +6,30 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.2.0] - 2026-10-12
+
+Fase 2: primeros flujos reales.
+
+### Añadido
+- Plantilla **whatsapp-a-sheets**: guarda los contactos de WhatsApp (Cloud API oficial) en Google Sheets sin duplicados y avisa por Gmail cuando escribe alguien nuevo.
+- Plantilla **reporte-diario-ventas**: cada mañana resume las ventas de ayer desde Google Sheets y las envía por Gmail, también cuando no hubo ventas.
+- Estado «Sin probar» en tarjetas y detalle, para plantillas publicadas que aún no se han probado en una instancia real de n8n.
+- Prueba que impide publicar workflows con credenciales, `pinData` o `meta.instanceId`.
+- Capturas de la vista previa en el README.
+
+### Cambiado
+- El sello «Probado» es opcional. Las plantillas probadas se listan primero.
+- Los flujos con más de 5 columnas se dibujan en vertical también en escritorio.
+- Textos del inicio y de Acerca que prometían que todas las plantillas estaban probadas.
+
+### Corregido
+- El rayo del disparador tapaba la etiqueta del primer nodo.
+- Las etiquetas largas se salían de los nodos del mapa.
+- El mapa se encogía hasta quedar ilegible en flujos largos.
+
+### Eliminado
+- Las dos plantillas de ejemplo de la Fase 1.
+
 ## [0.1.1] - 2026-10-12
 
 ### Añadido
@@ -32,6 +56,7 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.1.1...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Sergio-Velandia/Moss-Nexus/releases/tag/v0.1.0
