@@ -151,8 +151,10 @@ export function FlowMap({
                   <circle cx={horizontal ? 0 : NODE_W / 2} cy={horizontal ? NODE_H / 2 : 0} r={4} fill="var(--c-bg)" stroke="var(--c-line-strong)" strokeWidth={1.5} />
                 )}
                 <circle cx={horizontal ? NODE_W : NODE_W / 2} cy={horizontal ? NODE_H / 2 : NODE_H} r={4} fill="var(--c-bg)" stroke="var(--c-nexus)" strokeWidth={1.5} />
+                {/* El rayo va en el lado de entrada: un disparador no recibe conexiones y así no tapa la etiqueta */}
                 {trigger && (
-                  <g transform={`translate(${NODE_W - 26} 8)`}>
+                  <g transform={horizontal ? `translate(-9 ${NODE_H / 2 - 9})` : `translate(${NODE_W / 2 - 9} -9)`}>
+                    <circle cx={9} cy={9} r={9} fill="var(--c-surface)" stroke="var(--c-nexus)" strokeOpacity={0.55} />
                     <circle cx={9} cy={9} r={9} fill="var(--c-nexus)" fillOpacity={0.16} />
                     <Zap x={3} y={3} size={12} color="var(--c-nexus)" fill="var(--c-nexus)" />
                   </g>
