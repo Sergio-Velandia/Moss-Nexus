@@ -16,6 +16,14 @@ Librería/cookbook estática de plantillas de n8n. Proyecto hermano de Moss (htt
 - Las fases y las plantillas se trabajan en ramas cortas (`feat/plantilla-<slug>`, `docs/pulido-repo`) que se integran a `main` al terminar. No acumular trabajo de varios días sin commitear.
 - Push y tags solo con confirmación explícita del usuario.
 
+## Versionado
+- SemVer sobre el sitio, como `0.MINOR.PATCH` mientras sea anterior a 1.0.
+  - **MINOR:** una fase completa o una plantilla nueva.
+  - **PATCH:** correcciones y cambios de documentación.
+- `CHANGELOG.md` sigue Keep a Changelog, en español. El campo `version` de `package.json` siempre coincide con la última versión del changelog.
+- **Regla:** toda plantilla nueva sube MINOR y agrega su línea al CHANGELOG, en el mismo commit o en el inmediato.
+- Cada versión se marca con un tag `vX.Y.Z` en `main`, que solo se crea con confirmación del usuario.
+
 ## Fases
 - **Fase 1 (hecha):** estructura, diseño, galería, detalle, mapa generado, copiar flujo, 2 plantillas `ejemplo: true`.
 - **Fase 2 (esperar a que se pida):** reemplazar los ejemplos por flujos reales. El primero es WhatsApp → Google Sheets → Gmail; el segundo lo define el usuario.
