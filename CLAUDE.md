@@ -8,6 +8,14 @@ Librería/cookbook estática de plantillas de n8n. Proyecto hermano de Moss (htt
 - Agregar una plantilla = agregar una carpeta en `src/data/templates/<slug>/` (`meta.json`, `diagram.json`, `workflow.json`). Nunca exigir cambios en componentes para eso.
 - No commitear ni hacer push sin que se pida.
 
+## Convenciones de commits
+- Conventional Commits: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, `style:`.
+- Descripción en español, en minúscula, en imperativo y de unos 70 caracteres como máximo. Ejemplo: `docs: agrega presentación y capturas al README`.
+- Un commit es un cambio lógico. No mezclar en un mismo commit documentación, estilos y datos.
+- Cada plantilla nueva va en su propio commit: `feat(plantilla): agrega whatsapp-a-sheets`. Para corregirla después: `fix(plantilla): corrige credenciales en whatsapp-a-sheets`.
+- Las fases y las plantillas se trabajan en ramas cortas (`feat/plantilla-<slug>`, `docs/pulido-repo`) que se integran a `main` al terminar. No acumular trabajo de varios días sin commitear.
+- Push y tags solo con confirmación explícita del usuario.
+
 ## Fases
 - **Fase 1 (hecha):** estructura, diseño, galería, detalle, mapa generado, copiar flujo, 2 plantillas `ejemplo: true`.
 - **Fase 2 (esperar a que se pida):** reemplazar los ejemplos por flujos reales. El primero es WhatsApp → Google Sheets → Gmail; el segundo lo define el usuario.
