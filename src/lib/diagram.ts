@@ -130,6 +130,15 @@ export function layoutDiagram(diagram: TemplateDiagram, opts: LayoutOptions): La
   return { nodes, edges, width, height, nodeW, nodeH }
 }
 
+/** Más columnas que esto no caben legibles en horizontal: el mapa se dibuja en vertical también en escritorio */
+export const MAX_HORIZONTAL_RANKS = 5
+
+export function preferredOrientation(diagram: TemplateDiagram, wideScreen: boolean): Orientation {
+  if (!wideScreen) return 'vertical'
+  const columns = Math.max(...rankNodes(diagram).values()) + 1
+  return columns > MAX_HORIZONTAL_RANKS ? 'vertical' : 'horizontal'
+}
+
 /** Orden de lectura para lectores de pantalla: por columnas, de arriba abajo */
 export function readingOrder(diagram: TemplateDiagram): string[] {
   const rank = rankNodes(diagram)

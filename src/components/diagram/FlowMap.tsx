@@ -2,7 +2,7 @@ import { useId, useMemo } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import { Zap } from 'lucide-react'
 import { getTool } from '../../data/tools'
-import { layoutDiagram, readingOrder, type Orientation } from '../../lib/diagram'
+import { layoutDiagram, preferredOrientation, readingOrder, type Orientation } from '../../lib/diagram'
 import type { TemplateDiagram } from '../../lib/types'
 import { useMediaQuery } from '../../lib/useMediaQuery'
 
@@ -32,7 +32,7 @@ export function FlowMap({
   className?: string
 }) {
   const wide = useMediaQuery('(min-width: 768px)', true)
-  const dir: Orientation = orientation ?? (wide ? 'horizontal' : 'vertical')
+  const dir: Orientation = orientation ?? preferredOrientation(diagram, wide)
   const reduce = useReducedMotion()
   const uid = useId().replace(/:/g, '')
   const layout = useMemo(

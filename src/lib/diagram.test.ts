@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { layoutDiagram, rankNodes, readingOrder } from './diagram'
+import { layoutDiagram, MAX_HORIZONTAL_RANKS, preferredOrientation, rankNodes, readingOrder } from './diagram'
 import type { TemplateDiagram } from './types'
 
 const node = (id: string) => ({ id, etiqueta: id, herramienta: 'n8n', tipo: 'accion' as const })
@@ -68,5 +68,21 @@ describe('layoutDiagram', () => {
 describe('readingOrder', () => {
   it('lee por columnas', () => {
     expect(readingOrder(diamond)).toEqual(['a', 'b', 'c', 'd', 'e'])
+  })
+})
+
+describe('preferredOrientation', () => {
+  const chain = (n: number): TemplateDiagram => ({
+    nodos: Array.from({ length: n }, (_, i) => node(`n${i}`)),
+    conexiones: Array.from({ length: n - 1 }, (_, i) => ({ origen: `n${i}`, destino: `n${i + 1}` })),
+  })
+  it('en pantallas angostas siempre es vertical', () => {
+    expect(preferredOrientation(chain(2), false)).toBe('vertical')
+  })
+  it('en escritorio es horizontal hasta el límite de columnas', () => {
+    expect(preferredOrientation(chain(MAX_HORIZONTAL_RANKS), true)).toBe('horizontal')
+  })
+  it('los flujos más largos pasan a vertical también en escritorio', () => {
+    expect(preferredOrientation(chain(MAX_HORIZONTAL_RANKS + 1), true)).toBe('vertical')
   })
 })
