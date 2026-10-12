@@ -4,6 +4,31 @@ Librería de flujos de automatización para **n8n**, ya armados, explicados y li
 
 **[Ver el sitio en vivo →](https://sergio-velandia.github.io/Moss-Nexus/)** · Proyecto hermano de **[Moss](https://sergio-velandia.github.io/Moss/)**: en Moss se aprende el porqué; en Nexus se copia el flujo y se usa.
 
+## Vista previa
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <a href="docs/img/inicio.png"><img src="docs/img/inicio.png" alt="Inicio de Moss Nexus: buscador y lienzo con un flujo animado" width="400"></a>
+      <br><sub><b>Inicio</b></sub>
+    </td>
+    <td align="center" width="50%">
+      <a href="docs/img/plantillas.png"><img src="docs/img/plantillas.png" alt="Galería de plantillas con búsqueda y filtros" width="400"></a>
+      <br><sub><b>Plantillas</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <a href="docs/img/acerca.png"><img src="docs/img/acerca.png" alt="Página Acerca: qué es Nexus y su relación con Moss" width="400"></a>
+      <br><sub><b>Acerca</b></sub>
+    </td>
+    <td align="center" width="50%">
+      <a href="docs/img/ejemplo.png"><img src="docs/img/ejemplo.png" alt="Detalle de una plantilla de ejemplo con su mapa del flujo" width="400"></a>
+      <br><sub><b>Ejemplo</b></sub>
+    </td>
+  </tr>
+</table>
+
 ## Estado
 
 | Fase | Estado |
