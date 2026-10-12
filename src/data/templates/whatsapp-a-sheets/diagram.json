@@ -1,0 +1,21 @@
+{
+  "nodos": [
+    { "id": "whatsapp", "etiqueta": "Mensaje de WhatsApp", "herramienta": "whatsapp", "tipo": "disparador" },
+    { "id": "es-mensaje", "etiqueta": "¿Es un mensaje?", "herramienta": "n8n", "tipo": "logica" },
+    { "id": "extraer", "etiqueta": "Extraer contacto", "herramienta": "n8n", "tipo": "logica" },
+    { "id": "buscar", "etiqueta": "Buscar en la hoja", "herramienta": "google-sheets", "tipo": "accion" },
+    { "id": "nuevo", "etiqueta": "¿Contacto nuevo?", "herramienta": "n8n", "tipo": "logica" },
+    { "id": "agregar", "etiqueta": "Agregar contacto", "herramienta": "google-sheets", "tipo": "accion" },
+    { "id": "avisar", "etiqueta": "Avisar por Gmail", "herramienta": "gmail", "tipo": "accion" },
+    { "id": "actualizar", "etiqueta": "Actualizar contacto", "herramienta": "google-sheets", "tipo": "accion" }
+  ],
+  "conexiones": [
+    { "origen": "whatsapp", "destino": "es-mensaje" },
+    { "origen": "es-mensaje", "destino": "extraer" },
+    { "origen": "extraer", "destino": "buscar" },
+    { "origen": "buscar", "destino": "nuevo" },
+    { "origen": "nuevo", "destino": "agregar", "etiqueta": "sí" },
+    { "origen": "nuevo", "destino": "actualizar", "etiqueta": "no" },
+    { "origen": "agregar", "destino": "avisar" }
+  ]
+}

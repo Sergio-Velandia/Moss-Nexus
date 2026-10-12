@@ -1,0 +1,32 @@
+{
+  "slug": "whatsapp-a-sheets",
+  "titulo": "Contactos de WhatsApp a Google Sheets con aviso por Gmail",
+  "resumen": "Guarda a cada persona que te escribe por WhatsApp en una hoja y te avisa por correo si es nueva.",
+  "problema": "Te escriben clientes por WhatsApp y sus datos se quedan en el chat: no sabes quién te contactó la semana pasada ni puedes hacerle seguimiento. Pasarlos a mano a una hoja es tedioso y siempre se escapa alguno. Este flujo lleva cada contacto a Google Sheets sin duplicados, actualiza su último mensaje y te avisa por correo solo cuando escribe alguien nuevo.",
+  "categoria": "atencion",
+  "herramientas": ["whatsapp", "n8n", "google-sheets", "gmail"],
+  "dificultad": "media",
+  "tiempoEstimado": 40,
+  "requisitos": [
+    "Una instancia de n8n accesible desde internet con HTTPS (n8n Cloud o autoalojada con dominio propio)",
+    "Una cuenta de Meta for Developers con una app de tipo Business y el producto WhatsApp añadido",
+    "Un número conectado a la WhatsApp Cloud API (sirve el número de prueba que da Meta)",
+    "Una cuenta de Google con acceso a Google Sheets y Gmail",
+    "Una hoja de cálculo con una pestaña «Contactos» y las columnas Teléfono, Nombre, Último mensaje y Fecha"
+  ],
+  "escenarios": [
+    "Negocio pequeño que atiende pedidos y consultas por WhatsApp y quiere una lista de clientes",
+    "Campaña con un número de WhatsApp en la publicidad, para contar cuántas personas nuevas escriben",
+    "Equipo comercial que necesita enterarse en el momento de que llegó un contacto nuevo"
+  ],
+  "pasos": [
+    "Crea la hoja de cálculo con una pestaña llamada «Contactos» y, en la primera fila, las columnas Teléfono, Nombre, Último mensaje y Fecha.",
+    "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
+    "En el nodo «Mensaje de WhatsApp», crea la credencial de WhatsApp Trigger con el ID y la clave secreta de tu app de Meta.",
+    "Abre los tres nodos de Google Sheets, conecta tu cuenta de Google y pega la URL de tu hoja.",
+    "En «Avisar por Gmail», conecta tu cuenta y cambia tu-correo@ejemplo.com por el correo donde quieres recibir los avisos.",
+    "Activa el flujo: n8n registra el webhook en tu app de Meta. Cada app admite un solo webhook, así que si ya la usas en otro flujo, crea una app aparte.",
+    "Escribe al número desde otro teléfono y revisa que aparezca la fila nueva y que te llegue el correo."
+  ],
+  "destacado": true
+}

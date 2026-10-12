@@ -1,0 +1,224 @@
+{
+  "name": "Contactos de WhatsApp a Google Sheets con aviso por Gmail",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Contactos de WhatsApp → Google Sheets + Gmail\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. Credencial de WhatsApp Trigger con el ID y la clave secreta de tu app de Meta.\n2. Cuenta de Google y URL de tu hoja en los tres nodos de Google Sheets.\n3. Tu correo en «Avisar por Gmail».\n\nLa hoja necesita una pestaña **Contactos** con las columnas: Teléfono, Nombre, Último mensaje, Fecha.",
+        "height": 300,
+        "width": 380
+      },
+      "id": "6c1f7e0a-8d2b-4f3a-9b1e-2a5d7c9e1f01",
+      "name": "Nota de configuración",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-460, -140]
+    },
+    {
+      "parameters": {
+        "updates": ["messages"]
+      },
+      "id": "6c1f7e0a-8d2b-4f3a-9b1e-2a5d7c9e1f02",
+      "name": "Mensaje de WhatsApp",
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "webhookId": "5b0d3c2e-7f41-4a6b-8e9d-3c2f1a0b9e72"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose", "version": 2 },
+          "conditions": [
+            {
+              "id": "a1b2c3d4-0001-4e5f-8a9b-0c1d2e3f4a01",
+              "leftValue": "={{ $json.messages }}",
+              "rightValue": "",
+              "operator": { "type": "array", "operation": "notEmpty", "singleValue": true }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "6c1f7e0a-8d2b-4f3a-9b1e-2a5d7c9e1f03",
+      "name": "¿Es un mensaje?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [220, 0],
+      "notes": "Deja pasar solo los mensajes entrantes. Los avisos de entregado y leído llegan por el mismo webhook y se descartan aquí.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1b2c3d4-0002-4e5f-8a9b-0c1d2e3f4a01",
+              "name": "telefono",
+              "value": "={{ $json.messages[0].from }}",
+              "type": "string"
+            },
+            {
+              "id": "a1b2c3d4-0002-4e5f-8a9b-0c1d2e3f4a02",
+              "name": "nombre",
+              "value": "={{ $json.contacts?.[0]?.profile?.name ?? 'Sin nombre' }}",
+              "type": "string"
+            },
+            {
+              "id": "a1b2c3d4-0002-4e5f-8a9b-0c1d2e3f4a03",
+              "name": "mensaje",
+              "value": "={{ $json.messages[0].text?.body ?? '(' + $json.messages[0].type + ')' }}",
+              "type": "string"
+            },
+            {
+              "id": "a1b2c3d4-0002-4e5f-8a9b-0c1d2e3f4a04",
+              "name": "fecha",
+              "value": "={{ DateTime.fromSeconds(Number($json.messages[0].timestamp)).toFormat('yyyy-MM-dd HH:mm') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6c1f7e0a-8d2b-4f3a-9b1e-2a5d7c9e1f04",
+      "name": "Extraer contacto",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [440, 0],
+      "notes": "Si el mensaje no es de texto (foto, audio, ubicación), guarda el tipo entre paréntesis.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "documentId": { "__rl": true, "value": "", "mode": "url" },
+        "sheetName": { "__rl": true, "value": "Contactos", "mode": "name" },
+        "filtersUI": {
+          "values": [{ "lookupColumn": "Teléfono", "lookupValue": "={{ $json.telefono }}" }]
+        },
+        "options": {}
+      },
+      "id": "6c1f7e0a-8d2b-4f3a-9b1e-2a5d7c9e1f05",
+      "name": "Buscar en la hoja",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [660, 0],
+      "alwaysOutputData": true,
+      "notes": "«Always Output Data» está activado: si el teléfono no existe, sigue con un elemento vacío para que el siguiente nodo lo trate como nuevo.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose", "version": 2 },
+          "conditions": [
+            {
+              "id": "a1b2c3d4-0003-4e5f-8a9b-0c1d2e3f4a01",
+              "leftValue": "={{ $json['Teléfono'] }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "empty", "singleValue": true }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "6c1f7e0a-8d2b-4f3a-9b1e-2a5d7c9e1f06",
+      "name": "¿Contacto nuevo?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [880, 0]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": { "__rl": true, "value": "", "mode": "url" },
+        "sheetName": { "__rl": true, "value": "Contactos", "mode": "name" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Teléfono": "={{ $('Extraer contacto').item.json.telefono }}",
+            "Nombre": "={{ $('Extraer contacto').item.json.nombre }}",
+            "Último mensaje": "={{ $('Extraer contacto').item.json.mensaje }}",
+            "Fecha": "={{ $('Extraer contacto').item.json.fecha }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            { "id": "Teléfono", "displayName": "Teléfono", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Nombre", "displayName": "Nombre", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Último mensaje", "displayName": "Último mensaje", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Fecha", "displayName": "Fecha", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true }
+          ]
+        },
+        "options": { "cellFormat": "RAW" }
+      },
+      "id": "6c1f7e0a-8d2b-4f3a-9b1e-2a5d7c9e1f07",
+      "name": "Agregar contacto",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1100, -100],
+      "notes": "Formato RAW: el teléfono se guarda como texto y no pierde dígitos ni se convierte en número.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "sendTo": "tu-correo@ejemplo.com",
+        "subject": "=Nuevo contacto de WhatsApp: {{ $('Extraer contacto').item.json.nombre }}",
+        "emailType": "text",
+        "message": "=Te escribió alguien nuevo por WhatsApp.\n\nNombre: {{ $('Extraer contacto').item.json.nombre }}\nTeléfono: +{{ $('Extraer contacto').item.json.telefono }}\nMensaje: {{ $('Extraer contacto').item.json.mensaje }}\nFecha: {{ $('Extraer contacto').item.json.fecha }}\n\nYa quedó guardado en tu hoja de contactos.",
+        "options": { "appendAttribution": false }
+      },
+      "id": "6c1f7e0a-8d2b-4f3a-9b1e-2a5d7c9e1f08",
+      "name": "Avisar por Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1320, -100],
+      "webhookId": "8e2a4c6d-1b3f-4d5e-9a7c-6b8d0f2e4a13"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": { "__rl": true, "value": "", "mode": "url" },
+        "sheetName": { "__rl": true, "value": "Contactos", "mode": "name" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Teléfono": "={{ $('Extraer contacto').item.json.telefono }}",
+            "Nombre": "={{ $('Extraer contacto').item.json.nombre }}",
+            "Último mensaje": "={{ $('Extraer contacto').item.json.mensaje }}",
+            "Fecha": "={{ $('Extraer contacto').item.json.fecha }}"
+          },
+          "matchingColumns": ["Teléfono"],
+          "schema": [
+            { "id": "Teléfono", "displayName": "Teléfono", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Nombre", "displayName": "Nombre", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Último mensaje", "displayName": "Último mensaje", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Fecha", "displayName": "Fecha", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true }
+          ]
+        },
+        "options": { "cellFormat": "RAW" }
+      },
+      "id": "6c1f7e0a-8d2b-4f3a-9b1e-2a5d7c9e1f09",
+      "name": "Actualizar contacto",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1100, 100]
+    }
+  ],
+  "connections": {
+    "Mensaje de WhatsApp": { "main": [[{ "node": "¿Es un mensaje?", "type": "main", "index": 0 }]] },
+    "¿Es un mensaje?": { "main": [[{ "node": "Extraer contacto", "type": "main", "index": 0 }]] },
+    "Extraer contacto": { "main": [[{ "node": "Buscar en la hoja", "type": "main", "index": 0 }]] },
+    "Buscar en la hoja": { "main": [[{ "node": "¿Contacto nuevo?", "type": "main", "index": 0 }]] },
+    "¿Contacto nuevo?": {
+      "main": [
+        [{ "node": "Agregar contacto", "type": "main", "index": 0 }],
+        [{ "node": "Actualizar contacto", "type": "main", "index": 0 }]
+      ]
+    },
+    "Agregar contacto": { "main": [[{ "node": "Avisar por Gmail", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "pinData": {}
+}
