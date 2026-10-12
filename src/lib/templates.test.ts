@@ -44,6 +44,26 @@ describe('plantillas del repositorio', () => {
   })
 })
 
+// El repo es público: un export de n8n sin limpiar filtra ids de credenciales, datos de prueba y el id de la instancia
+describe('workflows publicables', () => {
+  type Workflow = { nodes?: { name: string; credentials?: unknown }[]; pinData?: Record<string, unknown>; meta?: Record<string, unknown> }
+
+  it('ningún nodo incluye credenciales', async () => {
+    for (const t of templates) {
+      const wf = (await t.loadWorkflow()) as Workflow
+      const withCreds = (wf.nodes ?? []).filter((n) => n.credentials !== undefined).map((n) => n.name)
+      expect(withCreds, `${t.slug}: quita "credentials" de estos nodos`).toEqual([])
+    }
+  })
+  it('no incluye datos fijados (pinData) ni el id de la instancia', async () => {
+    for (const t of templates) {
+      const wf = (await t.loadWorkflow()) as Workflow
+      expect(Object.keys(wf.pinData ?? {}), `${t.slug}: vacía "pinData"`).toEqual([])
+      expect(wf.meta?.instanceId, `${t.slug}: quita "meta.instanceId"`).toBeUndefined()
+    }
+  })
+})
+
 describe('validateMeta', () => {
   it('acepta una meta correcta', () => {
     expect(validateMeta(meta, 'demo')).toEqual([])
