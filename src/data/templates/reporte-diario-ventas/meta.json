@@ -1,0 +1,31 @@
+{
+  "slug": "reporte-diario-ventas",
+  "titulo": "Reporte diario de ventas por correo desde Google Sheets",
+  "resumen": "Cada mañana te llega un correo con las ventas de ayer: cuántas, cuánto sumaron y qué se vendió más.",
+  "problema": "Registras las ventas en una hoja de cálculo, pero para saber cómo fue el día hay que abrirla, filtrar por fecha y sumar a mano. Casi nunca se hace, y cuando se hace llega tarde. Este flujo lee la hoja cada mañana, calcula el resumen del día anterior y te lo envía por correo, incluso cuando no hubo ventas, para que el silencio no se confunda con un error.",
+  "categoria": "reportes",
+  "herramientas": ["schedule", "google-sheets", "n8n", "gmail"],
+  "dificultad": "facil",
+  "tiempoEstimado": 15,
+  "requisitos": [
+    "Una instancia de n8n (cloud o autoalojada), con la zona horaria correcta en Settings > Timezone",
+    "Una cuenta de Google con acceso a Google Sheets y Gmail",
+    "Una hoja de cálculo con una pestaña «Ventas» y las columnas Fecha, Cliente, Producto y Total",
+    "La columna Fecha con el formato AAAA-MM-DD (por ejemplo 2026-10-11) o DD/MM/AAAA",
+    "La columna Total con números, sin símbolo de moneda"
+  ],
+  "escenarios": [
+    "Tienda o emprendimiento que anota sus ventas en Google Sheets y quiere el parte del día sin abrirla",
+    "Dueño de negocio que revisa las cifras desde el celular antes de empezar la jornada",
+    "Equipo pequeño que quiere un histórico de correos diarios para comparar semanas"
+  ],
+  "pasos": [
+    "Prepara la hoja con una pestaña llamada «Ventas» y, en la primera fila, las columnas Fecha, Cliente, Producto y Total.",
+    "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
+    "En «Leer ventas», conecta tu cuenta de Google y pega la URL de tu hoja.",
+    "En «Enviar reporte», conecta tu cuenta de Gmail y cambia tu-correo@ejemplo.com por el correo donde quieres recibirlo.",
+    "Si prefieres otra hora, cámbiala en el nodo «Cada día a las 8:00».",
+    "Pulsa «Test workflow» para recibir un reporte ahora mismo y, si está bien, activa el flujo."
+  ],
+  "destacado": true
+}

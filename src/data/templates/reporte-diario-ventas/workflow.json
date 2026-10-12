@@ -1,0 +1,146 @@
+{
+  "name": "Reporte diario de ventas por correo desde Google Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Reporte diario de ventas\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. Cuenta de Google y URL de tu hoja en «Leer ventas».\n2. Cuenta de Gmail y tu correo en «Enviar reporte».\n3. Zona horaria correcta en Settings > Timezone.\n\nLa hoja necesita una pestaña **Ventas** con las columnas: Fecha (AAAA-MM-DD), Cliente, Producto, Total (número).",
+        "height": 300,
+        "width": 380
+      },
+      "id": "3f9a2b1c-5d7e-4a8b-9c0d-1e2f3a4b5c01",
+      "name": "Nota de configuración",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -140
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "id": "3f9a2b1c-5d7e-4a8b-9c0d-1e2f3a4b5c02",
+      "name": "Cada día a las 8:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Ventas",
+          "mode": "name"
+        },
+        "options": {
+          "outputFormatting": {
+            "values": {
+              "general": "UNFORMATTED_VALUE",
+              "date": "FORMATTED_STRING"
+            }
+          }
+        }
+      },
+      "id": "3f9a2b1c-5d7e-4a8b-9c0d-1e2f3a4b5c03",
+      "name": "Leer ventas",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        0
+      ],
+      "alwaysOutputData": true,
+      "notes": "«Always Output Data» está activado: aunque la hoja esté vacía, el flujo sigue y el correo avisa que no hubo ventas.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Resumen de las ventas de ayer. Usa la zona horaria de n8n (Settings > Timezone).\nconst ayer = $now.minus({ days: 1 });\nconst ayerISO = ayer.toFormat('yyyy-MM-dd');\n\n// Acepta fechas AAAA-MM-DD y DD/MM/AAAA\nfunction aISO(valor) {\n  const texto = String(valor ?? '').trim();\n  const dma = texto.match(/^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4})/);\n  if (dma) return dma[3] + '-' + dma[2].padStart(2, '0') + '-' + dma[1].padStart(2, '0');\n  return texto.slice(0, 10);\n}\n\nconst ventas = $input.all()\n  .map((item) => item.json)\n  .filter((fila) => aISO(fila.Fecha) === ayerISO);\n\nconst total = ventas.reduce((suma, fila) => suma + (Number(fila.Total) || 0), 0);\n\n// Producto más vendido (por número de ventas)\nconst porProducto = {};\nfor (const fila of ventas) {\n  const producto = String(fila.Producto || 'Sin producto');\n  porProducto[producto] = (porProducto[producto] || 0) + 1;\n}\nconst [masVendido, veces] = Object.entries(porProducto).sort((a, b) => b[1] - a[1])[0] ?? ['', 0];\n\nconst dinero = new Intl.NumberFormat('es', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(total);\nconst dia = ayer.setLocale('es').toFormat(\"cccc d 'de' LLLL\");\n\nconst asunto = ventas.length === 0\n  ? 'Reporte de ventas: sin ventas el ' + dia\n  : 'Reporte de ventas del ' + dia + ': ' + ventas.length + ' ventas, ' + dinero;\n\nconst cuerpo = ventas.length === 0\n  ? 'Ayer (' + dia + ') no se registraron ventas en la hoja.\\n\\nSi esperabas ventas, revisa que la columna Fecha tenga el formato AAAA-MM-DD o DD/MM/AAAA.'\n  : [\n      'Resumen de ventas del ' + dia + ':',\n      '',\n      'Ventas: ' + ventas.length,\n      'Total: ' + dinero,\n      'Producto más vendido: ' + masVendido + ' (' + veces + (veces === 1 ? ' venta)' : ' ventas)'),\n    ].join('\\n');\n\nreturn [{ json: { asunto, cuerpo, ventas: ventas.length, total } }];"
+      },
+      "id": "3f9a2b1c-5d7e-4a8b-9c0d-1e2f3a4b5c04",
+      "name": "Calcular resumen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "notes": "Filtra las filas de ayer y calcula el número de ventas, el total y el producto más vendido.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "sendTo": "tu-correo@ejemplo.com",
+        "subject": "={{ $json.asunto }}",
+        "emailType": "text",
+        "message": "={{ $json.cuerpo }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "3f9a2b1c-5d7e-4a8b-9c0d-1e2f3a4b5c05",
+      "name": "Enviar reporte",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        660,
+        0
+      ],
+      "webhookId": "9d1c3e5f-2a4b-4c6d-8e0f-7a9b1c3d5e24"
+    }
+  ],
+  "connections": {
+    "Cada día a las 8:00": {
+      "main": [
+        [
+          {
+            "node": "Leer ventas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer ventas": {
+      "main": [
+        [
+          {
+            "node": "Calcular resumen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calcular resumen": {
+      "main": [
+        [
+          {
+            "node": "Enviar reporte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

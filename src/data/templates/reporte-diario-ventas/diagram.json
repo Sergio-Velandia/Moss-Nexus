@@ -1,0 +1,13 @@
+{
+  "nodos": [
+    { "id": "cada-dia", "etiqueta": "Cada día a las 8:00", "herramienta": "schedule", "tipo": "disparador" },
+    { "id": "leer", "etiqueta": "Leer ventas", "herramienta": "google-sheets", "tipo": "accion" },
+    { "id": "resumir", "etiqueta": "Calcular resumen", "herramienta": "n8n", "tipo": "logica" },
+    { "id": "enviar", "etiqueta": "Enviar reporte", "herramienta": "gmail", "tipo": "accion" }
+  ],
+  "conexiones": [
+    { "origen": "cada-dia", "destino": "leer" },
+    { "origen": "leer", "destino": "resumir" },
+    { "origen": "resumir", "destino": "enviar" }
+  ]
+}
