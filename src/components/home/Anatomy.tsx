@@ -114,7 +114,7 @@ export function Anatomy() {
               <Copy size={16} /> Copiar flujo
             </span>
             <span className="inline-flex items-center gap-1.5 text-xs font-medium text-moss">
-              <BadgeCheck size={15} aria-hidden /> Sello «Probado» con fecha y versión de n8n
+              <BadgeCheck size={15} aria-hidden /> Sello «Probado» con fecha y versión de n8n, cuando ya se verificó
             </span>
           </div>
         </Tile>

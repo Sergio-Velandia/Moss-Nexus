@@ -5,7 +5,7 @@ import { Reveal } from '../components/ui/Reveal'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
 
 const principles = [
-  { icon: BadgeCheck, title: 'Probado antes de publicar', text: 'Cada plantilla lleva la fecha y la versión de n8n en la que se probó.' },
+  { icon: BadgeCheck, title: 'Claro sobre las pruebas', text: 'Si una plantilla se probó en n8n, muestra la fecha y la versión. Si todavía no, se marca «Sin probar».' },
   { icon: Languages, title: 'Explicado en español claro', text: 'Primero el problema y el para qué; los detalles técnicos, solo cuando hacen falta.' },
   { icon: FolderGit2, title: 'Abierto y versionado', text: 'Las plantillas viven como archivos en un repositorio público. Sin cuentas ni bases de datos.' },
   { icon: Code2, title: 'Tú tienes el control', text: 'Copias el JSON y lo ejecutas en tu propio n8n. Nexus nunca ve tus datos ni tus credenciales.' },

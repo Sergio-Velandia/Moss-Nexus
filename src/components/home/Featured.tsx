@@ -34,7 +34,7 @@ export function Featured() {
               <div>
                 <p className="font-semibold">Más plantillas en camino</p>
                 <p className="mt-1.5 text-sm text-ink-soft">
-                  La librería crece de a una, cada plantilla probada antes de publicarse.
+                  La librería crece de a una plantilla, cada una explicada paso a paso.
                 </p>
               </div>
             </div>

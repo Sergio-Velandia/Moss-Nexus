@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'motion/react'
-import { ArrowRight, BadgeCheck, Copy, MessageSquareText } from 'lucide-react'
+import { ArrowRight, ClipboardCheck, Copy, MessageSquareText } from 'lucide-react'
 import type { TemplateDiagram } from '../../lib/types'
 import { FlowMap } from '../diagram/FlowMap'
 import { ButtonLink } from '../ui/Button'
@@ -45,7 +45,7 @@ export function Hero() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-moss opacity-60 motion-reduce:hidden" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-moss" />
           </span>
-          Plantillas de n8n probadas y explicadas
+          Plantillas de n8n armadas y explicadas
         </motion.p>
 
         <motion.h1
@@ -126,7 +126,7 @@ export function Hero() {
 
           <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line px-4 py-3 sm:px-6">
             <span className="inline-flex items-center gap-1.5 text-xs font-medium text-moss">
-              <BadgeCheck size={15} aria-hidden /> Probado en n8n
+              <ClipboardCheck size={15} aria-hidden /> Listo para pegar en n8n
             </span>
             <span aria-hidden className="inline-flex items-center gap-2 rounded-lg bg-nexus px-3 py-1.5 text-xs font-semibold text-on-accent">
               <Copy size={13} /> Copiar flujo
