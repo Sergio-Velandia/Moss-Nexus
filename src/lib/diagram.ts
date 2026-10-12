@@ -1,0 +1,140 @@
+import type { TemplateDiagram } from './types'
+
+/**
+ * Posiciona los nodos del mapa a partir de diagram.json, sin coordenadas escritas a mano.
+ * 1. Cada nodo va a la columna de su camino más largo desde un disparador (así el flujo siempre avanza).
+ * 2. Dentro de cada columna, los nodos se ordenan por la posición media de sus padres para cruzar menos líneas.
+ * El resultado se puede dibujar en horizontal (escritorio) o vertical (móvil) intercambiando ejes.
+ */
+
+export type Orientation = 'horizontal' | 'vertical'
+
+export interface PlacedNode {
+  id: string
+  /** Columna (profundidad en el flujo) */
+  rank: number
+  /** Posición dentro de la columna */
+  slot: number
+  x: number
+  y: number
+}
+
+export interface PlacedEdge {
+  from: string
+  to: string
+  label?: string
+  path: string
+}
+
+export interface Layout {
+  nodes: PlacedNode[]
+  edges: PlacedEdge[]
+  width: number
+  height: number
+  nodeW: number
+  nodeH: number
+}
+
+export interface LayoutOptions {
+  orientation: Orientation
+  nodeW?: number
+  nodeH?: number
+  /** Separación entre columnas (eje del flujo) */
+  gapMain?: number
+  /** Separación entre nodos de una misma columna */
+  gapCross?: number
+  padding?: number
+}
+
+export function rankNodes({ nodos, conexiones }: TemplateDiagram): Map<string, number> {
+  const parents = new Map<string, string[]>(nodos.map((n) => [n.id, []]))
+  for (const c of conexiones) parents.get(c.destino)?.push(c.origen)
+  const rank = new Map<string, number>()
+  const resolve = (id: string): number => {
+    const known = rank.get(id)
+    if (known !== undefined) return known
+    const ps = parents.get(id) ?? []
+    const r = ps.length === 0 ? 0 : Math.max(...ps.map(resolve)) + 1
+    rank.set(id, r)
+    return r
+  }
+  nodos.forEach((n) => resolve(n.id))
+  return rank
+}
+
+export function layoutDiagram(diagram: TemplateDiagram, opts: LayoutOptions): Layout {
+  const { orientation, nodeW = 200, nodeH = 64, padding = 16 } = opts
+  const horizontal = orientation === 'horizontal'
+  const gapMain = opts.gapMain ?? (horizontal ? 64 : 44)
+  const gapCross = opts.gapCross ?? (horizontal ? 28 : 20)
+
+  const rank = rankNodes(diagram)
+  const columns: string[][] = []
+  for (const n of diagram.nodos) (columns[rank.get(n.id)!] ??= []).push(n.id)
+
+  // Ordenar cada columna por el slot medio de sus padres (barycenter de una pasada)
+  const slot = new Map<string, number>()
+  const parentsOf = (id: string) => diagram.conexiones.filter((c) => c.destino === id).map((c) => c.origen)
+  columns.forEach((col, r) => {
+    if (r > 0) {
+      const weight = (id: string) => {
+        const ps = parentsOf(id).filter((p) => slot.has(p))
+        return ps.length ? ps.reduce((s, p) => s + slot.get(p)!, 0) / ps.length : 0
+      }
+      col.sort((a, b) => weight(a) - weight(b))
+    }
+    col.forEach((id, i) => slot.set(id, i - (col.length - 1) / 2)) // centrado alrededor de 0
+  })
+
+  // En el eje cruzado, el tamaño de cada nodo depende de la orientación
+  const mainSize = horizontal ? nodeW : nodeH
+  const crossSize = horizontal ? nodeH : nodeW
+  const maxPerCol = Math.max(...columns.map((c) => c.length))
+  const crossSpan = maxPerCol * crossSize + (maxPerCol - 1) * gapCross
+  const mainSpan = columns.length * mainSize + (columns.length - 1) * gapMain
+
+  const nodes: PlacedNode[] = diagram.nodos.map((n) => {
+    const r = rank.get(n.id)!
+    const s = slot.get(n.id)!
+    const main = padding + r * (mainSize + gapMain)
+    const cross = padding + crossSpan / 2 - crossSize / 2 + s * (crossSize + gapCross)
+    return {
+      id: n.id,
+      rank: r,
+      slot: s,
+      x: horizontal ? main : cross,
+      y: horizontal ? cross : main,
+    }
+  })
+
+  const pos = new Map(nodes.map((n) => [n.id, n]))
+  const edges: PlacedEdge[] = diagram.conexiones.map((c) => {
+    const a = pos.get(c.origen)!
+    const b = pos.get(c.destino)!
+    let x1, y1, x2, y2
+    if (horizontal) {
+      ;[x1, y1, x2, y2] = [a.x + nodeW, a.y + nodeH / 2, b.x, b.y + nodeH / 2]
+    } else {
+      ;[x1, y1, x2, y2] = [a.x + nodeW / 2, a.y + nodeH, b.x + nodeW / 2, b.y]
+    }
+    // Curva de Bézier suave con tangentes en la dirección del flujo, como en el lienzo de n8n
+    const bend = Math.max(24, (horizontal ? x2 - x1 : y2 - y1) / 2)
+    const path = horizontal
+      ? `M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}`
+      : `M ${x1} ${y1} C ${x1} ${y1 + bend}, ${x2} ${y2 - bend}, ${x2} ${y2}`
+    return { from: c.origen, to: c.destino, label: c.etiqueta, path }
+  })
+
+  const width = padding * 2 + (horizontal ? mainSpan : crossSpan)
+  const height = padding * 2 + (horizontal ? crossSpan : mainSpan)
+  return { nodes, edges, width, height, nodeW, nodeH }
+}
+
+/** Orden de lectura para lectores de pantalla: por columnas, de arriba abajo */
+export function readingOrder(diagram: TemplateDiagram): string[] {
+  const rank = rankNodes(diagram)
+  return diagram.nodos
+    .map((n, i) => ({ id: n.id, r: rank.get(n.id)!, i }))
+    .sort((a, b) => a.r - b.r || a.i - b.i)
+    .map((n) => n.id)
+}

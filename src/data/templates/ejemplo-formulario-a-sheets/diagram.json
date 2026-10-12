@@ -1,0 +1,17 @@
+{
+  "nodos": [
+    { "id": "webhook", "etiqueta": "Recibir respuesta", "herramienta": "webhook", "tipo": "disparador" },
+    { "id": "limpiar", "etiqueta": "Limpiar campos", "herramienta": "n8n", "tipo": "logica" },
+    { "id": "valido", "etiqueta": "¿Correo válido?", "herramienta": "n8n", "tipo": "logica" },
+    { "id": "sheets", "etiqueta": "Agregar fila", "herramienta": "google-sheets", "tipo": "accion" },
+    { "id": "aviso", "etiqueta": "Enviar aviso", "herramienta": "gmail", "tipo": "accion" },
+    { "id": "revisar", "etiqueta": "Marcar para revisar", "herramienta": "google-sheets", "tipo": "accion" }
+  ],
+  "conexiones": [
+    { "origen": "webhook", "destino": "limpiar" },
+    { "origen": "limpiar", "destino": "valido" },
+    { "origen": "valido", "destino": "sheets", "etiqueta": "sí" },
+    { "origen": "valido", "destino": "revisar", "etiqueta": "no" },
+    { "origen": "sheets", "destino": "aviso" }
+  ]
+}

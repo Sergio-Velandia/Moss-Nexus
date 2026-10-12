@@ -1,0 +1,19 @@
+{
+  "name": "EJEMPLO · ejemplo-formulario-a-sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Plantilla de ejemplo\nEste flujo es un marcador de posición para probar el diseño de Moss Nexus. Se reemplazará por un flujo real y probado en la Fase 2."
+      },
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "Nota",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [0, 0]
+    }
+  ],
+  "connections": {},
+  "settings": { "executionOrder": "v1" },
+  "meta": { "templateCredsSetupCompleted": false },
+  "pinData": {}
+}

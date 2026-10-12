@@ -1,0 +1,41 @@
+/** Forma de los archivos de cada plantilla en src/data/templates/<slug>/ */
+
+export type Difficulty = 'facil' | 'media' | 'avanzada'
+
+/** meta.json */
+export interface TemplateMeta {
+  slug: string
+  titulo: string
+  /** Una línea: lo que verá la tarjeta de la galería */
+  resumen: string
+  /** Contexto humano: el problema real que resuelve, en un párrafo */
+  problema: string
+  /** id de src/data/categories.ts */
+  categoria: string
+  /** ids de src/data/tools.ts, en el orden en que aparecen en el flujo */
+  herramientas: string[]
+  dificultad: Difficulty
+  /** Minutos que toma configurarla la primera vez */
+  tiempoEstimado: number
+  requisitos: string[]
+  escenarios: string[]
+  pasos: string[]
+  probado: { fecha: string; versionN8n: string }
+  destacado: boolean
+  /** Plantilla ficticia, solo para ver el diseño. Se muestra con una marca visible. */
+  ejemplo?: boolean
+}
+
+export type NodeKind = 'disparador' | 'accion' | 'logica'
+
+/** diagram.json */
+export interface TemplateDiagram {
+  nodos: { id: string; etiqueta: string; herramienta: string; tipo: NodeKind }[]
+  conexiones: { origen: string; destino: string; etiqueta?: string }[]
+}
+
+export interface Template extends TemplateMeta {
+  diagrama: TemplateDiagram
+  /** Carga perezosa del JSON de n8n: solo se descarga al abrir el detalle o copiar */
+  loadWorkflow: () => Promise<unknown>
+}

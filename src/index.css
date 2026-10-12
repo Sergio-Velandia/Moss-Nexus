@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+/* Moss Nexus — tokens de diseño.
+   Base verde musgo heredada de Moss + coral inspirado en n8n como acento.
+   Los valores cambian según el tema; las utilidades de Tailwind leen estas variables.
+   Contraste verificado: todo texto ≥ 4.5:1 contra --c-bg y --c-surface en ambos temas. */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --c-bg: #0e130e;
+  --c-bg-deep: #141b13;
+  --c-surface: #1a2219;
+  --c-surface-2: #222c20;
+  --c-line: rgb(233 239 224 / 0.09);
+  --c-line-strong: rgb(233 239 224 / 0.16);
+  --c-ink: #e9efe0;
+  --c-ink-soft: #a9b5a2;
+  --c-faint: #808d7a;
+  --c-moss: #8fb079;
+  --c-nexus: #f2647a;
+  --c-amber: #e0a458;
+  --c-on-accent: #0e130e;
+  --c-dot: rgb(233 239 224 / 0.07);
+  --glow-moss: rgb(111 138 92 / 0.2);
+  --glow-nexus: rgb(242 100 122 / 0.13);
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 10px 30px -12px rgb(0 0 0 / 0.6);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --c-bg: #faf7ef;
+  --c-bg-deep: #f1ecdd;
+  --c-surface: #ffffff;
+  --c-surface-2: #f6f2e7;
+  --c-line: rgb(47 58 44 / 0.1);
+  --c-line-strong: rgb(47 58 44 / 0.18);
+  --c-ink: #2f3a2c;
+  --c-ink-soft: #5b6657;
+  --c-faint: #646f60;
+  --c-moss: #476140;
+  --c-nexus: #c2364f;
+  --c-amber: #8f5b12;
+  --c-on-accent: #ffffff;
+  --c-dot: rgb(47 58 44 / 0.09);
+  --glow-moss: rgb(156 175 136 / 0.28);
+  --glow-nexus: rgb(242 100 122 / 0.12);
+  --shadow-card: 0 10px 30px -14px rgb(47 58 44 / 0.25);
+}
+
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-bg-deep: var(--c-bg-deep);
+  --color-surface: var(--c-surface);
+  --color-surface-2: var(--c-surface-2);
+  --color-line: var(--c-line);
+  --color-line-strong: var(--c-line-strong);
+  --color-ink: var(--c-ink);
+  --color-ink-soft: var(--c-ink-soft);
+  --color-faint: var(--c-faint);
+  --color-moss: var(--c-moss);
+  --color-nexus: var(--c-nexus);
+  --color-amber: var(--c-amber);
+  --color-on-accent: var(--c-on-accent);
+
+  --font-sans: "Inter Variable", "Inter", system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+
+/* En capas: así las utilidades de Tailwind (border-*, rounded-*, etc.) pueden sobrescribirlas */
+@layer base {
+  html {
+    background: var(--c-bg);
+    color: var(--c-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(56rem 30rem at 0% -8%, var(--glow-moss), transparent 70%),
+      radial-gradient(48rem 28rem at 100% 4%, var(--glow-nexus), transparent 70%),
+      var(--c-bg);
+  }
+
+  /* Foco visible y consistente para quien navega con teclado */
+  :focus-visible {
+    outline: 2px solid var(--c-nexus);
+    outline-offset: 3px;
+  }
+  /* Los buscadores marcan el foco con el anillo de su contenedor (focus-within): sin esto se verían dos */
+  [role="search"] input:focus-visible {
+    outline: none;
+  }
+
+  ::selection {
+    background: var(--c-nexus);
+    color: var(--c-on-accent);
+  }
+}
+
+@layer components {
+  /* Rejilla de puntos tipo lienzo de n8n */
+  .dot-grid {
+    background-image: radial-gradient(var(--c-dot) 1.2px, transparent 1.2px);
+    background-size: 18px 18px;
+  }
+
+  /* Texto con degradado musgo → coral para los titulares clave */
+  .text-gradient {
+    background: linear-gradient(100deg, var(--c-moss) 0%, var(--c-nexus) 85%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Borde con brillo sutil para las superficies de vidrio */
+  .glass {
+    background: color-mix(in oklab, var(--c-surface) 72%, transparent);
+    border: 1px solid var(--c-line);
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(14px);
+  }
+
+  /* Pulso de datos que recorre las conexiones del mapa (solo en el hero) */
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    100% {
+      transform: scale(1.12);
+      opacity: 0;
+    }
+  }
+  .pulse-ring {
+    animation: pulse-ring 2.4s ease-out infinite;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--c-surface-2);
+  }
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, var(--c-line-strong), transparent);
+    animation: shimmer 1.4s infinite;
+  }
+}
+
+/* Línea discontinua que avanza (conector del ecosistema) */
+@keyframes dash {
+  to {
+    stroke-dashoffset: -18;
+  }
+}
+
+/* Respeta la preferencia de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
