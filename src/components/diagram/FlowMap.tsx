@@ -49,7 +49,8 @@ export function FlowMap({
       <svg
         viewBox={`0 0 ${layout.width} ${layout.height}`}
         className="mx-auto block h-auto w-full"
-        style={{ maxWidth: layout.width }}
+        // En flujos largos no se encoge por debajo del 72 %: el contenedor se desplaza en horizontal y el texto sigue legible
+        style={{ maxWidth: layout.width, minWidth: horizontal ? Math.round(layout.width * 0.72) : undefined }}
         aria-hidden
         focusable="false"
       >
