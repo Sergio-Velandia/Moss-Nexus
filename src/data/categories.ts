@@ -10,6 +10,9 @@ export const categories: Category[] = [
   { id: 'productividad', nombre: 'Productividad' },
   { id: 'reportes', nombre: 'Reportes y datos' },
   { id: 'marketing', nombre: 'Marketing' },
+  { id: 'finanzas', nombre: 'Finanzas' },
+  { id: 'operaciones', nombre: 'Operaciones y TI' },
+  { id: 'rrhh', nombre: 'Recursos humanos' },
 ]
 
 const byId = new Map(categories.map((c) => [c.id, c]))
