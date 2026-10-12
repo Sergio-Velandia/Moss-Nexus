@@ -1,4 +1,4 @@
-import { BadgeCheck, Clock, FlaskConical } from 'lucide-react'
+import { BadgeCheck, CircleDashed, Clock, FlaskConical } from 'lucide-react'
 import { difficultyLabel, difficultyLevel, formatDate, formatMinutes } from '../../lib/format'
 import type { Difficulty } from '../../lib/types'
 
@@ -41,6 +41,28 @@ export function ExampleBadge() {
       <FlaskConical size={12} aria-hidden />
       Ejemplo
     </span>
+  )
+}
+
+/** Plantilla publicada sin probar todavía en una instancia real de n8n */
+export function UntestedBadge() {
+  return (
+    <span className="inline-flex items-center gap-1 text-xs font-medium text-amber">
+      <CircleDashed size={14} aria-hidden />
+      Sin probar
+    </span>
+  )
+}
+
+export function UntestedNotice() {
+  return (
+    <p className="flex items-start gap-3 rounded-2xl border border-dashed border-amber/50 bg-amber/[0.06] px-4 py-3 text-sm text-ink-soft">
+      <CircleDashed size={18} className="mt-0.5 shrink-0 text-amber" aria-hidden />
+      <span>
+        <strong className="text-amber">Sin probar.</strong> Este flujo aún no se ha probado en una instancia real de n8n. Revísalo y
+        pruébalo antes de usarlo con datos reales.
+      </span>
+    </p>
   )
 }
 

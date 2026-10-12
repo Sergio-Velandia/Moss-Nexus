@@ -2,7 +2,7 @@ import { ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { getCategory } from '../../data/categories'
 import type { Template } from '../../lib/types'
-import { DifficultyBadge, ExampleBadge, TestedSeal, TimeBadge } from '../ui/Badges'
+import { DifficultyBadge, ExampleBadge, TestedSeal, TimeBadge, UntestedBadge } from '../ui/Badges'
 import { ToolStack } from '../ui/ToolIcon'
 
 /** Tarjeta de la galería. Toda la tarjeta es un enlace; el brillo sigue al puntero (solo con ratón). */
@@ -44,7 +44,7 @@ export function TemplateCard({ template: t, headingLevel = 3 }: { template: Temp
         <DifficultyBadge value={t.dificultad} />
         <TimeBadge minutes={t.tiempoEstimado} />
         <span className="ml-auto">
-          {t.probado && <TestedSeal fecha={t.probado.fecha} version={t.probado.versionN8n} compact />}
+          {t.probado ? <TestedSeal fecha={t.probado.fecha} version={t.probado.versionN8n} compact /> : <UntestedBadge />}
         </span>
       </div>
     </Link>

@@ -6,7 +6,7 @@ import { getTool } from '../data/tools'
 import { FlowMap } from '../components/diagram/FlowMap'
 import { CopyFlowButton } from '../components/templates/CopyFlowButton'
 import { TemplateCard } from '../components/templates/TemplateCard'
-import { DifficultyBadge, ExampleBadge, TestedSeal, TimeBadge } from '../components/ui/Badges'
+import { DifficultyBadge, ExampleBadge, TestedSeal, TimeBadge, UntestedBadge, UntestedNotice } from '../components/ui/Badges'
 import { Reveal } from '../components/ui/Reveal'
 import { ToolIcon } from '../components/ui/ToolIcon'
 import { getTemplate, relatedTemplates } from '../lib/templates'
@@ -81,7 +81,7 @@ export default function TemplateDetail() {
           <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2">
             <DifficultyBadge value={t.dificultad} />
             <TimeBadge minutes={t.tiempoEstimado} />
-            {t.probado && <TestedSeal fecha={t.probado.fecha} version={t.probado.versionN8n} compact />}
+            {t.probado ? <TestedSeal fecha={t.probado.fecha} version={t.probado.versionN8n} compact /> : <UntestedBadge />}
           </div>
         </div>
       </header>
@@ -159,6 +159,11 @@ export default function TemplateDetail() {
             <p className="relative mt-2 max-w-lg text-ink-soft">
               Copia el flujo, abre un flujo nuevo en n8n y pégalo directamente sobre el lienzo.
             </p>
+            {!t.probado && (
+              <div className="relative mt-5">
+                <UntestedNotice />
+              </div>
+            )}
             <div className="relative mt-6">
               <CopyFlowButton template={t} />
             </div>
