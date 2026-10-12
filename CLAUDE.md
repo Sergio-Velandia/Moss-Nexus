@@ -42,6 +42,7 @@ Orden acordado. Cada fase empieza solo cuando el usuario la pide y con un plan c
 - **Fase Repaso del inicio:** rama `docs/repaso-inicio`.
   - Primero un informe sin cambios, en tabla: elemento / estado actual / problema / cambio propuesto. Después del OK, commits pequeños, uno por tema.
   - Contrastar cada afirmación del sitio con la realidad: hero, cómo funciona, destacadas sin `ejemplo`, chips de herramientas con al menos una plantilla, cifras dinámicas, sello Probado, enlaces a Moss, Acerca, footer y legales, metadatos y Open Graph, README, CHANGELOG y package.json, accesibilidad y móvil.
+  - Aclarar en el inicio que cada plantilla es un punto de partida y puede requerir personalizaciones y ajustes según la persona o la empresa (sus datos, columnas, reglas de negocio y herramientas).
   - No inventar cifras ni funciones. Pedir al usuario lo que falte.
   - Proponer PATCH o MINOR al final.
 
