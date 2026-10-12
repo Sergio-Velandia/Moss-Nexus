@@ -6,7 +6,7 @@ import { layoutDiagram, preferredOrientation, readingOrder, type Orientation } f
 import type { TemplateDiagram } from '../../lib/types'
 import { useMediaQuery } from '../../lib/useMediaQuery'
 
-const NODE_W = 208
+const NODE_W = 232
 const NODE_H = 68
 const MAX_LABEL = 21
 
