@@ -55,6 +55,19 @@ describe('workflows publicables', () => {
       expect(withCreds, `${t.slug}: quita "credentials" de estos nodos`).toEqual([])
     }
   })
+  it('las conexiones apuntan a nodos existentes y los nombres no se repiten', async () => {
+    type Conn = Record<string, { main: { node: string }[][] }>
+    for (const t of templates) {
+      const wf = (await t.loadWorkflow()) as Workflow & { connections?: Conn }
+      const names = (wf.nodes ?? []).map((n) => n.name)
+      expect(new Set(names).size, `${t.slug}: hay nombres de nodo repetidos`).toBe(names.length)
+      const broken = Object.entries(wf.connections ?? {}).flatMap(([from, c]) => [
+        ...(names.includes(from) ? [] : [from]),
+        ...c.main.flat().map((l) => l.node).filter((to) => !names.includes(to)),
+      ])
+      expect(broken, `${t.slug}: conexiones a nodos que no existen`).toEqual([])
+    }
+  })
   it('no incluye datos fijados (pinData) ni el id de la instancia', async () => {
     for (const t of templates) {
       const wf = (await t.loadWorkflow()) as Workflow
