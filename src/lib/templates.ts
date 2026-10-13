@@ -84,3 +84,13 @@ export function toolUsage(pool: Template[] = templates) {
   for (const t of pool) for (const h of t.herramientas) counts.set(h, (counts.get(h) ?? 0) + 1)
   return counts
 }
+
+/** Cifras de la librería para el inicio: siempre calculadas, nunca escritas a mano */
+export function libraryStats(pool: Template[] = templates) {
+  return {
+    plantillas: pool.length,
+    niveles: new Set(pool.map((t) => t.dificultad)).size,
+    categorias: new Set(pool.map((t) => t.categoria)).size,
+    herramientas: new Set(pool.flatMap((t) => t.herramientas)).size,
+  }
+}

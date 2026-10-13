@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildTemplates, relatedTemplates, templateErrors, templates, toolUsage } from './templates'
+import { buildTemplates, libraryStats, relatedTemplates, templateErrors, templates, toolUsage } from './templates'
 import { validateDiagram, validateMeta } from './validate'
 import type { Template, TemplateDiagram, TemplateMeta } from './types'
 
@@ -154,6 +154,9 @@ describe('relatedTemplates y toolUsage', () => {
 
   it('prioriza la misma categoría y excluye las que no comparten nada', () => {
     expect(relatedTemplates(pool[0], 3, pool).map((t) => t.slug)).toEqual(['b', 'c'])
+  })
+  it('calcula las cifras de la librería sin repetir', () => {
+    expect(libraryStats(pool)).toEqual({ plantillas: 4, niveles: 1, categorias: 2, herramientas: 2 })
   })
   it('cuenta el uso de cada herramienta', () => {
     expect(toolUsage(pool).get('gmail')).toBe(2)

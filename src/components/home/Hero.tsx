@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { ArrowRight, ClipboardCheck, Copy, MessageSquareText } from 'lucide-react'
+import { libraryStats } from '../../lib/templates'
 import type { TemplateDiagram } from '../../lib/types'
 import { FlowMap } from '../diagram/FlowMap'
 import { ButtonLink } from '../ui/Button'
@@ -23,6 +24,7 @@ const showcase: TemplateDiagram = {
 }
 
 const spring = { type: 'spring', stiffness: 140, damping: 20 } as const
+const stats = libraryStats()
 
 export function Hero() {
   const [q, setQ] = useState('')
@@ -83,6 +85,22 @@ export function Hero() {
               Cómo funciona
             </a>
           </div>
+          <dl className="mx-auto mt-8 grid max-w-xl grid-cols-2 gap-3 sm:grid-cols-4">
+            {[
+              [stats.plantillas, 'plantillas'],
+              [stats.niveles, 'niveles'],
+              [stats.categorias, 'categorías'],
+              [stats.herramientas, 'herramientas'],
+            ].map(([n, label]) => (
+              <div key={label} className="glass rounded-2xl px-3 py-2.5">
+                <dt className="sr-only">{label}</dt>
+                <dd className="text-xl font-semibold tabular-nums">
+                  {n}
+                  <span aria-hidden className="mt-0.5 block text-xs font-normal text-ink-soft">{label}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
         </motion.div>
       </div>
 
