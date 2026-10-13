@@ -1,0 +1,75 @@
+{
+  "nodos": [
+    {
+      "id": "error",
+      "etiqueta": "Cuando un flujo falla",
+      "herramienta": "n8n",
+      "tipo": "disparador"
+    },
+    {
+      "id": "preparar",
+      "etiqueta": "Preparar alerta",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "registrar",
+      "etiqueta": "Registrar error",
+      "herramienta": "google-sheets",
+      "tipo": "accion"
+    },
+    {
+      "id": "critico",
+      "etiqueta": "¿Es crítico?",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "correo",
+      "etiqueta": "Avisar por correo",
+      "herramienta": "gmail",
+      "tipo": "accion"
+    },
+    {
+      "id": "urgente",
+      "etiqueta": "Alerta urgente",
+      "herramienta": "slack",
+      "tipo": "accion"
+    },
+    {
+      "id": "normal",
+      "etiqueta": "Alerta en Slack",
+      "herramienta": "slack",
+      "tipo": "accion"
+    }
+  ],
+  "conexiones": [
+    {
+      "origen": "error",
+      "destino": "preparar"
+    },
+    {
+      "origen": "preparar",
+      "destino": "registrar"
+    },
+    {
+      "origen": "preparar",
+      "destino": "critico"
+    },
+    {
+      "origen": "critico",
+      "destino": "correo",
+      "etiqueta": "sí"
+    },
+    {
+      "origen": "critico",
+      "destino": "urgente",
+      "etiqueta": "sí"
+    },
+    {
+      "origen": "critico",
+      "destino": "normal",
+      "etiqueta": "no"
+    }
+  ]
+}

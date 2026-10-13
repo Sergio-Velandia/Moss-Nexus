@@ -1,0 +1,33 @@
+{
+  "slug": "alertas-de-errores-n8n",
+  "titulo": "Alertas cuando falla cualquier flujo de n8n",
+  "resumen": "Un flujo de errores central: registra cada fallo, avisa en Slack y escala por correo los flujos marcados como críticos.",
+  "problema": "Un flujo deja de funcionar un viernes y nadie se entera hasta que un cliente pregunta por qué no le llegó la factura. n8n registra el error, pero nadie revisa las ejecuciones a diario. Este flujo se conecta como «Error workflow» de tus automatizaciones: cada fallo queda en una hoja con su enlace, llega a un canal de Slack y, si el flujo lleva «[crítico]» en el nombre, también te escribe por correo y menciona a todo el canal.",
+  "categoria": "operaciones",
+  "herramientas": [
+    "n8n",
+    "google-sheets",
+    "gmail",
+    "slack"
+  ],
+  "dificultad": "media",
+  "tiempoEstimado": 15,
+  "requisitos": [
+    "Una instancia de n8n con flujos activos que quieras vigilar",
+    "Un espacio de Slack con un canal para alertas (por ejemplo #alertas)",
+    "Una cuenta de Google con acceso a Gmail y a una hoja con la pestaña «Errores» (Fecha, Flujo, Nodo, Error, Enlace)"
+  ],
+  "escenarios": [
+    "Empresa que ya tiene varias automatizaciones en producción y no quiere fallos silenciosos",
+    "Agencia que administra la instancia de n8n de varios clientes",
+    "Equipo de TI que necesita trazabilidad de incidentes para revisarlos cada semana"
+  ],
+  "pasos": [
+    "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n. Guárdalo con un nombre como «Alertas de errores».",
+    "Conecta Google en «Registrar error» (con la URL de la hoja), Gmail en «Avisar por correo» con tu dirección, y Slack en los dos nodos de alerta.",
+    "En cada flujo que quieras vigilar, abre Settings > Error workflow y elige «Alertas de errores».",
+    "Agrega «[crítico]» al nombre de los flujos cuyo fallo debe llegar también por correo.",
+    "Para probarlo, crea un flujo con un nodo que falle a propósito, asígnale este Error workflow, actívalo y provoca el error."
+  ],
+  "destacado": false
+}

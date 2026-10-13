@@ -1,0 +1,323 @@
+{
+  "name": "Alertas cuando falla cualquier flujo de n8n",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Alertas de errores de n8n\nPlantilla de **Moss Nexus**.\n\n**Cómo se usa:** en cada flujo que quieras vigilar, abre Settings > Error workflow y elige este flujo.\n\nPon **[crítico]** en el nombre de los flujos importantes: sus fallos además llegan por correo y con @channel en Slack.\n\n**Antes de activar:** Slack, Gmail y la URL de la hoja (pestaña **Errores**: Fecha, Flujo, Nodo, Error, Enlace).",
+        "height": 320,
+        "width": 400
+      },
+      "id": "bb5c15cb-01ec-46e2-8664-53d60ba7c2fc",
+      "name": "Nota de configuración",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -260
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "41d9d8a0-9026-40a1-84a7-22a7f20f0db2",
+      "name": "Cuando un flujo falla",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2a398268-58d7-4bd4-8a51-e6af38e22b18",
+              "name": "flujo",
+              "value": "={{ $json.workflow?.name ?? 'Flujo sin nombre' }}",
+              "type": "string"
+            },
+            {
+              "id": "6ed6cfb4-cf4a-4b3f-816a-eff6e63b0cf0",
+              "name": "nodo",
+              "value": "={{ $json.execution?.lastNodeExecuted ?? $json.trigger?.error?.node?.name ?? 'Disparador' }}",
+              "type": "string"
+            },
+            {
+              "id": "6aea29ee-f20f-49f7-8f7e-0267e6f220ff",
+              "name": "error",
+              "value": "={{ $json.execution?.error?.message ?? $json.trigger?.error?.message ?? 'Error desconocido' }}",
+              "type": "string"
+            },
+            {
+              "id": "e3a3deba-4df5-4ada-85b1-f1e7b71edf27",
+              "name": "enlace",
+              "value": "={{ $json.execution?.url ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "e8818c91-63f5-4890-8746-72163c7c8d78",
+              "name": "fecha",
+              "value": "={{ $now.toFormat('yyyy-MM-dd HH:mm') }}",
+              "type": "string"
+            },
+            {
+              "id": "0f3f3a8d-c47d-4cdd-8d58-730d8ddcdfef",
+              "name": "critico",
+              "value": "={{ ($json.workflow?.name ?? '').toLowerCase().includes('[crítico]') }}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3cd759dc-5b7b-4816-84f5-4346a46d16d3",
+      "name": "Preparar alerta",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Errores",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha": "={{ $json.fecha }}",
+            "Flujo": "={{ $json.flujo }}",
+            "Nodo": "={{ $json.nodo }}",
+            "Error": "={{ $json.error }}",
+            "Enlace": "={{ $json.enlace }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Flujo",
+              "displayName": "Flujo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nodo",
+              "displayName": "Nodo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error",
+              "displayName": "Error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Enlace",
+              "displayName": "Enlace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "id": "56c30109-8eb0-40fb-86cb-b4b3b977a260",
+      "name": "Registrar error",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        460,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c9bedcbc-6b05-430c-89ad-099937aab422",
+              "leftValue": "={{ $json.critico }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "4e736dda-8a7d-4fbc-87d1-e22c36240d53",
+      "name": "¿Es crítico?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        460,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "tu-correo@ejemplo.com",
+        "subject": "=Falló un flujo crítico: {{ $json.flujo }}",
+        "emailType": "text",
+        "message": "=El flujo «{{ $json.flujo }}» falló a las {{ $json.fecha }}.\n\nNodo: {{ $json.nodo }}\nError: {{ $json.error }}\n\nVer la ejecución: {{ $json.enlace }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "8b566196-4b07-4d76-857a-3d5047552e7e",
+      "name": "Avisar por correo",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        700,
+        0
+      ],
+      "webhookId": "299b8d19-851b-467f-8a4a-d9ee36a5a06b"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#alertas",
+          "mode": "name"
+        },
+        "text": "=<!channel> :rotating_light: *Falló un flujo crítico: {{ $json.flujo }}*\nNodo: {{ $json.nodo }}\nError: `{{ $json.error }}`\n{{ $json.enlace ? '<' + $json.enlace + '|Ver la ejecución>' : '' }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "b9356291-ee1f-4088-8de7-ebe818c6548c",
+      "name": "Alerta urgente",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        700,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#alertas",
+          "mode": "name"
+        },
+        "text": "=:warning: Falló *{{ $json.flujo }}* en el nodo {{ $json.nodo }}\nError: `{{ $json.error }}`\n{{ $json.enlace ? '<' + $json.enlace + '|Ver la ejecución>' : '' }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "74ef1b94-8e71-485f-8483-a7983e4e74ea",
+      "name": "Alerta en Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        700,
+        280
+      ]
+    }
+  ],
+  "connections": {
+    "Cuando un flujo falla": {
+      "main": [
+        [
+          {
+            "node": "Preparar alerta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar alerta": {
+      "main": [
+        [
+          {
+            "node": "Registrar error",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "¿Es crítico?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Es crítico?": {
+      "main": [
+        [
+          {
+            "node": "Avisar por correo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Alerta urgente",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Alerta en Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}
