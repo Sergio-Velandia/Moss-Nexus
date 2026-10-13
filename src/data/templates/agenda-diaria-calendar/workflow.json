@@ -1,0 +1,139 @@
+{
+  "name": "Agenda del día por correo desde Google Calendar",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Agenda diaria por correo\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. Cuenta de Google en «Eventos de hoy» (y otro calendario si no usas el principal).\n2. Cuenta de Gmail y tu correo en «Enviar por Gmail».\n3. Zona horaria correcta en Settings > Timezone.\n\nPor defecto corre de lunes a viernes a las 7:00.",
+        "height": 320,
+        "width": 400
+      },
+      "id": "a3b6edee-4586-4ca0-8dfe-5ca01b1f1c5c",
+      "name": "Nota de configuración",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * 1-5"
+            }
+          ]
+        }
+      },
+      "id": "0eef5b25-6a42-48d4-8341-5a8da2cbe23f",
+      "name": "Días hábiles 7:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "primary",
+          "mode": "id"
+        },
+        "returnAll": true,
+        "timeMin": "={{ $today.toISO() }}",
+        "timeMax": "={{ $today.plus({ days: 1 }).toISO() }}",
+        "options": {
+          "orderBy": "startTime"
+        }
+      },
+      "id": "9b542678-4ba6-4b17-8e36-ee64fc3bbd92",
+      "name": "Eventos de hoy",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        220,
+        0
+      ],
+      "alwaysOutputData": true,
+      "notes": "«Always Output Data» está activado: los días sin eventos igual llega el correo.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Arma la agenda del día a partir de los eventos de Google Calendar\nconst eventos = $input.all()\n  .map((item) => item.json)\n  .filter((e) => e.id && e.status !== 'cancelled');\n\nconst hoy = $now.setLocale('es').toFormat(\"cccc d 'de' LLLL\");\nconst hora = (iso) => DateTime.fromISO(iso).toFormat('HH:mm');\n\nlet minutos = 0;\nconst lineas = eventos.map((e) => {\n  const lugar = e.hangoutLink ? ' · ' + e.hangoutLink : e.location ? ' · ' + e.location : '';\n  if (e.start?.date) return '• Todo el día: ' + (e.summary || 'Sin título') + lugar;\n  minutos += DateTime.fromISO(e.end.dateTime).diff(DateTime.fromISO(e.start.dateTime), 'minutes').minutes;\n  return '• ' + hora(e.start.dateTime) + '–' + hora(e.end.dateTime) + '  ' + (e.summary || 'Sin título') + lugar;\n});\n\nconst ocupado = Math.floor(minutos / 60) + ' h ' + Math.round(minutos % 60) + ' min';\nconst asunto = eventos.length === 0\n  ? 'Tu agenda de hoy: sin reuniones'\n  : 'Tu agenda de hoy: ' + eventos.length + (eventos.length === 1 ? ' evento' : ' eventos');\nconst cuerpo = eventos.length === 0\n  ? 'Hoy, ' + hoy + ', no tienes eventos en el calendario. Buen día para avanzar en lo importante.'\n  : ['Agenda del ' + hoy + ':', '', ...lineas, '', 'Tiempo en reuniones: ' + ocupado + '.'].join('\\n');\n\nreturn [{ json: { asunto, cuerpo } }];"
+      },
+      "id": "54430eec-a08c-440e-821b-1564cfc98eee",
+      "name": "Armar agenda",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "tu-correo@ejemplo.com",
+        "subject": "={{ $json.asunto }}",
+        "emailType": "text",
+        "message": "={{ $json.cuerpo }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "0cdf5e20-1c1e-4090-8f97-240c8a8796eb",
+      "name": "Enviar por Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        660,
+        0
+      ],
+      "webhookId": "9f89cd31-6f7a-40d3-80b8-45447eb2d452"
+    }
+  ],
+  "connections": {
+    "Días hábiles 7:00": {
+      "main": [
+        [
+          {
+            "node": "Eventos de hoy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Eventos de hoy": {
+      "main": [
+        [
+          {
+            "node": "Armar agenda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar agenda": {
+      "main": [
+        [
+          {
+            "node": "Enviar por Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

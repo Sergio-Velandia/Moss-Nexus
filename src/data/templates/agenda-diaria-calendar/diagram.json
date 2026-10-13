@@ -1,0 +1,42 @@
+{
+  "nodos": [
+    {
+      "id": "cada-dia",
+      "etiqueta": "Días hábiles 7:00",
+      "herramienta": "schedule",
+      "tipo": "disparador"
+    },
+    {
+      "id": "eventos",
+      "etiqueta": "Eventos de hoy",
+      "herramienta": "google-calendar",
+      "tipo": "accion"
+    },
+    {
+      "id": "armar",
+      "etiqueta": "Armar agenda",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "enviar",
+      "etiqueta": "Enviar por Gmail",
+      "herramienta": "gmail",
+      "tipo": "accion"
+    }
+  ],
+  "conexiones": [
+    {
+      "origen": "cada-dia",
+      "destino": "eventos"
+    },
+    {
+      "origen": "eventos",
+      "destino": "armar"
+    },
+    {
+      "origen": "armar",
+      "destino": "enviar"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "slug": "agenda-diaria-calendar",
+  "titulo": "Agenda del día por correo desde Google Calendar",
+  "resumen": "Cada mañana de días hábiles recibes un correo con tus reuniones, sus horarios y el tiempo total ocupado.",
+  "problema": "Empiezas el día abriendo el calendario a la carrera, entre correos y mensajes, y descubres tarde que tenías una reunión temprano o que el día está lleno. Este flujo te envía cada mañana un resumen claro: qué reuniones hay, a qué hora, dónde o con qué enlace, y cuánto tiempo del día se va en ellas.",
+  "categoria": "productividad",
+  "herramientas": [
+    "schedule",
+    "google-calendar",
+    "n8n",
+    "gmail"
+  ],
+  "dificultad": "facil",
+  "tiempoEstimado": 10,
+  "requisitos": [
+    "Una instancia de n8n (cloud o autoalojada), con la zona horaria correcta en Settings > Timezone",
+    "Una cuenta de Google con acceso a Google Calendar y Gmail"
+  ],
+  "escenarios": [
+    "Profesional con muchas reuniones que quiere planear el día antes de abrir el computador",
+    "Gerente que revisa su agenda desde el celular camino a la oficina",
+    "Asistente que recibe la agenda de un directivo, usando el calendario compartido"
+  ],
+  "pasos": [
+    "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
+    "En «Eventos de hoy», conecta tu cuenta de Google. Si quieres otro calendario, cambia «primary» por su ID.",
+    "En «Enviar por Gmail», conecta tu cuenta y cambia tu-correo@ejemplo.com por el correo donde quieres recibir la agenda.",
+    "Si prefieres otra hora o también los fines de semana, cambia la expresión del nodo «Días hábiles 7:00» (0 7 * * 1-5).",
+    "Pulsa «Test workflow» para recibir la agenda de hoy y, si está bien, activa el flujo."
+  ],
+  "destacado": false
+}
