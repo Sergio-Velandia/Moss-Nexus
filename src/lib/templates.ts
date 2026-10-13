@@ -60,7 +60,6 @@ export const templates = built.templates
 export const templateErrors = built.errors
 
 export const getTemplate = (slug: string) => templates.find((t) => t.slug === slug)
-export const featuredTemplates = () => templates.filter((t) => t.destacado)
 
 /** Relacionadas: misma categoría pesa más que compartir herramientas */
 export function relatedTemplates(current: Template, limit = 3, pool: Template[] = templates) {
@@ -93,4 +92,10 @@ export function libraryStats(pool: Template[] = templates) {
     categorias: new Set(pool.map((t) => t.categoria)).size,
     herramientas: new Set(pool.flatMap((t) => t.herramientas)).size,
   }
+}
+
+/** Destacadas para el inicio: hasta `porNivel` de cada dificultad, para mostrar el rango completo de la librería */
+export function balancedFeatured(pool: Template[] = templates, porNivel = 2) {
+  const destacadas = pool.filter((t) => t.destacado)
+  return (['facil', 'media', 'avanzada'] as const).flatMap((d) => destacadas.filter((t) => t.dificultad === d).slice(0, porNivel))
 }

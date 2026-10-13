@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildTemplates, libraryStats, relatedTemplates, templateErrors, templates, toolUsage } from './templates'
+import { balancedFeatured, buildTemplates, libraryStats, relatedTemplates, templateErrors, templates, toolUsage } from './templates'
 import { validateDiagram, validateMeta } from './validate'
 import type { Template, TemplateDiagram, TemplateMeta } from './types'
 
@@ -154,6 +154,11 @@ describe('relatedTemplates y toolUsage', () => {
 
   it('prioriza la misma categoría y excluye las que no comparten nada', () => {
     expect(relatedTemplates(pool[0], 3, pool).map((t) => t.slug)).toEqual(['b', 'c'])
+  })
+  it('las destacadas se reparten por nivel, en orden fácil → avanzada', () => {
+    const d = (slug: string, dificultad: Template['dificultad'], destacado = true) => ({ ...meta, slug, dificultad, destacado }) as Template
+    const lote = [d('a1', 'avanzada'), d('f1', 'facil'), d('f2', 'facil'), d('f3', 'facil'), d('m1', 'media'), d('m2', 'media', false), d('a2', 'avanzada')]
+    expect(balancedFeatured(lote, 2).map((t) => t.slug)).toEqual(['f1', 'f2', 'm1', 'a1', 'a2'])
   })
   it('calcula las cifras de la librería sin repetir', () => {
     expect(libraryStats(pool)).toEqual({ plantillas: 4, niveles: 1, categorias: 2, herramientas: 2 })
