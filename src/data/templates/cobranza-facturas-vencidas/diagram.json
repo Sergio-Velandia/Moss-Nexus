@@ -1,0 +1,93 @@
+{
+  "nodos": [
+    {
+      "id": "cada",
+      "etiqueta": "Días hábiles 8:00",
+      "herramienta": "schedule",
+      "tipo": "disparador"
+    },
+    {
+      "id": "leer",
+      "etiqueta": "Leer facturas",
+      "herramienta": "google-sheets",
+      "tipo": "accion"
+    },
+    {
+      "id": "mora",
+      "etiqueta": "Calcular mora",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "tono",
+      "etiqueta": "Según el tono",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "amable",
+      "etiqueta": "Recordatorio amable",
+      "herramienta": "gmail",
+      "tipo": "accion"
+    },
+    {
+      "id": "firme",
+      "etiqueta": "Recordatorio firme",
+      "herramienta": "gmail",
+      "tipo": "accion"
+    },
+    {
+      "id": "escalar",
+      "etiqueta": "Escalar al responsable",
+      "herramienta": "gmail",
+      "tipo": "accion"
+    },
+    {
+      "id": "registrar",
+      "etiqueta": "Registrar gestión",
+      "herramienta": "google-sheets",
+      "tipo": "accion"
+    }
+  ],
+  "conexiones": [
+    {
+      "origen": "cada",
+      "destino": "leer"
+    },
+    {
+      "origen": "leer",
+      "destino": "mora"
+    },
+    {
+      "origen": "mora",
+      "destino": "tono"
+    },
+    {
+      "origen": "tono",
+      "destino": "amable",
+      "etiqueta": "amable"
+    },
+    {
+      "origen": "tono",
+      "destino": "firme",
+      "etiqueta": "firme"
+    },
+    {
+      "origen": "tono",
+      "destino": "escalar",
+      "etiqueta": "escalar"
+    },
+    {
+      "origen": "amable",
+      "destino": "registrar"
+    },
+    {
+      "origen": "firme",
+      "destino": "registrar"
+    },
+    {
+      "origen": "escalar",
+      "destino": "registrar"
+    }
+  ]
+}

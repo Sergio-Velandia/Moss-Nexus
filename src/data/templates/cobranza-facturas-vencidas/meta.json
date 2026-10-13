@@ -1,0 +1,36 @@
+{
+  "slug": "cobranza-facturas-vencidas",
+  "titulo": "Cobranza automática de facturas vencidas con recordatorios escalonados",
+  "resumen": "Lee tus facturas pendientes y envía recordatorios con el tono adecuado según los días de mora, escalando los casos difíciles.",
+  "problema": "Cobrar facturas vencidas se hace a mano, tarde y sin criterio: a unos clientes se les escribe cada semana y a otros nunca. La cartera crece y la caja se resiente. Este flujo revisa cada mañana la hoja de facturas y aplica un calendario de cobro: recordatorio amable los días 1 y 7, firme con copia al responsable los días 15 y 22, y desde el día 30 escala el caso a una persona cada semana. Cada gestión queda registrada.",
+  "categoria": "finanzas",
+  "herramientas": [
+    "schedule",
+    "google-sheets",
+    "n8n",
+    "gmail"
+  ],
+  "dificultad": "media",
+  "tiempoEstimado": 25,
+  "requisitos": [
+    "Una instancia de n8n (cloud o autoalojada), con la zona horaria correcta en Settings > Timezone",
+    "Una cuenta de Google con acceso a Google Sheets y Gmail",
+    "Una pestaña «Facturas» con las columnas Número, Cliente, Correo, Monto, Vencimiento, Estado y Responsable",
+    "Una pestaña «Gestiones» con las columnas Fecha, Factura, Cliente, Días de mora y Acción",
+    "Vencimiento en formato AAAA-MM-DD o DD/MM/AAAA, y Estado «Pagada» cuando la factura se cobra"
+  ],
+  "escenarios": [
+    "Empresa de servicios con facturación mensual a decenas de clientes",
+    "Pyme sin área de cartera donde cobrar le toca al dueño o a administración",
+    "Equipo comercial que necesita saber qué clientes escalar sin revisar la hoja a diario"
+  ],
+  "pasos": [
+    "Prepara las pestañas «Facturas» y «Gestiones» con sus columnas. Marca como «Pagada» cada factura cobrada.",
+    "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
+    "Conecta tu cuenta de Google en «Leer facturas» y «Registrar gestión», y pega la URL de la hoja.",
+    "Conecta Gmail en los tres nodos de correo y adapta los textos al tono de tu empresa.",
+    "Si tu política de cobro es distinta, cambia los días en la función «etapa» del nodo «Calcular mora».",
+    "Crea una factura de prueba con tu correo y un vencimiento de hace 1 día, pulsa «Test workflow» y revisa el correo y la gestión registrada. Luego activa el flujo."
+  ],
+  "destacado": true
+}
