@@ -1,0 +1,277 @@
+{
+  "name": "Resumen diario de correos sin leer con IA en Slack",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Resumen de correos con IA\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. Cuenta de Gmail en «Correos sin leer».\n2. Credencial de OpenAI en «Resumir con IA» y el modelo en «Configuración».\n3. Slack y el canal (o tu usuario) en los dos nodos de Slack.\n\nSolo se envían a la IA el remitente, el asunto y un extracto de cada correo, nunca los adjuntos.",
+        "height": 320,
+        "width": 400
+      },
+      "id": "8fe76824-5543-4544-8048-1d811e9063df",
+      "name": "Nota de configuración",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "30 7 * * 1-5"
+            }
+          ]
+        }
+      },
+      "id": "e0eae653-0c2e-4cbd-8cbf-6bffa0e2b715",
+      "name": "Días hábiles 7:30",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3f2d8edb-e4cf-4cae-8bd3-b9102ca215cb",
+              "name": "modelo",
+              "value": "gpt-4o-mini",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ed58c041-6662-451f-8751-09718fe9d1dd",
+      "name": "Configuración",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 40,
+        "filters": {
+          "q": "is:unread newer_than:1d -category:promotions -category:social"
+        }
+      },
+      "id": "989744ec-46aa-4e38-895b-00f74f50c6f9",
+      "name": "Correos sin leer",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        440,
+        0
+      ],
+      "alwaysOutputData": true,
+      "webhookId": "4661d59b-e764-4399-804b-9a210521bfc8",
+      "notes": "Sin leer de las últimas 24 horas, sin promociones ni redes sociales. Máximo 40.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepara la lista de correos sin leer para la IA (sin cuerpos completos: remitente, asunto y extracto)\nconst correos = $input.all()\n  .map((item) => item.json)\n  .filter((c) => c.id);\n\nconst lista = correos.slice(0, 40).map((c, i) => {\n  const de = c.From || c.from?.text || c.from || 'desconocido';\n  const asunto = c.Subject || c.subject || '(sin asunto)';\n  const extracto = String(c.snippet || c.text || '').replace(/\\s+/g, ' ').slice(0, 300);\n  return (i + 1) + '. De: ' + de + ' | Asunto: ' + asunto + ' | Extracto: ' + extracto;\n}).join('\\n');\n\nreturn [{\n  json: {\n    hayCorreos: correos.length > 0,\n    total: correos.length,\n    lista,\n    modelo: $('Configuración').first().json.modelo,\n  },\n}];"
+      },
+      "id": "a41ae7b3-3dd5-4123-8ff6-40d9bc328e55",
+      "name": "Preparar correos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0ac43e31-1048-405a-8f8d-12a45e865027",
+              "leftValue": "={{ $json.hayCorreos }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "1e980cbd-fd2d-49e0-889a-b2ec25b54cdc",
+      "name": "¿Hay correos?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: $json.modelo, temperature: 0.2, messages: [ { role: 'system', content: 'Eres un asistente ejecutivo. Recibes la lista de correos sin leer de las últimas 24 horas. Escribe en español un resumen para Slack con tres secciones: *Requiere acción hoy* (máximo 5 viñetas, con remitente y qué hay que hacer), *Para leer después* (agrupado por tema, una línea cada uno) y *Puedes ignorar* (una sola línea). Sé breve y no inventes información que no esté en la lista.' }, { role: 'user', content: $json.lista } ] }) }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "c1a205c9-6eb9-45d2-8527-6b702e7dbc53",
+      "name": "Resumir con IA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#mi-bandeja",
+          "mode": "name"
+        },
+        "text": "=:inbox_tray: *Tu bandeja: {{ $('Preparar correos').item.json.total }} correos sin leer*\n\n{{ $json.choices[0].message.content }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "25eceac7-f89b-467f-8821-0c781385415f",
+      "name": "Enviar resumen",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#mi-bandeja",
+          "mode": "name"
+        },
+        "text": ":white_check_mark: No tienes correos sin leer de las últimas 24 horas. Bandeja al día.",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "e7845730-3151-4399-8778-3f093ac5e0b2",
+      "name": "Bandeja al día",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        1100,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Días hábiles 7:30": {
+      "main": [
+        [
+          {
+            "node": "Configuración",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configuración": {
+      "main": [
+        [
+          {
+            "node": "Correos sin leer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Correos sin leer": {
+      "main": [
+        [
+          {
+            "node": "Preparar correos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar correos": {
+      "main": [
+        [
+          {
+            "node": "¿Hay correos?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay correos?": {
+      "main": [
+        [
+          {
+            "node": "Resumir con IA",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Bandeja al día",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resumir con IA": {
+      "main": [
+        [
+          {
+            "node": "Enviar resumen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

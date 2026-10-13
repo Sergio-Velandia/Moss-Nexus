@@ -1,0 +1,35 @@
+{
+  "slug": "resumen-correos-con-ia",
+  "titulo": "Resumen diario de correos sin leer con IA en Slack",
+  "resumen": "Cada mañana la IA revisa tus correos sin leer y te deja en Slack qué requiere acción hoy, qué puede esperar y qué ignorar.",
+  "problema": "Empiezas el día con decenas de correos sin leer y pasas la primera hora decidiendo cuáles importan. Lo urgente se mezcla con boletines y notificaciones. Este flujo toma tus correos sin leer de las últimas 24 horas (sin promociones ni redes sociales), le pide a la IA que los ordene en «requiere acción hoy», «para leer después» y «puedes ignorar», y te lo deja en Slack antes de empezar. A la IA solo llegan el remitente, el asunto y un extracto.",
+  "categoria": "productividad",
+  "herramientas": [
+    "schedule",
+    "n8n",
+    "gmail",
+    "openai",
+    "slack"
+  ],
+  "dificultad": "avanzada",
+  "tiempoEstimado": 20,
+  "requisitos": [
+    "Una instancia de n8n (cloud o autoalojada), con la zona horaria correcta en Settings > Timezone",
+    "Una cuenta de OpenAI con una clave de API y saldo disponible",
+    "Una cuenta de Gmail",
+    "Un espacio de Slack con un canal privado para ti (o enviar el resumen como mensaje directo)"
+  ],
+  "escenarios": [
+    "Directivo o gerente que recibe muchos correos y necesita priorizar rápido",
+    "Profesional independiente que atiende clientes por correo y no quiere que se le pase nada",
+    "Cualquier persona que quiere empezar el día sin abrir la bandeja de entrada"
+  ],
+  "pasos": [
+    "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
+    "Conecta Gmail en «Correos sin leer» y crea la credencial de OpenAI en «Resumir con IA». En «Configuración», elige el modelo.",
+    "Conecta Slack en «Enviar resumen» y «Bandeja al día» y escribe tu canal privado.",
+    "Si quieres afinar qué correos entran, cambia la búsqueda de «Correos sin leer» (usa la misma sintaxis que el buscador de Gmail).",
+    "Pulsa «Test workflow» para recibir el resumen ahora y, si está bien, activa el flujo."
+  ],
+  "destacado": false
+}

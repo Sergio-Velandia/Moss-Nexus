@@ -1,0 +1,84 @@
+{
+  "nodos": [
+    {
+      "id": "cada",
+      "etiqueta": "Días hábiles 7:30",
+      "herramienta": "schedule",
+      "tipo": "disparador"
+    },
+    {
+      "id": "config",
+      "etiqueta": "Configuración",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "gmail",
+      "etiqueta": "Correos sin leer",
+      "herramienta": "gmail",
+      "tipo": "accion"
+    },
+    {
+      "id": "preparar",
+      "etiqueta": "Preparar correos",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "hay",
+      "etiqueta": "¿Hay correos?",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "resumir",
+      "etiqueta": "Resumir con IA",
+      "herramienta": "openai",
+      "tipo": "accion"
+    },
+    {
+      "id": "aldia",
+      "etiqueta": "Bandeja al día",
+      "herramienta": "slack",
+      "tipo": "accion"
+    },
+    {
+      "id": "enviar",
+      "etiqueta": "Enviar resumen",
+      "herramienta": "slack",
+      "tipo": "accion"
+    }
+  ],
+  "conexiones": [
+    {
+      "origen": "cada",
+      "destino": "config"
+    },
+    {
+      "origen": "config",
+      "destino": "gmail"
+    },
+    {
+      "origen": "gmail",
+      "destino": "preparar"
+    },
+    {
+      "origen": "preparar",
+      "destino": "hay"
+    },
+    {
+      "origen": "hay",
+      "destino": "resumir",
+      "etiqueta": "sí"
+    },
+    {
+      "origen": "hay",
+      "destino": "aldia",
+      "etiqueta": "no"
+    },
+    {
+      "origen": "resumir",
+      "destino": "enviar"
+    }
+  ]
+}
