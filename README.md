@@ -123,6 +123,16 @@ Añádela en [`src/data/tools.ts`](src/data/tools.ts) o en [`src/data/categories
 
 React 19, Vite, TypeScript, Tailwind CSS 4, React Router, Motion, Lucide y Vitest/oxlint. Sin backend: las plantillas viven en el repositorio.
 
+## Licencia
+
+El proyecto usa tres licencias, según el tipo de material:
+
+| Material | Licencia | Qué permite |
+| --- | --- | --- |
+| Flujos de n8n (`src/data/templates/*/workflow.json`) | [MIT-0](LICENSE-WORKFLOWS) | Copiarlos, modificarlos y usarlos, también con fines comerciales, sin ninguna condición |
+| Textos y diagramas de las plantillas (`meta.json`, `diagram.json`) | [CC BY 4.0](LICENSE-CONTENT) | Reutilizarlos y adaptarlos citando a Moss Nexus como fuente |
+| Código del sitio (todo lo demás) | [MIT](LICENSE) | Uso libre, conservando el aviso de copyright |
+
 ---
 
 Proyecto independiente, sin relación oficial con n8n GmbH.

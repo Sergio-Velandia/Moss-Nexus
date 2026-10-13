@@ -1,0 +1,20 @@
+Contenido de las plantillas de Moss Nexus
+Copyright (c) 2026 Sergio Andres Ramirez Velandia
+
+Los textos y diagramas de las plantillas (src/data/templates/*/meta.json y
+src/data/templates/*/diagram.json: títulos, resúmenes, problemas, requisitos,
+escenarios, pasos y mapas de cada flujo) se publican bajo la licencia
+Creative Commons Atribución 4.0 Internacional (CC BY 4.0).
+
+Puedes copiarlos, redistribuirlos, adaptarlos y usarlos con cualquier fin,
+incluso comercial, siempre que des crédito adecuado, enlaces a la licencia
+e indiques si hiciste cambios. Por ejemplo:
+
+  Basado en «<título de la plantilla>» de Moss Nexus
+  (https://sergio-velandia.github.io/Moss-Nexus/), CC BY 4.0.
+
+Resumen de la licencia:  https://creativecommons.org/licenses/by/4.0/deed.es
+Texto legal completo:    https://creativecommons.org/licenses/by/4.0/legalcode.es
+
+Los flujos (workflow.json) no se rigen por este archivo sino por
+LICENSE-WORKFLOWS (MIT-0). El código del sitio se rige por LICENSE (MIT).
