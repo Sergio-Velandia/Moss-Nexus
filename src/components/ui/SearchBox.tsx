@@ -29,7 +29,7 @@ export function SearchBox({
         e.preventDefault()
         onSubmit?.()
       }}
-      className={`glass group flex items-center gap-3 transition focus-within:border-nexus/60 focus-within:ring-4 focus-within:ring-nexus/15 ${
+      className={`glass group flex items-center gap-3 transition focus-within:border-nexus focus-within:ring-2 focus-within:ring-nexus/50 focus-within:ring-offset-2 focus-within:ring-offset-bg ${
         lg ? 'rounded-2xl p-2 pl-5' : 'rounded-xl px-4'
       }`}
     >
