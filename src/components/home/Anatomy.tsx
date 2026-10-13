@@ -47,8 +47,8 @@ function MiniFlow({ template }: { template: Template }) {
           const nodes = step.nodes.map((n) => byId.get(n.id)!)
           return (
             <Fragment key={i}>
-              {i > 0 && <li aria-hidden className="mx-1 mt-[1.1rem] h-px w-6 shrink-0 bg-gradient-to-r from-moss to-nexus" />}
-              <li className="flex w-24 shrink-0 flex-col items-center text-center">
+              {i > 0 && <li aria-hidden className="mx-0.5 mt-[1.1rem] h-px w-4 shrink-0 bg-gradient-to-r from-moss to-nexus" />}
+              <li className="flex w-20 shrink-0 flex-col items-center text-center">
                 <span className="flex -space-x-1.5">
                   {nodes.map((n) => (
                     <span key={n.id} className="rounded-xl ring-2 ring-bg">
@@ -65,6 +65,30 @@ function MiniFlow({ template }: { template: Template }) {
         })}
       </ol>
     </div>
+  )
+}
+
+/** Dónde se divide el flujo y en qué caminos: lo que la miniatura no alcanza a contar */
+function Divisiones({ template }: { template: Template }) {
+  const byId = new Map(template.diagrama.nodos.map((n) => [n.id, n]))
+  const divisiones = flowSteps(template.diagrama)
+    .map((step, i) => ({ step, i }))
+    .filter(({ step }) => step.nodes.length > 1)
+  if (divisiones.length === 0) return null
+  return (
+    <ul className="mt-4 space-y-2 text-sm text-ink-soft">
+      {divisiones.map(({ step, i }) => (
+        <li key={i} className="flex gap-2">
+          <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md bg-surface-2 font-mono text-[11px] text-ink">{i + 1}</span>
+          <span>
+            {step.divididoPor
+              ? `«${step.divididoPor}» se divide en ${step.nodes.length} caminos: `
+              : `${step.nodes.length} caminos en paralelo: `}
+            <span className="text-ink">{step.nodes.map((n) => byId.get(n.id)!.etiqueta).join(' · ')}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
   )
 }
 
@@ -103,9 +127,15 @@ export function Anatomy() {
           text="De dónde llega la información, por qué pasos pasa y a dónde termina. En la plantilla lo ves completo, con cada conexión."
         >
           <MiniFlow template={t} />
-          <p className="mt-3 font-mono text-[11px] text-faint">
-            {t.diagrama.nodos.length} nodos · {t.diagrama.conexiones.length} conexiones
-          </p>
+          <Divisiones template={t} />
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+            <p className="font-mono text-[11px] text-faint">
+              {t.diagrama.nodos.length} nodos · {t.diagrama.conexiones.length} conexiones
+            </p>
+            <Link to={`/plantillas/${t.slug}`} className="inline-flex items-center gap-1 text-sm font-medium text-nexus underline-offset-2 hover:underline">
+              Ver el mapa completo <ArrowRight size={14} aria-hidden />
+            </Link>
+          </div>
         </Tile>
 
         <Tile
