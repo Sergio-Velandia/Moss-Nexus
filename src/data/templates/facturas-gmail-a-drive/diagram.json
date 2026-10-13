@@ -1,0 +1,42 @@
+{
+  "nodos": [
+    {
+      "id": "correo",
+      "etiqueta": "Correo con factura",
+      "herramienta": "gmail",
+      "tipo": "disparador"
+    },
+    {
+      "id": "separar",
+      "etiqueta": "Separar adjuntos",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "subir",
+      "etiqueta": "Subir a Drive",
+      "herramienta": "google-drive",
+      "tipo": "accion"
+    },
+    {
+      "id": "registrar",
+      "etiqueta": "Registrar factura",
+      "herramienta": "google-sheets",
+      "tipo": "accion"
+    }
+  ],
+  "conexiones": [
+    {
+      "origen": "correo",
+      "destino": "separar"
+    },
+    {
+      "origen": "separar",
+      "destino": "subir"
+    },
+    {
+      "origen": "subir",
+      "destino": "registrar"
+    }
+  ]
+}

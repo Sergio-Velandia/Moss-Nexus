@@ -1,0 +1,213 @@
+{
+  "name": "Facturas de proveedores de Gmail a Google Drive con registro",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Facturas de Gmail → Google Drive\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. En Gmail, crea la etiqueta **facturas** y un filtro que la aplique a los correos de tus proveedores.\n2. Cuenta de Gmail en «Correo con factura».\n3. Cuenta de Google y URL de la carpeta en «Subir a Drive».\n4. URL de tu hoja en «Registrar factura» (pestaña **Registro**: Fecha, Remitente, Asunto, Archivo, Enlace).",
+        "height": 320,
+        "width": 400
+      },
+      "id": "be4085df-db1e-492a-861d-c28fe08f2889",
+      "name": "Nota de configuración",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 5,
+              "unit": "minutes"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "q": "has:attachment label:facturas"
+        },
+        "options": {
+          "downloadAttachments": true,
+          "dataPropertyAttachmentsPrefixName": "attachment_"
+        }
+      },
+      "id": "f3175291-e57f-4983-8a76-e6c7ffef77d7",
+      "name": "Correo con factura",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Un elemento por adjunto útil (PDF, XML o imagen), con un nombre de archivo ordenable\nconst TIPOS = ['application/pdf', 'application/xml', 'text/xml', 'image/jpeg', 'image/png'];\nconst salida = [];\n\nfor (const item of $input.all()) {\n  const correo = item.json;\n  const remitente = correo.from?.value?.[0]?.address || correo.from?.text || 'desconocido';\n  const fecha = DateTime.fromISO(new Date(correo.date || Date.now()).toISOString()).toFormat('yyyy-MM-dd');\n  const dominio = remitente.split('@')[1]?.split('.')[0] || 'proveedor';\n\n  for (const archivo of Object.values(item.binary || {})) {\n    if (!TIPOS.includes(archivo.mimeType)) continue;\n    salida.push({\n      json: {\n        fecha,\n        remitente,\n        asunto: correo.subject || '',\n        original: archivo.fileName,\n        nombreArchivo: fecha + '_' + dominio + '_' + archivo.fileName,\n      },\n      binary: { archivo },\n    });\n  }\n}\nreturn salida;"
+      },
+      "id": "f09756ec-1dbd-4510-8b8e-6dad7446fe74",
+      "name": "Separar adjuntos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "notes": "Ignora logos y firmas: solo pasan PDF, XML e imágenes JPG o PNG.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.nombreArchivo }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        },
+        "inputDataFieldName": "archivo",
+        "options": {}
+      },
+      "id": "593dd34b-3fd8-4454-85b0-c992035fa926",
+      "name": "Subir a Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Registro",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha": "={{ $('Separar adjuntos').item.json.fecha }}",
+            "Remitente": "={{ $('Separar adjuntos').item.json.remitente }}",
+            "Asunto": "={{ $('Separar adjuntos').item.json.asunto }}",
+            "Archivo": "={{ $('Separar adjuntos').item.json.nombreArchivo }}",
+            "Enlace": "=https://drive.google.com/file/d/{{ $json.id }}/view"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Remitente",
+              "displayName": "Remitente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Asunto",
+              "displayName": "Asunto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Archivo",
+              "displayName": "Archivo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Enlace",
+              "displayName": "Enlace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "id": "5753231c-3be7-4365-8754-c48adc12d6b0",
+      "name": "Registrar factura",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        660,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Correo con factura": {
+      "main": [
+        [
+          {
+            "node": "Separar adjuntos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separar adjuntos": {
+      "main": [
+        [
+          {
+            "node": "Subir a Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir a Drive": {
+      "main": [
+        [
+          {
+            "node": "Registrar factura",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}
