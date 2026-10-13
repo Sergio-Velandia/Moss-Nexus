@@ -1,0 +1,52 @@
+{
+  "nodos": [
+    {
+      "id": "cada",
+      "etiqueta": "Cada 5 minutos",
+      "herramienta": "schedule",
+      "tipo": "disparador"
+    },
+    {
+      "id": "config",
+      "etiqueta": "Configuración",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "revisar",
+      "etiqueta": "Revisar sitio",
+      "herramienta": "http",
+      "tipo": "accion"
+    },
+    {
+      "id": "cambio",
+      "etiqueta": "¿Cambió el estado?",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "alertar",
+      "etiqueta": "Alertar por Telegram",
+      "herramienta": "telegram",
+      "tipo": "accion"
+    }
+  ],
+  "conexiones": [
+    {
+      "origen": "cada",
+      "destino": "config"
+    },
+    {
+      "origen": "config",
+      "destino": "revisar"
+    },
+    {
+      "origen": "revisar",
+      "destino": "cambio"
+    },
+    {
+      "origen": "cambio",
+      "destino": "alertar"
+    }
+  ]
+}
