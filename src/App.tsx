@@ -28,37 +28,44 @@ function PageSkeleton() {
   )
 }
 
+/** Todas las rutas del sitio. Separadas de App para poder probarlas con un router en memoria. */
+export function AppRoutes() {
+  return (
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route
+          path="plantillas"
+          element={
+            <Suspense fallback={<PageSkeleton />}>
+              <Templates />
+            </Suspense>
+          }
+        />
+        <Route
+          path="plantillas/:slug"
+          element={
+            <Suspense fallback={<PageSkeleton />}>
+              <TemplateDetail />
+            </Suspense>
+          }
+        />
+        <Route path="acerca" element={<About />} />
+        <Route path="terminos" element={<Terms />} />
+        <Route path="privacidad" element={<Privacy />} />
+        <Route path="contacto" element={<Contact />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
+  )
+}
+
 export default function App() {
   return (
     // reducedMotion="user": si el sistema pide menos movimiento, se omiten los desplazamientos
     <MotionConfig reducedMotion="user">
       <BrowserRouter basename={import.meta.env.BASE_URL}>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route
-              path="plantillas"
-              element={
-                <Suspense fallback={<PageSkeleton />}>
-                  <Templates />
-                </Suspense>
-              }
-            />
-            <Route
-              path="plantillas/:slug"
-              element={
-                <Suspense fallback={<PageSkeleton />}>
-                  <TemplateDetail />
-                </Suspense>
-              }
-            />
-            <Route path="acerca" element={<About />} />
-            <Route path="terminos" element={<Terms />} />
-            <Route path="privacidad" element={<Privacy />} />
-            <Route path="contacto" element={<Contact />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
+        <AppRoutes />
       </BrowserRouter>
     </MotionConfig>
   )
