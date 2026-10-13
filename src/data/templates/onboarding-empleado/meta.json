@@ -1,0 +1,36 @@
+{
+  "slug": "onboarding-empleado",
+  "titulo": "Onboarding de empleados: calendario, correos, Slack y registro",
+  "resumen": "Un formulario dispara todo el ingreso: reunión de bienvenida, correo al nuevo, checklist al responsable, anuncio y registro.",
+  "problema": "El primer día de alguien nuevo depende de la memoria del equipo: nadie agendó la bienvenida, el computador no está listo y el resto se entera por pasillo. Esa primera impresión cuesta. Con este flujo, RR. HH. llena un formulario y n8n se encarga del resto en paralelo: agenda la reunión de bienvenida, escribe a la persona, envía al responsable una lista de verificación, lo anuncia en Slack y deja el ingreso registrado.",
+  "categoria": "rrhh",
+  "herramientas": [
+    "form",
+    "google-calendar",
+    "gmail",
+    "slack",
+    "google-sheets"
+  ],
+  "dificultad": "media",
+  "tiempoEstimado": 25,
+  "requisitos": [
+    "Una instancia de n8n accesible desde internet, para que el formulario tenga una URL",
+    "Una cuenta de Google con acceso a Google Calendar, Gmail y Google Sheets",
+    "Un espacio de Slack donde puedas conectar n8n",
+    "Una hoja con una pestaña «Ingresos» y las columnas Fecha de registro, Nombre, Cargo, Área, Fecha de ingreso, Correo y Responsable"
+  ],
+  "escenarios": [
+    "Empresa en crecimiento que contrata cada mes y quiere un ingreso consistente",
+    "Área de RR. HH. pequeña que no tiene una plataforma de onboarding",
+    "Equipos remotos donde el primer día ocurre por videollamada"
+  ],
+  "pasos": [
+    "Crea la hoja con la pestaña «Ingresos» y las columnas Fecha de registro, Nombre, Cargo, Área, Fecha de ingreso, Correo y Responsable.",
+    "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
+    "Conecta tu cuenta de Google en «Agendar bienvenida», en los dos nodos de Gmail y en «Registrar ingreso» (con la URL de la hoja).",
+    "Conecta Slack en «Anunciar al equipo» y elige el canal.",
+    "Ajusta las áreas del formulario, el texto de bienvenida y la lista de verificación a tu empresa.",
+    "Activa el flujo y prueba el formulario con tus propios correos antes de compartir la URL con RR. HH."
+  ],
+  "destacado": true
+}

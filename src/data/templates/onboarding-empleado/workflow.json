@@ -1,0 +1,412 @@
+{
+  "name": "Onboarding de empleados: calendario, correos, Slack y registro",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Onboarding de un empleado nuevo\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. Cuenta de Google en «Agendar bienvenida» y «Registrar ingreso» (URL de la hoja, pestaña **Ingresos**).\n2. Cuenta de Gmail en los dos nodos de correo.\n3. Slack y canal en «Anunciar al equipo».\n4. Ajusta las áreas del formulario y el texto de bienvenida a tu empresa.",
+        "height": 320,
+        "width": 400
+      },
+      "id": "a1efea63-c174-4dbd-806f-ba49e3588b77",
+      "name": "Nota de configuración",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -260
+      ]
+    },
+    {
+      "parameters": {
+        "formTitle": "Nuevo ingreso",
+        "formDescription": "Lo completa RR. HH. o el responsable cuando se confirma una contratación.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nombre completo",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Correo personal",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Cargo",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Área",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Comercial"
+                  },
+                  {
+                    "option": "Operaciones"
+                  },
+                  {
+                    "option": "Tecnología"
+                  },
+                  {
+                    "option": "Administración"
+                  },
+                  {
+                    "option": "Otra"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Fecha de ingreso",
+              "fieldType": "date",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Correo del responsable",
+              "fieldType": "email",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "respondWithOptions": {
+            "values": {
+              "respondWith": "text",
+              "formSubmittedText": "Listo. El ingreso quedó registrado y se enviaron las invitaciones."
+            }
+          }
+        }
+      },
+      "id": "edc6dd14-a73f-4b53-855f-2b4c52fbd60d",
+      "name": "Formulario de ingreso",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "10219278-008a-46ea-83f1-1ecb247ecbfd"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "eb1f31d7-e06b-4803-822c-f83cd012ccff",
+              "name": "nombre",
+              "value": "={{ $json['Nombre completo'].trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "fa9d9f47-b6b3-4aa6-8374-638f61dbc129",
+              "name": "primerNombre",
+              "value": "={{ $json['Nombre completo'].trim().split(' ')[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "3c016a11-6ffe-4dd6-80e5-4a6f931d7400",
+              "name": "correo",
+              "value": "={{ $json['Correo personal'].trim().toLowerCase() }}",
+              "type": "string"
+            },
+            {
+              "id": "fe7fb135-88c3-45ff-8785-77b0980438f2",
+              "name": "cargo",
+              "value": "={{ $json.Cargo }}",
+              "type": "string"
+            },
+            {
+              "id": "37744f20-fa64-4183-8656-f9fce056f5f3",
+              "name": "area",
+              "value": "={{ $json['Área'] }}",
+              "type": "string"
+            },
+            {
+              "id": "75cb3b35-217a-42fb-865b-117ff22b5512",
+              "name": "responsable",
+              "value": "={{ $json['Correo del responsable'].trim().toLowerCase() }}",
+              "type": "string"
+            },
+            {
+              "id": "d444959d-7e6d-44bd-80d0-65e8fcd0e54a",
+              "name": "fechaIngreso",
+              "value": "={{ $json['Fecha de ingreso'] }}",
+              "type": "string"
+            },
+            {
+              "id": "4cbafe77-85f9-4c4c-87e0-b721f761cb1a",
+              "name": "fechaLegible",
+              "value": "={{ DateTime.fromISO($json['Fecha de ingreso']).setLocale('es').toFormat(\"cccc d 'de' LLLL\") }}",
+              "type": "string"
+            },
+            {
+              "id": "2d151267-501b-457b-839f-3201862da95c",
+              "name": "inicio",
+              "value": "={{ DateTime.fromISO($json['Fecha de ingreso']).set({ hour: 9 }).toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "36cb48e6-842e-4d69-889b-03b38a13fe33",
+              "name": "fin",
+              "value": "={{ DateTime.fromISO($json['Fecha de ingreso']).set({ hour: 9, minute: 30 }).toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "606d4ed1-f036-4d86-86bd-e7519e634a28",
+      "name": "Preparar datos",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "primary",
+          "mode": "id"
+        },
+        "start": "={{ $json.inicio }}",
+        "end": "={{ $json.fin }}",
+        "additionalFields": {
+          "summary": "=Bienvenida: {{ $json.nombre }}",
+          "description": "=Primer día de {{ $json.nombre }} ({{ $json.cargo }}, {{ $json.area }}). Presentación del equipo, accesos y plan de las primeras semanas.",
+          "attendees": [
+            "={{ $json.correo }}",
+            "={{ $json.responsable }}"
+          ]
+        }
+      },
+      "id": "40de285c-a616-4751-86c2-71ff1b50b331",
+      "name": "Agendar bienvenida",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        480,
+        -260
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.correo }}",
+        "subject": "=Bienvenido al equipo, {{ $json.primerNombre }}",
+        "emailType": "text",
+        "message": "=Hola, {{ $json.primerNombre }}:\n\nNos alegra que te unas como {{ $json.cargo }} en el área de {{ $json.area }}. Te esperamos el {{ $json.fechaLegible }} a las 9:00; ya tienes en tu calendario la reunión de bienvenida.\n\nSi tienes cualquier duda antes de empezar, responde a este correo.\n\nUn saludo,\nEl equipo",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "a4f90058-4df4-4d34-8c24-0dd9d562454c",
+      "name": "Correo de bienvenida",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        480,
+        -130
+      ],
+      "webhookId": "6b5800e2-1191-440e-86c4-7ccac009573e"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.responsable }}",
+        "subject": "=Prepara el ingreso de {{ $json.nombre }} ({{ $json.fechaLegible }})",
+        "emailType": "text",
+        "message": "=Hola:\n\n{{ $json.nombre }} empieza como {{ $json.cargo }} el {{ $json.fechaLegible }}. Antes de ese día, revisa:\n\n[ ] Equipo de trabajo (computador, periféricos)\n[ ] Correo corporativo y cuentas de las herramientas\n[ ] Accesos a carpetas y sistemas del área\n[ ] Compañero o compañera de acompañamiento\n[ ] Plan de las primeras dos semanas\n\nLa reunión de bienvenida ya está en tu calendario.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "50738157-6ffe-49bf-841b-a1cbc8624188",
+      "name": "Checklist al responsable",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        480,
+        0
+      ],
+      "webhookId": "e5795571-7591-496a-8541-3bded5e6a199"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#general",
+          "mode": "name"
+        },
+        "text": "=:wave: El {{ $json.fechaLegible }} se une *{{ $json.nombre }}* como {{ $json.cargo }} en {{ $json.area }}. ¡Démosle la bienvenida!",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "f3048b1d-356b-4ea7-8658-5536a2dded15",
+      "name": "Anunciar al equipo",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        130
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Ingresos",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha de registro": "={{ $now.toFormat('yyyy-MM-dd') }}",
+            "Nombre": "={{ $json.nombre }}",
+            "Cargo": "={{ $json.cargo }}",
+            "Área": "={{ $json.area }}",
+            "Fecha de ingreso": "={{ $json.fechaIngreso }}",
+            "Correo": "={{ $json.correo }}",
+            "Responsable": "={{ $json.responsable }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Fecha de registro",
+              "displayName": "Fecha de registro",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Cargo",
+              "displayName": "Cargo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Área",
+              "displayName": "Área",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha de ingreso",
+              "displayName": "Fecha de ingreso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Correo",
+              "displayName": "Correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Responsable",
+              "displayName": "Responsable",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "id": "c8e289f5-cf7a-43d4-8f8c-0f0ae4f885c2",
+      "name": "Registrar ingreso",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        480,
+        260
+      ]
+    }
+  ],
+  "connections": {
+    "Formulario de ingreso": {
+      "main": [
+        [
+          {
+            "node": "Preparar datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar datos": {
+      "main": [
+        [
+          {
+            "node": "Agendar bienvenida",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Correo de bienvenida",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Checklist al responsable",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Anunciar al equipo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Registrar ingreso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}
