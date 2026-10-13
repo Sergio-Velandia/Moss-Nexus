@@ -35,7 +35,7 @@ Orden acordado. Cada fase empieza solo cuando el usuario la pide y con un plan c
 - **Fase 3 (hecha, v0.3.0 a v0.5.0):** 12 plantillas para entornos profesionales, 4 por nivel, todas «Sin probar». Desde aquí, la librería solo se **actualiza**: plantillas sueltas cuando el usuario las pida (MINOR cada una), correcciones y sellos «Probado» (PATCH).
   - Las plantillas se generan con nodos nativos. Para IA se usa una petición HTTP a la API de OpenAI con la credencial openAiApi y el modelo en un nodo «Configuración». La lógica de cada nodo Code se prueba con casos antes de commitear.
   - El mapa: SVG desde md (vertical si hay más de 5 columnas) y lista de pasos (FlowSteps) en pantallas angostas.
-- **Fase Legal (MINOR, v0.6.0):** rama `docs/legal`.
+- **Fase Legal (hecha, v0.6.0):** `/terminos`, `/privacidad`, `/contacto` (correo armado en el cliente al pulsar un botón, nunca en el HTML), footer legal y licencias MIT / MIT-0 / CC BY 4.0. Si el sitio cambia su manejo de datos (por ejemplo, analítica), actualizar antes `/privacidad` y `site.legalUpdated`. Brief original:
   - Antes de redactar, auditar con evidencia qué hace el sitio con los datos: almacenamiento, terceros, formularios y qué se copia o descarga. La privacidad describe solo lo verificado.
   - Páginas `/terminos`, `/privacidad` y `/contacto`, con carga perezosa y el mismo diseño. Contacto sin formulario: GitHub Issues más el placeholder `CONTACTO_EMAIL`, preguntando al usuario cuál usar.
   - Footer con Términos, Privacidad, Contacto, Licencia, el aviso de n8n GmbH y el año.

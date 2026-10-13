@@ -6,6 +6,21 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.6.0] - 2026-10-12
+
+Fase Legal: términos, privacidad, contacto y licencia.
+
+### Añadido
+- Página de **términos y condiciones** (`/terminos`): plantillas «tal cual» y sin garantía, responsabilidad sobre credenciales y servicios de terceros, marcas, limitación de responsabilidad y licencia.
+- Página de **privacidad** (`/privacidad`), basada en una auditoría del código: solo se guarda la preferencia de tema en el navegador; sin cookies, cuentas, formularios, analítica ni recursos de terceros.
+- Página de **contacto** (`/contacto`): GitHub Issues y un correo que solo se muestra al pulsar un botón.
+- Footer con enlaces a Términos, Privacidad, Contacto y Licencia, el año y el aviso de independencia de n8n GmbH.
+- Licencias: MIT para el código del sitio, MIT-0 para los `workflow.json` y CC BY 4.0 para los textos de las plantillas.
+- Pruebas de renderizado de las páginas legales y de los enlaces del footer.
+
+### Cambiado
+- La Fase 3 se da por completa: desde aquí, la librería se actualiza con plantillas sueltas.
+
 ## [0.5.0] - 2026-10-12
 
 Fase 3, lote 3: plantillas de nivel avanzado.
@@ -91,7 +106,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.5.0...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.2.0...v0.3.0
