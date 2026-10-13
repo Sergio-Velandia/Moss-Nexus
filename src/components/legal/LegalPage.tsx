@@ -79,8 +79,8 @@ export function LegalPage({
 
       <div className="mt-10 space-y-10">
         {sections.map((s) => (
-          <section key={s.id} aria-labelledby={s.id} className="scroll-mt-24">
-            <h2 id={s.id} className="text-xl font-semibold tracking-tight">
+          <section key={s.id} aria-labelledby={s.id}>
+            <h2 id={s.id} className="scroll-mt-28 text-xl font-semibold tracking-tight">
               {s.title}
             </h2>
             <div className="mt-3 space-y-3 text-pretty leading-relaxed text-ink-soft [&_a]:text-nexus [&_a]:underline [&_a]:underline-offset-2 [&_strong]:text-ink [&_ul]:list-disc [&_ul]:space-y-1.5 [&_ul]:pl-5">
