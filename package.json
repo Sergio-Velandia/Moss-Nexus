@@ -31,5 +31,6 @@
     "typescript": "~6.0.2",
     "vite": "^8.3.0",
     "vitest": "^5.0.3"
-  }
+  },
+  "license": "MIT AND MIT-0 AND CC-BY-4.0"
 }
