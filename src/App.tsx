@@ -12,6 +12,7 @@ const TemplateDetail = lazy(() => import('./pages/TemplateDetail'))
 const About = lazy(() => import('./pages/About'))
 const Terms = lazy(() => import('./pages/Terms'))
 const Privacy = lazy(() => import('./pages/Privacy'))
+const Contact = lazy(() => import('./pages/Contact'))
 
 function PageSkeleton() {
   return (
@@ -54,6 +55,7 @@ export default function App() {
             <Route path="acerca" element={<About />} />
             <Route path="terminos" element={<Terms />} />
             <Route path="privacidad" element={<Privacy />} />
+            <Route path="contacto" element={<Contact />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
