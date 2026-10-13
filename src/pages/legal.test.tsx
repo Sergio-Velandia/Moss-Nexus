@@ -26,8 +26,11 @@ describe('páginas legales', () => {
     expect(html).toMatch(/Última actualización: <time dateTime="\d{4}-\d{2}-\d{2}"/)
   })
 
-  it('términos incluye la sección de licencia a la que apunta el footer', async () => {
-    expect(await renderRoute('/terminos')).toContain('id="licencia"')
+  it('términos incluye la licencia (destino del footer) y la ley aplicable', async () => {
+    const html = await renderRoute('/terminos')
+    expect(html).toContain('id="licencia"')
+    expect(html).toContain('id="ley-aplicable"')
+    expect(html).toContain('República de Colombia')
   })
 
   it('contacto enlaza a GitHub Issues y no expone el correo en el HTML', async () => {
