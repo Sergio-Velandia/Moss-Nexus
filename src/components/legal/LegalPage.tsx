@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, type ReactNode } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { formatDate } from '../../lib/format'
 import { useDocumentTitle } from '../../lib/useDocumentTitle'
@@ -28,6 +28,12 @@ export function LegalPage({
 }) {
   useDocumentTitle(title)
   const navigate = useNavigate()
+  const { hash } = useLocation()
+
+  // La página carga de forma diferida: al llegar con un ancla (p. ej. /terminos#licencia), bajamos a ella al montar
+  useEffect(() => {
+    if (hash) document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView()
+  }, [hash])
   // React Router guarda la posición en el historial: si se llegó desde otra página del sitio, volvemos a ella
   const back = () => {
     const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0

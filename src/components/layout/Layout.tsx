@@ -1,9 +1,10 @@
 import { Suspense, useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
-import { ArrowUpRight, Menu, Sprout, X } from 'lucide-react'
+import { Menu, Sprout, X } from 'lucide-react'
 import { site } from '../../data/site'
-import { Logo, LogoMark } from './Logo'
+import { Footer } from './Footer'
+import { Logo } from './Logo'
 import { ThemeToggle } from './ThemeToggle'
 
 const links = [
@@ -157,58 +158,3 @@ export default function Layout() {
   )
 }
 
-function Footer() {
-  return (
-    <footer className="mt-24 border-t border-line">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-[1.4fr_1fr_1fr]">
-        <div>
-          <Link to="/" className="inline-flex rounded-xl" aria-label="Moss Nexus, inicio">
-            <Logo />
-          </Link>
-          <p className="mt-3 max-w-xs text-sm text-ink-soft">
-            Flujos de n8n ya armados, explicados y listos para copiar. Parte del ecosistema Moss.
-          </p>
-        </div>
-        <div>
-          <h2 className="font-mono text-xs uppercase tracking-[0.16em] text-faint">Explorar</h2>
-          <ul className="mt-3 space-y-2 text-sm">
-            <li>
-              <Link to="/plantillas" className="text-ink-soft transition hover:text-ink">Todas las plantillas</Link>
-            </li>
-            <li>
-              <Link to="/acerca" className="text-ink-soft transition hover:text-ink">Qué es Nexus</Link>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h2 className="font-mono text-xs uppercase tracking-[0.16em] text-faint">Ecosistema</h2>
-          <ul className="mt-3 space-y-2 text-sm">
-            <li>
-              <a href={site.mossUrl} className="inline-flex items-center gap-1.5 text-moss transition hover:underline">
-                <Sprout size={14} aria-hidden /> Moss, el jardín digital
-              </a>
-            </li>
-            <li>
-              <a href={site.repoUrl} className="inline-flex items-center gap-1 text-ink-soft transition hover:text-ink" target="_blank" rel="noreferrer">
-                Código en GitHub <ArrowUpRight size={14} aria-hidden />
-                <span className="sr-only"> (se abre en una pestaña nueva)</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div className="border-t border-line">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-xs text-faint sm:flex-row sm:items-center sm:justify-between">
-          <p className="flex items-center gap-2">
-            <LogoMark size={16} />
-            Hecho por{' '}
-            <a href={site.portfolioUrl} className="text-ink-soft underline-offset-2 hover:underline" target="_blank" rel="noreferrer">
-              {site.author}
-            </a>
-          </p>
-          <p>Proyecto independiente, sin relación oficial con n8n GmbH.</p>
-        </div>
-      </div>
-    </footer>
-  )
-}
