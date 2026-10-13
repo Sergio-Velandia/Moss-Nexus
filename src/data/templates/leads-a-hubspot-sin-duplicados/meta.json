@@ -1,0 +1,36 @@
+{
+  "slug": "leads-a-hubspot-sin-duplicados",
+  "titulo": "Leads del sitio web a HubSpot sin duplicados",
+  "resumen": "Recibe leads por webhook, limpia sus datos, los crea o actualiza en HubSpot por correo y avisa a ventas.",
+  "problema": "El mismo cliente aparece tres veces en el CRM porque escribió su correo con mayúsculas, con un espacio al final o desde otro formulario. Ventas pierde el historial, se pisan entre vendedores y los reportes inflan los leads. Este flujo normaliza cada lead antes de tocar el CRM, usa el correo como llave para crear o actualizar en HubSpot y aparta en una hoja los que llegan con datos inválidos para revisarlos.",
+  "categoria": "ventas",
+  "herramientas": [
+    "webhook",
+    "n8n",
+    "hubspot",
+    "slack",
+    "google-sheets"
+  ],
+  "dificultad": "media",
+  "tiempoEstimado": 25,
+  "requisitos": [
+    "Una instancia de n8n accesible desde internet con HTTPS, para recibir el webhook",
+    "Una cuenta de HubSpot con una app privada y su token de acceso (permisos de contactos)",
+    "Un formulario o sitio web capaz de enviar un POST con JSON (campos email, nombre, apellido, telefono, empresa, origen)",
+    "Un espacio de Slack y una cuenta de Google con una hoja que tenga la pestaña «Revisar» (Fecha, Correo, Datos recibidos)"
+  ],
+  "escenarios": [
+    "Empresa B2B con varios formularios (contacto, demo, descarga) que alimentan el mismo CRM",
+    "Equipo comercial que sufre contactos duplicados y reportes inflados",
+    "Agencia que integra los formularios de un cliente con su HubSpot"
+  ],
+  "pasos": [
+    "En HubSpot, crea una app privada con permisos de lectura y escritura de contactos y copia su token.",
+    "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
+    "En «Crear o actualizar», crea la credencial de HubSpot con el token.",
+    "Conecta Slack en «Avisar a ventas» y Google en «Leads para revisar» (con la URL de la hoja).",
+    "Activa el flujo y configura tu formulario para enviar un POST con JSON a la URL de producción de «Lead recibido».",
+    "Envía un lead de prueba, y luego el mismo con el correo en mayúsculas: en HubSpot debe quedar un solo contacto actualizado."
+  ],
+  "destacado": false
+}

@@ -1,0 +1,294 @@
+{
+  "name": "Leads del sitio web a HubSpot sin duplicados",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Leads a HubSpot sin duplicados\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. Credencial de HubSpot (token de app privada) en «Crear o actualizar».\n2. Slack y canal en «Avisar a ventas».\n3. Cuenta de Google y URL de la hoja en «Leads para revisar» (pestaña **Revisar**: Fecha, Correo, Datos recibidos).\n4. Apunta tu formulario web a la URL de producción de «Lead recibido» (POST con JSON).",
+        "height": 320,
+        "width": 400
+      },
+      "id": "6dfa19b5-5d08-4c5b-8de9-88c575ab06bc",
+      "name": "Nota de configuración",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -260
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nuevo-lead",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "18222ea0-b6b4-4165-8fa4-1deefc437ac6",
+      "name": "Lead recibido",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "635fc1ab-e627-46c2-8442-b5d0c5a18585"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0849fb7c-e501-4318-855f-f831bf73154f",
+              "name": "email",
+              "value": "={{ String($json.body.email ?? '').trim().toLowerCase() }}",
+              "type": "string"
+            },
+            {
+              "id": "23352474-b407-48a9-8193-f83ce5db33a5",
+              "name": "nombre",
+              "value": "={{ String($json.body.nombre ?? '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "1fe01ee0-8c73-4bc9-8ca4-7b0d74c568bb",
+              "name": "apellido",
+              "value": "={{ String($json.body.apellido ?? '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "3e12147c-c32f-4cdb-8c25-8a33aac88782",
+              "name": "telefono",
+              "value": "={{ String($json.body.telefono ?? '').replace(/[^\\d+]/g, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "4acbd524-3c44-4534-8e21-2185f03adddb",
+              "name": "empresa",
+              "value": "={{ String($json.body.empresa ?? '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "60399c5a-30ca-45ff-8a63-9feffaad72ff",
+              "name": "origen",
+              "value": "={{ $json.body.origen || 'Sitio web' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9cfc5200-5728-4ab3-86e6-1bcc62fa1b91",
+      "name": "Normalizar datos",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "notes": "Correo en minúsculas y sin espacios: así «Ana@Empresa.com » y «ana@empresa.com» son el mismo contacto.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "fa4c0ac1-1f58-4e06-818e-a11f2be72174",
+              "leftValue": "={{ /^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test($json.email) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "9e857a3c-0143-4956-8be8-e46db0ae0eca",
+      "name": "¿Correo válido?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "appToken",
+        "resource": "contact",
+        "operation": "upsert",
+        "email": "={{ $json.email }}",
+        "additionalFields": {
+          "firstName": "={{ $json.nombre }}",
+          "lastName": "={{ $json.apellido }}",
+          "phoneNumber": "={{ $json.telefono }}",
+          "companyName": "={{ $json.empresa }}"
+        }
+      },
+      "id": "421b9c75-f476-40f5-81c6-784ae5904d37",
+      "name": "Crear o actualizar",
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.1,
+      "position": [
+        680,
+        -100
+      ],
+      "notes": "HubSpot busca el contacto por correo: si existe lo actualiza, si no lo crea. Nunca duplica.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#ventas",
+          "mode": "name"
+        },
+        "text": "=:handshake: Lead sincronizado en HubSpot: *{{ $('Normalizar datos').item.json.nombre }} {{ $('Normalizar datos').item.json.apellido }}*{{ $('Normalizar datos').item.json.empresa ? ' · ' + $('Normalizar datos').item.json.empresa : '' }} ({{ $('Normalizar datos').item.json.email }}). Origen: {{ $('Normalizar datos').item.json.origen }}.",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "2454e4bb-5665-42a1-8a98-9802b396a2ac",
+      "name": "Avisar a ventas",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        900,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Revisar",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha": "={{ $now.toFormat('yyyy-MM-dd HH:mm') }}",
+            "Correo": "={{ $json.email }}",
+            "Datos recibidos": "={{ JSON.stringify($('Lead recibido').item.json.body) }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Correo",
+              "displayName": "Correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Datos recibidos",
+              "displayName": "Datos recibidos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "id": "17010ba0-1f78-4df5-8c49-862131647e05",
+      "name": "Leads para revisar",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        680,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Lead recibido": {
+      "main": [
+        [
+          {
+            "node": "Normalizar datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar datos": {
+      "main": [
+        [
+          {
+            "node": "¿Correo válido?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Correo válido?": {
+      "main": [
+        [
+          {
+            "node": "Crear o actualizar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Leads para revisar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear o actualizar": {
+      "main": [
+        [
+          {
+            "node": "Avisar a ventas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

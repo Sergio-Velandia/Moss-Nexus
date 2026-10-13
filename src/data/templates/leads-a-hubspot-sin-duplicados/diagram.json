@@ -1,0 +1,64 @@
+{
+  "nodos": [
+    {
+      "id": "webhook",
+      "etiqueta": "Lead recibido",
+      "herramienta": "webhook",
+      "tipo": "disparador"
+    },
+    {
+      "id": "normalizar",
+      "etiqueta": "Normalizar datos",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "valido",
+      "etiqueta": "¿Correo válido?",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "hubspot",
+      "etiqueta": "Crear o actualizar",
+      "herramienta": "hubspot",
+      "tipo": "accion"
+    },
+    {
+      "id": "revisar",
+      "etiqueta": "Leads para revisar",
+      "herramienta": "google-sheets",
+      "tipo": "accion"
+    },
+    {
+      "id": "avisar",
+      "etiqueta": "Avisar a ventas",
+      "herramienta": "slack",
+      "tipo": "accion"
+    }
+  ],
+  "conexiones": [
+    {
+      "origen": "webhook",
+      "destino": "normalizar"
+    },
+    {
+      "origen": "normalizar",
+      "destino": "valido"
+    },
+    {
+      "origen": "valido",
+      "destino": "hubspot",
+      "etiqueta": "sí"
+    },
+    {
+      "origen": "valido",
+      "destino": "revisar",
+      "etiqueta": "no"
+    },
+    {
+      "origen": "hubspot",
+      "destino": "avisar"
+    }
+  ]
+}
