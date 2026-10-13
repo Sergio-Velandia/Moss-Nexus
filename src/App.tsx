@@ -10,6 +10,7 @@ import NotFound from './pages/NotFound'
 const Templates = lazy(() => import('./pages/Templates'))
 const TemplateDetail = lazy(() => import('./pages/TemplateDetail'))
 const About = lazy(() => import('./pages/About'))
+const Terms = lazy(() => import('./pages/Terms'))
 
 function PageSkeleton() {
   return (
@@ -50,6 +51,7 @@ export default function App() {
               }
             />
             <Route path="acerca" element={<About />} />
+            <Route path="terminos" element={<Terms />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
