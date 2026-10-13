@@ -100,7 +100,7 @@ export default function TemplateDetail() {
               {t.diagrama.nodos.length} nodos · {t.diagrama.conexiones.length} conexiones
             </span>
           </div>
-          <div className="dot-grid overflow-x-auto px-3 py-8 sm:px-8 sm:py-12" tabIndex={0} role="region" aria-label="Mapa del flujo, desplazable en horizontal">
+          <div className="dot-grid overflow-x-auto px-3 py-8 sm:px-8 sm:py-12" tabIndex={0} role="region" aria-label="Mapa del flujo">
             <FlowMap diagram={t.diagrama} title={`Mapa del flujo: ${t.titulo}`} />
           </div>
         </div>

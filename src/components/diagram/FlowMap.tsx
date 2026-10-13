@@ -5,6 +5,7 @@ import { getTool } from '../../data/tools'
 import { layoutDiagram, preferredOrientation, readingOrder, type Orientation } from '../../lib/diagram'
 import type { TemplateDiagram } from '../../lib/types'
 import { useMediaQuery } from '../../lib/useMediaQuery'
+import { FlowSteps } from './FlowSteps'
 
 const NODE_W = 232
 const NODE_H = 68
@@ -14,7 +15,8 @@ const truncate = (s: string) => (s.length > MAX_LABEL ? `${s.slice(0, MAX_LABEL 
 
 /**
  * Mapa del flujo dibujado en SVG a partir de diagram.json.
- * Horizontal desde md, vertical en móvil. `pulses` hace viajar un punto de datos por cada conexión (hero).
+ * Desde md: horizontal (o vertical si el flujo es largo). En pantallas angostas, lista de pasos (FlowSteps).
+ * `pulses` hace viajar un punto de datos por cada conexión (hero).
  * El SVG es decorativo para lectores de pantalla: debajo va una lista ordenada con el mismo contenido.
  */
 export function FlowMap({
@@ -43,6 +45,16 @@ export function FlowMap({
   const rankOf = useMemo(() => new Map(layout.nodes.map((n) => [n.id, n.rank])), [layout])
   const horizontal = dir === 'horizontal'
   const step = 0.18 // segundos entre columnas al revelar
+
+  // Con caminos en paralelo, un SVG angosto se encogería hasta ser ilegible: en móvil, lista de pasos
+  if (!wide && !orientation) {
+    return (
+      <figure className={className}>
+        <figcaption className="sr-only">{title}</figcaption>
+        <FlowSteps diagram={diagram} />
+      </figure>
+    )
+  }
 
   return (
     <figure className={className}>

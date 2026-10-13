@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { layoutDiagram, MAX_HORIZONTAL_RANKS, preferredOrientation, rankNodes, readingOrder } from './diagram'
+import { flowSteps, layoutDiagram, MAX_HORIZONTAL_RANKS, preferredOrientation, rankNodes, readingOrder } from './diagram'
 import type { TemplateDiagram } from './types'
 
 const node = (id: string) => ({ id, etiqueta: id, herramienta: 'n8n', tipo: 'accion' as const })
@@ -84,5 +84,32 @@ describe('preferredOrientation', () => {
   })
   it('los flujos más largos pasan a vertical también en escritorio', () => {
     expect(preferredOrientation(chain(MAX_HORIZONTAL_RANKS + 1), true)).toBe('vertical')
+  })
+})
+
+describe('flowSteps', () => {
+  // a → (sí) b, a → (no) c, b → d
+  const branch: TemplateDiagram = {
+    nodos: ['a', 'b', 'c', 'd'].map(node),
+    conexiones: [
+      { origen: 'a', destino: 'b', etiqueta: 'sí' },
+      { origen: 'a', destino: 'c', etiqueta: 'no' },
+      { origen: 'b', destino: 'd' },
+    ],
+  }
+  it('agrupa por pasos y marca el nodo que divide el flujo', () => {
+    const steps = flowSteps(branch)
+    expect(steps.map((s) => s.nodes.map((n) => n.id))).toEqual([['a'], ['b', 'c'], ['d']])
+    expect(steps[1].divididoPor).toBe('a')
+  })
+  it('lleva la etiqueta de cada rama', () => {
+    expect(flowSteps(branch)[1].nodes.map((n) => n.rama)).toEqual(['sí', 'no'])
+  })
+  it('después de varios caminos, dice de cuál viene cada nodo', () => {
+    expect(flowSteps(branch)[2].nodes[0].despuesDe).toEqual(['b'])
+  })
+  it('en un flujo lineal no agrega anotaciones', () => {
+    const steps = flowSteps({ nodos: ['x', 'y'].map(node), conexiones: [{ origen: 'x', destino: 'y' }] })
+    expect(steps.flatMap((s) => s.nodes).every((n) => !n.rama && !n.despuesDe)).toBe(true)
   })
 })

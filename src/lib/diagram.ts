@@ -139,6 +139,45 @@ export function preferredOrientation(diagram: TemplateDiagram, wideScreen: boole
   return columns > MAX_HORIZONTAL_RANKS ? 'vertical' : 'horizontal'
 }
 
+export interface FlowStep {
+  /** Nodos que ocurren en este paso; más de uno = el flujo se divide en caminos */
+  nodes: {
+    id: string
+    /** Etiqueta de la conexión que llega al nodo («sí», «no», «alta»…) */
+    rama?: string
+    /** Etiquetas de los nodos previos, cuando el paso anterior tenía varios caminos */
+    despuesDe?: string[]
+  }[]
+  /** Nodo que divide el flujo en este paso (si todos los caminos salen del mismo) */
+  divididoPor?: string
+}
+
+/** Pasos del flujo para la vista de lista en pantallas angostas: un paso por columna del mapa */
+export function flowSteps(diagram: TemplateDiagram): FlowStep[] {
+  const rank = rankNodes(diagram)
+  const label = new Map(diagram.nodos.map((n) => [n.id, n.etiqueta]))
+  const incoming = (id: string) => diagram.conexiones.filter((c) => c.destino === id)
+  const steps: string[][] = []
+  for (const id of readingOrder(diagram)) (steps[rank.get(id)!] ??= []).push(id)
+
+  return steps.map((ids, i) => {
+    const prev = steps[i - 1] ?? []
+    const parentsOf = (id: string) => incoming(id).map((c) => c.origen)
+    const allParents = new Set(ids.flatMap(parentsOf))
+    return {
+      divididoPor: ids.length > 1 && allParents.size === 1 ? label.get([...allParents][0]) : undefined,
+      nodes: ids.map((id) => {
+        const parents = parentsOf(id)
+        return {
+          id,
+          rama: incoming(id).find((c) => c.etiqueta)?.etiqueta,
+          despuesDe: prev.length > 1 && parents.length > 0 ? parents.map((p) => label.get(p)!) : undefined,
+        }
+      }),
+    }
+  })
+}
+
 /** Orden de lectura para lectores de pantalla: por columnas, de arriba abajo */
 export function readingOrder(diagram: TemplateDiagram): string[] {
   const rank = rankNodes(diagram)
