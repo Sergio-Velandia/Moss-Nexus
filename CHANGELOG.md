@@ -6,6 +6,18 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.3.0] - 2026-10-12
+
+Fase 3, lote 1: plantillas de nivel fácil.
+
+### Añadido
+- Plantilla **leads-formulario-a-sheets**: formulario propio de n8n que guarda cada lead en Google Sheets y avisa a ventas en Slack.
+- Plantilla **agenda-diaria-calendar**: agenda del día por correo desde Google Calendar, con el tiempo total en reuniones.
+- Plantilla **monitor-sitio-caido**: revisa un sitio cada 5 minutos y avisa por Telegram solo cuando cae y cuando se recupera.
+- Plantilla **facturas-gmail-a-drive**: sube a Drive las facturas que llegan por Gmail, con nombre ordenado, y las registra en una hoja.
+- Herramientas Formulario de n8n, Google Drive, HubSpot y Stripe, y categorías Finanzas, Operaciones y TI, y Recursos humanos.
+- Prueba que verifica que las conexiones de cada workflow apunten a nodos existentes.
+
 ## [0.2.0] - 2026-10-12
 
 Fase 2: primeros flujos reales.
@@ -56,7 +68,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.2.0...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Sergio-Velandia/Moss-Nexus/releases/tag/v0.1.0
