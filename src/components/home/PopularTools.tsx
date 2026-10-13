@@ -6,7 +6,8 @@ import { Reveal, SectionHeading } from '../ui/Reveal'
 
 export function PopularTools() {
   const usage = toolUsage()
-  const popular = tools.filter((t) => t.popular)
+  // Solo herramientas con plantillas, de la más usada a la menos usada: ningún chip lleva a una galería vacía
+  const popular = tools.filter((t) => t.popular && (usage.get(t.id) ?? 0) > 0).sort((a, b) => usage.get(b.id)! - usage.get(a.id)!)
   return (
     <section aria-labelledby="herramientas-title" className="mx-auto max-w-6xl px-4 py-20">
       <SectionHeading
@@ -30,8 +31,8 @@ export function PopularTools() {
                 </span>
                 <span className="text-sm font-medium">{t.nombre}</span>
                 <span className="rounded-full bg-surface-2 px-2 py-0.5 font-mono text-[11px] text-faint">
-                  {count > 0 ? count : 'pronto'}
-                  <span className="sr-only">{count === 1 ? ' plantilla' : count > 1 ? ' plantillas' : ''}</span>
+                  {count}
+                  <span className="sr-only">{count === 1 ? ' plantilla' : ' plantillas'}</span>
                 </span>
               </Link>
             </Reveal>

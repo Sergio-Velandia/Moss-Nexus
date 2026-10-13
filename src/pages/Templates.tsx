@@ -44,6 +44,8 @@ export default function Templates() {
   const usage = useMemo(() => toolUsage(), [])
   // Primero las herramientas que tienen plantillas; las elegidas siempre visibles
   const toolChips = tools.filter((t) => usage.has(t.id) || filters.herramientas.includes(t.id))
+  // Igual con las categorías: sin plantillas no se muestran (salvo la elegida, para poder quitarla)
+  const categoryChips = categories.filter((c) => templates.some((t) => t.categoria === c.id) || filters.categoria === c.id)
 
   const toggleTool = (id: string) =>
     update({
@@ -98,7 +100,7 @@ export default function Templates() {
               <button type="button" aria-pressed={!filters.categoria} onClick={() => update({ categoria: null })} className={`${chipBase} ${!filters.categoria ? chipOn : chipOff}`}>
                 Todas
               </button>
-              {categories.map((c) => {
+              {categoryChips.map((c) => {
                 const on = filters.categoria === c.id
                 return (
                   <button key={c.id} type="button" aria-pressed={on} onClick={() => update({ categoria: on ? null : c.id })} className={`${chipBase} ${on ? chipOn : chipOff}`}>
