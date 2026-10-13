@@ -1,4 +1,5 @@
 import { Anatomy } from '../components/home/Anatomy'
+import { Customize } from '../components/home/Customize'
 import { Ecosystem } from '../components/home/Ecosystem'
 import { Featured } from '../components/home/Featured'
 import { Hero } from '../components/home/Hero'
@@ -14,6 +15,7 @@ export default function Home() {
       <Hero />
       <Problem />
       <HowItWorks />
+      <Customize />
       <Featured />
       <PopularTools />
       <Anatomy />
