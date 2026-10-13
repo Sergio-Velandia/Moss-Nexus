@@ -115,6 +115,29 @@ export default function Terms() {
                   <strong>Código del sitio</strong>: <a href={file('LICENSE')}>MIT</a>.
                 </li>
               </ul>
+              <p>
+                Si usas estos materiales en una empresa en Colombia, puedes declararlos en el informe de gestión que exige la Ley
+                603 de 2000 como software y contenido de licencia libre. Conserva la referencia a la licencia correspondiente
+                como soporte.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'ley-aplicable',
+          title: 'Derecho de autor, ley aplicable y jurisdicción',
+          content: (
+            <>
+              <p>
+                El código, los flujos y los textos de Moss Nexus están protegidos por el derecho de autor desde su creación,
+                conforme a la Ley 23 de 1982 y a la Decisión Andina 351 de 1993. Las licencias de la sección anterior son las que
+                te conceden permiso para usarlos.
+              </p>
+              <p>
+                Estos términos se rigen por las leyes de la República de Colombia. Cualquier controversia relacionada con el sitio,
+                sus plantillas o estos términos se tramitará ante la jurisdicción ordinaria colombiana, en su especialidad civil o
+                comercial. Esto no limita los derechos irrenunciables que la ley de tu país pueda reconocerte.
+              </p>
             </>
           ),
         },
