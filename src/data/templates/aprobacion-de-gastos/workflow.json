@@ -1,0 +1,542 @@
+{
+  "name": "Aprobación de gastos por correo con registro en Google Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Aprobación de gastos\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. En «Configuración», el monto a partir del cual se pide aprobación y el correo de quien aprueba.\n2. Cuenta de Gmail en «Pedir aprobación» y «Avisar al solicitante».\n3. Cuenta de Google y URL de la hoja en «Registrar gasto» (pestaña **Gastos**).\n\nRequiere una versión de n8n con la operación «Send and Wait for Response» de Gmail.",
+        "height": 320,
+        "width": 400
+      },
+      "id": "903e4700-952b-4184-8813-73bff6cf32c7",
+      "name": "Nota de configuración",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "formTitle": "Solicitud de gasto",
+        "formDescription": "Registra el gasto. Si supera el monto definido por la empresa, se pedirá aprobación por correo.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nombre",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Correo",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Concepto",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Monto",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Centro de costo",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Comercial"
+                  },
+                  {
+                    "option": "Operaciones"
+                  },
+                  {
+                    "option": "Tecnología"
+                  },
+                  {
+                    "option": "Administración"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Fecha del gasto",
+              "fieldType": "date",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Detalle",
+              "fieldType": "textarea"
+            }
+          ]
+        },
+        "options": {
+          "respondWithOptions": {
+            "values": {
+              "respondWith": "text",
+              "formSubmittedText": "Solicitud recibida. Te avisaremos por correo cuando haya una decisión."
+            }
+          }
+        }
+      },
+      "id": "77740689-69da-47f9-8422-ba127c39ac5d",
+      "name": "Solicitud de gasto",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "3de15c55-b1d8-4174-8b19-987bc13ea95a"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "90fe40a3-b1c6-4866-8b64-23b9b3216f6a",
+              "name": "umbral",
+              "value": 500,
+              "type": "number"
+            },
+            {
+              "id": "eb8e2f74-4e9e-4277-831e-3be866824429",
+              "name": "aprobador",
+              "value": "aprobador@tu-empresa.com",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "d11b688f-36dc-41d8-8dc3-8f70441118b2",
+      "name": "Configuración",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "notes": "Gastos por encima de «umbral» necesitan aprobación de «aprobador». Los demás se aprueban solos.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0c263306-235c-4206-81fb-9162c2f0035d",
+              "leftValue": "={{ Number($json.Monto) > Number($json.umbral) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "463369f1-7ff2-4d77-813d-fe0d463b7f20",
+      "name": "¿Supera el umbral?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "={{ $json.aprobador }}",
+        "subject": "=Aprobar gasto de {{ $json.Nombre }}: {{ $json.Concepto }} ({{ $json.Monto }})",
+        "message": "=Hay un gasto que necesita tu aprobación.\n\nSolicitante: {{ $json.Nombre }} ({{ $json.Correo }})\nConcepto: {{ $json.Concepto }}\nMonto: {{ $json.Monto }}\nCentro de costo: {{ $json['Centro de costo'] }}\nFecha del gasto: {{ $json['Fecha del gasto'] }}\nDetalle: {{ $json.Detalle || 'Sin detalle' }}",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "Aprobar",
+            "disapproveLabel": "Rechazar"
+          }
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "763a0270-e7ea-4257-827b-aeb6ce55f609",
+      "name": "Pedir aprobación",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        680,
+        -120
+      ],
+      "webhookId": "14ed538f-7069-4bb3-8084-55d47a1b412d",
+      "notes": "El flujo queda en pausa hasta que el aprobador pulse «Aprobar» o «Rechazar» en el correo.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8d572438-f009-4c60-8fb7-11fbbc2a914b",
+              "name": "nombre",
+              "value": "={{ $('Configuración').item.json.Nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "fcc45f95-e6b4-4f83-894e-89e4fd2ea72b",
+              "name": "correo",
+              "value": "={{ $('Configuración').item.json.Correo }}",
+              "type": "string"
+            },
+            {
+              "id": "e6bb5267-d4ad-47ea-82e6-9fde07820d4b",
+              "name": "concepto",
+              "value": "={{ $('Configuración').item.json.Concepto }}",
+              "type": "string"
+            },
+            {
+              "id": "ea13d7b4-7251-4761-891c-42e3632d63c0",
+              "name": "monto",
+              "value": "={{ $('Configuración').item.json.Monto }}",
+              "type": "number"
+            },
+            {
+              "id": "fbd1a657-a232-430d-8f28-e21209c4894b",
+              "name": "centro",
+              "value": "={{ $('Configuración').item.json['Centro de costo'] }}",
+              "type": "string"
+            },
+            {
+              "id": "6e22f597-d1ae-402d-8662-7c55204a7a42",
+              "name": "fechaGasto",
+              "value": "={{ $('Configuración').item.json['Fecha del gasto'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f36f4207-c72e-459c-826a-07750b8e7494",
+              "name": "estado",
+              "value": "={{ $json.data.approved ? 'Aprobado' : 'Rechazado' }}",
+              "type": "string"
+            },
+            {
+              "id": "9c7d2231-85bc-4be0-8eff-19b782159e47",
+              "name": "decidio",
+              "value": "={{ $('Configuración').item.json.aprobador }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "458ddd34-c6af-4eeb-814e-5aec4cd3e464",
+      "name": "Marcar decisión",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        900,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8d572438-f009-4c60-8fb7-11fbbc2a914b",
+              "name": "nombre",
+              "value": "={{ $('Configuración').item.json.Nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "fcc45f95-e6b4-4f83-894e-89e4fd2ea72b",
+              "name": "correo",
+              "value": "={{ $('Configuración').item.json.Correo }}",
+              "type": "string"
+            },
+            {
+              "id": "e6bb5267-d4ad-47ea-82e6-9fde07820d4b",
+              "name": "concepto",
+              "value": "={{ $('Configuración').item.json.Concepto }}",
+              "type": "string"
+            },
+            {
+              "id": "ea13d7b4-7251-4761-891c-42e3632d63c0",
+              "name": "monto",
+              "value": "={{ $('Configuración').item.json.Monto }}",
+              "type": "number"
+            },
+            {
+              "id": "fbd1a657-a232-430d-8f28-e21209c4894b",
+              "name": "centro",
+              "value": "={{ $('Configuración').item.json['Centro de costo'] }}",
+              "type": "string"
+            },
+            {
+              "id": "6e22f597-d1ae-402d-8662-7c55204a7a42",
+              "name": "fechaGasto",
+              "value": "={{ $('Configuración').item.json['Fecha del gasto'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f36f4207-c72e-459c-826a-07750b8e7494",
+              "name": "estado",
+              "value": "Aprobado automáticamente",
+              "type": "string"
+            },
+            {
+              "id": "9c7d2231-85bc-4be0-8eff-19b782159e47",
+              "name": "decidio",
+              "value": "Regla de monto",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d2fdc560-7233-4135-8115-98c6619cb4b9",
+      "name": "Aprobación automática",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        680,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Gastos",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha de solicitud": "={{ $now.toFormat('yyyy-MM-dd HH:mm') }}",
+            "Solicitante": "={{ $json.nombre }}",
+            "Concepto": "={{ $json.concepto }}",
+            "Monto": "={{ $json.monto }}",
+            "Centro de costo": "={{ $json.centro }}",
+            "Fecha del gasto": "={{ $json.fechaGasto }}",
+            "Estado": "={{ $json.estado }}",
+            "Decidió": "={{ $json.decidio }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Fecha de solicitud",
+              "displayName": "Fecha de solicitud",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Solicitante",
+              "displayName": "Solicitante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Concepto",
+              "displayName": "Concepto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Monto",
+              "displayName": "Monto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Centro de costo",
+              "displayName": "Centro de costo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha del gasto",
+              "displayName": "Fecha del gasto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Decidió",
+              "displayName": "Decidió",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e41e5f19-4b74-42e1-849f-f7a1da7c53bf",
+      "name": "Registrar gasto",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1140,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.correo }}",
+        "subject": "=Tu gasto «{{ $json.concepto }}»: {{ $json.estado }}",
+        "emailType": "text",
+        "message": "=Hola, {{ $json.nombre }}:\n\nTu solicitud de gasto por {{ $json.monto }} ({{ $json.concepto }}) quedó en estado: {{ $json.estado }}.\n\nSi tienes dudas sobre la decisión, responde a este correo.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "c366b8fa-d823-4e81-8d9d-a8a5692a4c30",
+      "name": "Avisar al solicitante",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1140,
+        100
+      ],
+      "webhookId": "e0926791-d66a-4719-812e-3903f4356b70"
+    }
+  ],
+  "connections": {
+    "Solicitud de gasto": {
+      "main": [
+        [
+          {
+            "node": "Configuración",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configuración": {
+      "main": [
+        [
+          {
+            "node": "¿Supera el umbral?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Supera el umbral?": {
+      "main": [
+        [
+          {
+            "node": "Pedir aprobación",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Aprobación automática",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedir aprobación": {
+      "main": [
+        [
+          {
+            "node": "Marcar decisión",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar decisión": {
+      "main": [
+        [
+          {
+            "node": "Registrar gasto",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Avisar al solicitante",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aprobación automática": {
+      "main": [
+        [
+          {
+            "node": "Registrar gasto",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Avisar al solicitante",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

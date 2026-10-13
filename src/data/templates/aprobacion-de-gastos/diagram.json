@@ -1,0 +1,92 @@
+{
+  "nodos": [
+    {
+      "id": "form",
+      "etiqueta": "Solicitud de gasto",
+      "herramienta": "form",
+      "tipo": "disparador"
+    },
+    {
+      "id": "config",
+      "etiqueta": "Configuración",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "supera",
+      "etiqueta": "¿Supera el umbral?",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "pedir",
+      "etiqueta": "Pedir aprobación",
+      "herramienta": "gmail",
+      "tipo": "accion"
+    },
+    {
+      "id": "auto",
+      "etiqueta": "Aprobación automática",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "marcar",
+      "etiqueta": "Marcar decisión",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "registrar",
+      "etiqueta": "Registrar gasto",
+      "herramienta": "google-sheets",
+      "tipo": "accion"
+    },
+    {
+      "id": "avisar",
+      "etiqueta": "Avisar al solicitante",
+      "herramienta": "gmail",
+      "tipo": "accion"
+    }
+  ],
+  "conexiones": [
+    {
+      "origen": "form",
+      "destino": "config"
+    },
+    {
+      "origen": "config",
+      "destino": "supera"
+    },
+    {
+      "origen": "supera",
+      "destino": "pedir",
+      "etiqueta": "sí"
+    },
+    {
+      "origen": "supera",
+      "destino": "auto",
+      "etiqueta": "no"
+    },
+    {
+      "origen": "pedir",
+      "destino": "marcar"
+    },
+    {
+      "origen": "marcar",
+      "destino": "registrar"
+    },
+    {
+      "origen": "marcar",
+      "destino": "avisar"
+    },
+    {
+      "origen": "auto",
+      "destino": "registrar"
+    },
+    {
+      "origen": "auto",
+      "destino": "avisar"
+    }
+  ]
+}
