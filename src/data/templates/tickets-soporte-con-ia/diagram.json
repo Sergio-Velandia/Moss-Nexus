@@ -1,0 +1,84 @@
+{
+  "nodos": [
+    {
+      "id": "correo",
+      "etiqueta": "Correo de soporte",
+      "herramienta": "gmail",
+      "tipo": "disparador"
+    },
+    {
+      "id": "config",
+      "etiqueta": "Configuración",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "clasificar",
+      "etiqueta": "Clasificar con IA",
+      "herramienta": "openai",
+      "tipo": "accion"
+    },
+    {
+      "id": "leer",
+      "etiqueta": "Leer clasificación",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "segun",
+      "etiqueta": "Según la urgencia",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "registrar",
+      "etiqueta": "Registrar ticket",
+      "herramienta": "google-sheets",
+      "tipo": "accion"
+    },
+    {
+      "id": "urgente",
+      "etiqueta": "Avisar urgente",
+      "herramienta": "slack",
+      "tipo": "accion"
+    },
+    {
+      "id": "normal",
+      "etiqueta": "Avisar al equipo",
+      "herramienta": "slack",
+      "tipo": "accion"
+    }
+  ],
+  "conexiones": [
+    {
+      "origen": "correo",
+      "destino": "config"
+    },
+    {
+      "origen": "config",
+      "destino": "clasificar"
+    },
+    {
+      "origen": "clasificar",
+      "destino": "leer"
+    },
+    {
+      "origen": "leer",
+      "destino": "segun"
+    },
+    {
+      "origen": "leer",
+      "destino": "registrar"
+    },
+    {
+      "origen": "segun",
+      "destino": "urgente",
+      "etiqueta": "alta"
+    },
+    {
+      "origen": "segun",
+      "destino": "normal",
+      "etiqueta": "normal"
+    }
+  ]
+}

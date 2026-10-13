@@ -1,0 +1,370 @@
+{
+  "name": "Tickets de soporte clasificados con IA y repartidos en Slack",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Tickets de soporte clasificados con IA\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. En Gmail, una etiqueta **soporte** aplicada a los correos de tu buzón de ayuda.\n2. Credencial de OpenAI en «Clasificar con IA» y el modelo en «Configuración».\n3. Slack en los dos nodos de aviso y la URL de la hoja en «Registrar ticket» (pestaña **Tickets**).\n\nAjusta las categorías en el mensaje de sistema y en «Leer clasificación».",
+        "height": 320,
+        "width": 400
+      },
+      "id": "6949ea50-7923-469b-8fce-26d88a58ab7e",
+      "name": "Nota de configuración",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "q": "label:soporte"
+        },
+        "options": {}
+      },
+      "id": "49329f83-70c0-4471-8bd1-fa9fef7ed07b",
+      "name": "Correo de soporte",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1d5c5303-c96d-42fc-8cd0-756c19ae39c3",
+              "name": "modelo",
+              "value": "gpt-4o-mini",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "a3afc882-49ec-426d-8313-ce3b5dac5f26",
+      "name": "Configuración",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "notes": "Cambia el modelo por cualquiera de chat que tengas disponible en tu cuenta de OpenAI.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: $json.modelo, temperature: 0, response_format: { type: 'json_object' }, messages: [ { role: 'system', content: 'Eres el asistente de un equipo de soporte. Clasifica el correo del cliente y responde solo con un JSON con esta forma: {\"urgencia\": \"alta | media | baja\", \"categoria\": \"facturacion | tecnico | cuenta | comercial | otro\", \"resumen\": \"una frase en español\"}. Urgencia alta: el servicio no funciona, hay dinero en riesgo o el cliente está muy molesto. Baja: consultas generales sin prisa.' }, { role: 'user', content: 'Asunto: ' + ($json.subject || '') + '\\n\\n' + String($json.text || '').slice(0, 4000) } ] }) }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "87fe322d-3826-435e-86c5-54053508ba70",
+      "name": "Clasificar con IA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lee la clasificación de la IA. Si la respuesta no es válida, el ticket no se pierde:\n// queda como urgencia media y categoría «otro» para revisión humana.\nconst URGENCIAS = ['alta', 'media', 'baja'];\nconst CATEGORIAS = ['facturacion', 'tecnico', 'cuenta', 'comercial', 'otro'];\n\nreturn $input.all().map((item, i) => {\n  const correo = $('Correo de soporte').all()[i]?.json ?? {};\n  let ia = {};\n  try {\n    ia = JSON.parse(item.json.choices?.[0]?.message?.content ?? '{}');\n  } catch (error) {\n    ia = {};\n  }\n  const urgencia = URGENCIAS.includes(ia.urgencia) ? ia.urgencia : 'media';\n  return {\n    json: {\n      urgencia,\n      categoria: CATEGORIAS.includes(ia.categoria) ? ia.categoria : 'otro',\n      resumen: String(ia.resumen || correo.subject || 'Sin resumen').slice(0, 280),\n      de: correo.from?.text || correo.from?.value?.[0]?.address || 'desconocido',\n      asunto: correo.subject || '(sin asunto)',\n      enlace: correo.threadId ? 'https://mail.google.com/mail/u/0/#all/' + correo.threadId : '',\n      revisada: URGENCIAS.includes(ia.urgencia),\n    },\n  };\n});"
+      },
+      "id": "02e030cc-3c76-4250-87a0-88cd1212e315",
+      "name": "Leer clasificación",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c23ffe13-d01c-4568-8290-2b739c05025e",
+                    "leftValue": "={{ $json.urgencia }}",
+                    "rightValue": "alta",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Alta"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Normal"
+        }
+      },
+      "id": "4b07f492-d078-4ca6-86db-d8b608b80c2b",
+      "name": "Según la urgencia",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#soporte-urgente",
+          "mode": "name"
+        },
+        "text": "=<!here> :red_circle: *Ticket urgente* · {{ $json.categoria }}\n*{{ $json.asunto }}* — {{ $json.de }}\n> {{ $json.resumen }}\n{{ $json.enlace ? '<' + $json.enlace + '|Abrir en Gmail>' : '' }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "c57ece08-dec2-45ef-852d-d88aee604f65",
+      "name": "Avisar urgente",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#soporte",
+          "mode": "name"
+        },
+        "text": "=:large_{{ $json.urgencia === 'media' ? 'yellow' : 'green' }}_circle: Ticket {{ $json.urgencia }} · {{ $json.categoria }}\n*{{ $json.asunto }}* — {{ $json.de }}\n> {{ $json.resumen }}\n{{ $json.enlace ? '<' + $json.enlace + '|Abrir en Gmail>' : '' }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "1c07a773-7798-4272-8d67-a9eb2938e868",
+      "name": "Avisar al equipo",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Tickets",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha": "={{ $now.toFormat('yyyy-MM-dd HH:mm') }}",
+            "De": "={{ $json.de }}",
+            "Asunto": "={{ $json.asunto }}",
+            "Urgencia": "={{ $json.urgencia }}",
+            "Categoría": "={{ $json.categoria }}",
+            "Resumen": "={{ $json.resumen }}",
+            "Enlace": "={{ $json.enlace }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "De",
+              "displayName": "De",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Asunto",
+              "displayName": "Asunto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Urgencia",
+              "displayName": "Urgencia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Categoría",
+              "displayName": "Categoría",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resumen",
+              "displayName": "Resumen",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Enlace",
+              "displayName": "Enlace",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "id": "b634745a-4b5d-4603-8594-51680e943329",
+      "name": "Registrar ticket",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        880,
+        200
+      ]
+    }
+  ],
+  "connections": {
+    "Correo de soporte": {
+      "main": [
+        [
+          {
+            "node": "Configuración",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configuración": {
+      "main": [
+        [
+          {
+            "node": "Clasificar con IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clasificar con IA": {
+      "main": [
+        [
+          {
+            "node": "Leer clasificación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer clasificación": {
+      "main": [
+        [
+          {
+            "node": "Según la urgencia",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Registrar ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Según la urgencia": {
+      "main": [
+        [
+          {
+            "node": "Avisar urgente",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avisar al equipo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

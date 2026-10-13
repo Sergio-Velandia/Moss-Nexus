@@ -1,0 +1,37 @@
+{
+  "slug": "tickets-soporte-con-ia",
+  "titulo": "Tickets de soporte clasificados con IA y repartidos en Slack",
+  "resumen": "La IA lee cada correo de soporte, define su urgencia y categoría, y lo envía al canal correcto con un resumen. Todo queda registrado.",
+  "problema": "El buzón de soporte se atiende por orden de llegada: el cliente con el servicio caído espera detrás de diez consultas sin prisa. Clasificar a mano cada correo consume a la persona más experimentada del equipo. Este flujo usa IA para leer cada correo nuevo, decidir su urgencia y su categoría y resumirlo en una frase. Los urgentes llegan a un canal con aviso inmediato y el resto al canal del equipo. Si la IA responde algo inválido, el ticket no se pierde: entra como urgencia media para revisión humana.",
+  "categoria": "atencion",
+  "herramientas": [
+    "gmail",
+    "n8n",
+    "openai",
+    "slack",
+    "google-sheets"
+  ],
+  "dificultad": "avanzada",
+  "tiempoEstimado": 30,
+  "requisitos": [
+    "Una instancia de n8n (cloud o autoalojada)",
+    "Una cuenta de OpenAI con una clave de API y saldo disponible",
+    "Una cuenta de Google con Gmail (con una etiqueta «soporte» aplicada a los correos de ayuda) y Google Sheets",
+    "Un espacio de Slack con dos canales: uno para urgencias y otro para el equipo de soporte",
+    "Una hoja con la pestaña «Tickets» y las columnas Fecha, De, Asunto, Urgencia, Categoría, Resumen y Enlace"
+  ],
+  "escenarios": [
+    "Empresa de software con un buzón de ayuda que recibe decenas de correos al día",
+    "Tienda en línea que quiere atender primero los problemas de pagos y envíos",
+    "Equipo de soporte pequeño que necesita métricas de volumen por categoría"
+  ],
+  "pasos": [
+    "En Gmail, crea la etiqueta «soporte» y un filtro que la aplique a los correos de tu buzón de ayuda.",
+    "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
+    "Conecta Gmail en «Correo de soporte» y crea la credencial de OpenAI en «Clasificar con IA». En «Configuración», elige el modelo.",
+    "Conecta Slack en los dos nodos de aviso con tus canales, y Google en «Registrar ticket» con la URL de la hoja.",
+    "Si tus categorías son otras, cámbialas en el mensaje de «Clasificar con IA» y en la lista CATEGORIAS de «Leer clasificación».",
+    "Envía un correo de prueba con la etiqueta, pulsa «Test workflow» y revisa Slack y la hoja. Luego activa el flujo."
+  ],
+  "destacado": true
+}
