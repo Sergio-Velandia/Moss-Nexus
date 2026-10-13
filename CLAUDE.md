@@ -42,7 +42,7 @@ Orden acordado. Cada fase empieza solo cuando el usuario la pide y con un plan c
   - Licencia: presentar las opciones A (MIT), B (MIT + CC BY 4.0) o C, y preguntar antes de crear archivos.
   - Prueba de las rutas y del footer, y comprobar la recarga directa en Pages.
   - Actualizar CHANGELOG, README y CLAUDE.md. Al final, listar las cláusulas que conviene revisar con un profesional.
-- **Fase Repaso del inicio:** rama `docs/repaso-inicio`.
+- **Fase Repaso (hecha, v0.7.0):** aviso de personalización, «Dentro de cada plantilla» con una plantilla real, cifras y chips calculados desde los datos, Open Graph (imagen en `public/og.png`, la aporta el usuario) y páginas estáticas por ruta más `sitemap.xml` (`scripts/static-pages.ts`, plugin de Vite). Si se agrega una ruta nueva, súmala a `STATIC_PAGES`. Brief original:
   - Primero un informe sin cambios, en tabla: elemento / estado actual / problema / cambio propuesto. Después del OK, commits pequeños, uno por tema.
   - Contrastar cada afirmación del sitio con la realidad: hero, cómo funciona, destacadas sin `ejemplo`, chips de herramientas con al menos una plantilla, cifras dinámicas, sello Probado, enlaces a Moss, Acerca, footer y legales, metadatos y Open Graph, README, CHANGELOG y package.json, accesibilidad y móvil.
   - Aclarar en el inicio que cada plantilla es un punto de partida y puede requerir personalizaciones y ajustes según la persona o la empresa (sus datos, columnas, reglas de negocio y herramientas).

@@ -6,6 +6,26 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.7.0] - 2026-10-12
+
+Fase Repaso: coherencia del inicio y de la información general.
+
+### Añadido
+- Aviso en el inicio: cada plantilla es un punto de partida y suele requerir ajustes (datos, textos, reglas, horarios, herramientas y accesos).
+- «Dentro de cada plantilla» se muestra con una plantilla real del catálogo: su miniatura de pasos, la división del flujo, el problema, los escenarios, los requisitos, el nivel y el estado de prueba.
+- Cifras de la librería en el hero (plantillas, niveles, categorías y apps conectadas), calculadas desde los datos.
+- Metadatos Open Graph y Twitter Card para compartir enlaces. La imagen se espera en `public/og.png` (1200×630).
+- En el build, un `index.html` por ruta y por plantilla, con su propio título, descripción y URL canónica, para que GitHub Pages responda 200 en lugar de 404. También se genera `sitemap.xml`.
+- Principios «Adaptable a tu caso» y «Libre para usar» en Acerca.
+
+### Cambiado
+- Las destacadas del inicio se equilibran por nivel (dos fáciles, dos intermedias y dos avanzadas), con un acceso a toda la galería.
+- «Cómo funciona» menciona ajustar el flujo al caso propio.
+- Las herramientas populares y las categorías de la galería solo se muestran si tienen plantillas.
+
+### Corregido
+- El foco del teclado en los buscadores era casi invisible.
+
 ## [0.6.0] - 2026-10-12
 
 Fase Legal: términos, privacidad, contacto y licencia.
@@ -106,7 +126,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.6.0...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.3.0...v0.4.0
