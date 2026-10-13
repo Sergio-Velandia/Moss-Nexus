@@ -6,6 +6,16 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.5.0] - 2026-10-12
+
+Fase 3, lote 3: plantillas de nivel avanzado.
+
+### Añadido
+- Plantilla **aprobacion-de-gastos**: los gastos sobre un umbral esperan la aprobación de un responsable con botones en el correo; los demás se aprueban solos y todo queda registrado.
+- Plantilla **tickets-soporte-con-ia**: la IA clasifica la urgencia y la categoría de cada correo de soporte, lo resume y lo envía al canal de Slack que corresponde.
+- Plantilla **resumen-correos-con-ia**: resumen diario en Slack de los correos sin leer, ordenado por lo que requiere acción hoy.
+- Plantilla **pagos-stripe-idempotentes**: registra cada pago de Stripe una sola vez aunque el webhook llegue repetido, y luego envía el recibo y avisa a ventas.
+
 ## [0.4.0] - 2026-10-12
 
 Fase 3, lote 2: plantillas de nivel intermedio.
@@ -78,7 +88,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.4.0...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.1.1...v0.2.0
