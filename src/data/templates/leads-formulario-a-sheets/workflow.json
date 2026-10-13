@@ -1,0 +1,211 @@
+{
+  "name": "Leads del formulario web a Google Sheets con aviso en Slack",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Leads del formulario → Sheets + Slack\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. Cuenta de Google y URL de tu hoja en «Guardar lead».\n2. Cuenta de Slack y canal en «Avisar a ventas».\n3. Ajusta las preguntas del formulario a tu negocio.\n\nLa hoja necesita una pestaña **Leads** con las columnas: Fecha, Nombre, Correo, Empresa, Teléfono, Necesidad.",
+        "height": 320,
+        "width": 400
+      },
+      "id": "d536e547-1a83-4745-8d02-ea837a4c9f09",
+      "name": "Nota de configuración",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "formTitle": "Hablemos de tu proyecto",
+        "formDescription": "Déjanos tus datos y te contactamos en menos de un día hábil.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nombre",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Correo",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Empresa"
+            },
+            {
+              "fieldLabel": "Teléfono"
+            },
+            {
+              "fieldLabel": "¿En qué podemos ayudarte?",
+              "fieldType": "textarea",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "respondWithOptions": {
+            "values": {
+              "respondWith": "text",
+              "formSubmittedText": "Gracias. Te escribiremos muy pronto."
+            }
+          }
+        }
+      },
+      "id": "3c5d1848-b045-41b9-8d12-057a6952dc7f",
+      "name": "Formulario de contacto",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "00475a11-cd3d-4bc2-88fb-09fee9e467ba"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Leads",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha": "={{ $now.toFormat('yyyy-MM-dd HH:mm') }}",
+            "Nombre": "={{ $json.Nombre }}",
+            "Correo": "={{ $json.Correo.trim().toLowerCase() }}",
+            "Empresa": "={{ $json.Empresa }}",
+            "Teléfono": "={{ $json['Teléfono'] }}",
+            "Necesidad": "={{ $json['¿En qué podemos ayudarte?'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Correo",
+              "displayName": "Correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Empresa",
+              "displayName": "Empresa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Teléfono",
+              "displayName": "Teléfono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Necesidad",
+              "displayName": "Necesidad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "id": "efe35f66-d5ca-4e05-8f31-3bca72c07ccc",
+      "name": "Guardar lead",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#ventas",
+          "mode": "name"
+        },
+        "text": "=:incoming_envelope: *Nuevo lead*\n*{{ $('Formulario de contacto').item.json.Nombre }}*{{ $('Formulario de contacto').item.json.Empresa ? ' · ' + $('Formulario de contacto').item.json.Empresa : '' }}\n{{ $('Formulario de contacto').item.json.Correo }} {{ $('Formulario de contacto').item.json['Teléfono'] }}\n> {{ $('Formulario de contacto').item.json['¿En qué podemos ayudarte?'] }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "96c48884-3f44-4bd0-862d-7c8111a01e7d",
+      "name": "Avisar a ventas",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Formulario de contacto": {
+      "main": [
+        [
+          {
+            "node": "Guardar lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar lead": {
+      "main": [
+        [
+          {
+            "node": "Avisar a ventas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

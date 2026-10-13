@@ -1,0 +1,32 @@
+{
+  "nodos": [
+    {
+      "id": "form",
+      "etiqueta": "Formulario de contacto",
+      "herramienta": "form",
+      "tipo": "disparador"
+    },
+    {
+      "id": "guardar",
+      "etiqueta": "Guardar lead",
+      "herramienta": "google-sheets",
+      "tipo": "accion"
+    },
+    {
+      "id": "avisar",
+      "etiqueta": "Avisar a ventas",
+      "herramienta": "slack",
+      "tipo": "accion"
+    }
+  ],
+  "conexiones": [
+    {
+      "origen": "form",
+      "destino": "guardar"
+    },
+    {
+      "origen": "guardar",
+      "destino": "avisar"
+    }
+  ]
+}

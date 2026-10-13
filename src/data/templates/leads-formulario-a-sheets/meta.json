@@ -1,0 +1,34 @@
+{
+  "slug": "leads-formulario-a-sheets",
+  "titulo": "Leads del formulario web a Google Sheets con aviso en Slack",
+  "resumen": "Cada solicitud del formulario queda registrada en una hoja y el equipo comercial se entera al momento en Slack.",
+  "problema": "Los contactos que llegan desde la web se quedan en un correo que nadie revisa a tiempo o en una herramienta que ventas no mira. Cuando alguien responde, el cliente ya habló con la competencia. Este flujo publica un formulario propio de n8n, guarda cada solicitud con su fecha en una hoja compartida y avisa en el canal de ventas con los datos clave para responder rápido.",
+  "categoria": "ventas",
+  "herramientas": [
+    "form",
+    "google-sheets",
+    "slack"
+  ],
+  "dificultad": "facil",
+  "tiempoEstimado": 10,
+  "requisitos": [
+    "Una instancia de n8n accesible desde internet, para que el formulario tenga una URL pública",
+    "Una cuenta de Google con acceso a Google Sheets",
+    "Un espacio de Slack donde puedas conectar n8n y un canal para ventas (por ejemplo #ventas)",
+    "Una hoja con una pestaña «Leads» y las columnas Fecha, Nombre, Correo, Empresa, Teléfono y Necesidad"
+  ],
+  "escenarios": [
+    "Sitio web sin CRM que necesita centralizar las solicitudes de contacto",
+    "Campaña con página de aterrizaje cuyo formulario debe llegar al equipo comercial en minutos",
+    "Agencia o consultora que recibe pedidos de cotización y los reparte entre el equipo"
+  ],
+  "pasos": [
+    "Crea la hoja con una pestaña llamada «Leads» y, en la primera fila, las columnas Fecha, Nombre, Correo, Empresa, Teléfono y Necesidad.",
+    "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
+    "En «Guardar lead», conecta tu cuenta de Google y pega la URL de tu hoja.",
+    "En «Avisar a ventas», conecta Slack y escribe el canal donde quieres los avisos.",
+    "Abre «Formulario de contacto», ajusta las preguntas si lo necesitas y copia su URL de producción para enlazarla desde tu web.",
+    "Activa el flujo, envía una solicitud de prueba y revisa la fila y el mensaje en Slack."
+  ],
+  "destacado": true
+}
