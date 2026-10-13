@@ -1,4 +1,5 @@
-import { ArrowRight, BadgeCheck, BookOpen, Code2, FolderGit2, Languages, Sprout, Workflow } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { ArrowRight, BadgeCheck, BookOpen, Code2, FolderGit2, Languages, Scale, Sprout, Workflow, Wrench } from 'lucide-react'
 import { site } from '../data/site'
 import { ButtonLink } from '../components/ui/Button'
 import { Reveal } from '../components/ui/Reveal'
@@ -9,6 +10,13 @@ const principles = [
   { icon: Languages, title: 'Explicado en español claro', text: 'Primero el problema y el para qué; los detalles técnicos, solo cuando hacen falta.' },
   { icon: FolderGit2, title: 'Abierto y versionado', text: 'Las plantillas viven como archivos en un repositorio público. Sin cuentas ni bases de datos.' },
   { icon: Code2, title: 'Tú tienes el control', text: 'Copias el JSON y lo ejecutas en tu propio n8n. Nexus nunca ve tus datos ni tus credenciales.' },
+  { icon: Wrench, title: 'Adaptable a tu caso', text: 'Cada plantilla es un punto de partida: cambia columnas, textos, reglas o herramientas hasta que encaje con tu operación.' },
+  {
+    icon: Scale,
+    title: 'Libre para usar',
+    text: 'Los flujos se copian sin condiciones (MIT-0); los textos se pueden reutilizar citando la fuente (CC BY 4.0).',
+    to: '/terminos#licencia',
+  },
 ]
 
 export default function About() {
@@ -66,6 +74,11 @@ export default function About() {
               <p.icon size={22} className="text-nexus" aria-hidden />
               <h3 className="mt-4 font-semibold">{p.title}</h3>
               <p className="mt-1.5 text-sm text-ink-soft">{p.text}</p>
+              {p.to && (
+                <Link to={p.to} className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-nexus underline-offset-2 hover:underline">
+                  Ver licencias <ArrowRight size={14} aria-hidden />
+                </Link>
+              )}
             </Reveal>
           ))}
         </ul>
