@@ -11,7 +11,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 Fase Legal: términos, privacidad, contacto y licencia.
 
 ### Añadido
-- Página de **términos y condiciones** (`/terminos`): plantillas «tal cual» y sin garantía, responsabilidad sobre credenciales y servicios de terceros, marcas, limitación de responsabilidad y licencia.
+- Página de **términos y condiciones** (`/terminos`): plantillas «tal cual» y sin garantía, responsabilidad sobre credenciales y servicios de terceros, marcas, limitación de responsabilidad, licencia, y ley aplicable y jurisdicción colombianas (Ley 23 de 1982, Decisión Andina 351 de 1993 y una nota sobre la Ley 603 de 2000).
 - Página de **privacidad** (`/privacidad`), basada en una auditoría del código: solo se guarda la preferencia de tema en el navegador; sin cookies, cuentas, formularios, analítica ni recursos de terceros.
 - Página de **contacto** (`/contacto`): GitHub Issues y un correo que solo se muestra al pulsar un botón.
 - Footer con enlaces a Términos, Privacidad, Contacto y Licencia, el año y el aviso de independencia de n8n GmbH.
