@@ -1,0 +1,400 @@
+{
+  "name": "Pagos de Stripe sin pedidos duplicados (webhook idempotente)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Pagos de Stripe sin duplicados\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. Credencial de Stripe (clave secreta) en «Pago recibido». Al activar, n8n crea el webhook en Stripe.\n2. Cuenta de Google y URL de la hoja en «Buscar evento» y «Registrar pedido» (pestaña **Pedidos**).\n3. Gmail en «Enviar recibo» y Slack en «Avisar a ventas».\n\nEl ID del evento de Stripe es la llave: si ya está en la hoja, el reintento se ignora.",
+        "height": 320,
+        "width": 400
+      },
+      "id": "0e11b1db-595e-4e02-8b50-0044e3563b81",
+      "name": "Nota de configuración",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "events": [
+          "checkout.session.completed"
+        ]
+      },
+      "id": "580bbbdf-07b9-4677-873b-949200fe73ad",
+      "name": "Pago recibido",
+      "type": "n8n-nodes-base.stripeTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "0164e770-0436-4788-8356-725790258a84"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Pedidos",
+          "mode": "name"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "ID de evento",
+              "lookupValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5db312ae-8ebf-46c9-8f3c-6ec448b8480d",
+      "name": "Buscar evento",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        0
+      ],
+      "alwaysOutputData": true,
+      "notes": "«Always Output Data» está activado: si el evento no existe, sigue con un elemento vacío.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3d7876d7-c683-499e-8faf-be9dbd213b96",
+              "leftValue": "={{ $json['ID de evento'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "47b95741-dd3c-4641-89eb-29a27ae2f9f4",
+      "name": "¿Ya procesado?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "ed65112d-873d-45d6-874a-5bd7709ba950",
+      "name": "Ignorar duplicado",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        680,
+        -120
+      ],
+      "notes": "Stripe reintenta los webhooks: si el evento ya se registró, no se repite nada.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b29448d2-cd6e-426d-8fc4-30b11cc3ab1e",
+              "name": "evento",
+              "value": "={{ $('Pago recibido').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "535fe753-0e72-4878-8616-d37849994271",
+              "name": "sesion",
+              "value": "={{ $('Pago recibido').item.json.data.object.id }}",
+              "type": "string"
+            },
+            {
+              "id": "3298e893-55a6-4f99-86b5-3ef306115a50",
+              "name": "cliente",
+              "value": "={{ $('Pago recibido').item.json.data.object.customer_details?.name ?? 'Sin nombre' }}",
+              "type": "string"
+            },
+            {
+              "id": "dab9a13d-80ca-457c-8e8b-55c9d1c6479d",
+              "name": "correo",
+              "value": "={{ $('Pago recibido').item.json.data.object.customer_details?.email ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "165d73d3-1498-41de-8b70-5e65feca31bd",
+              "name": "monto",
+              "value": "={{ ($('Pago recibido').item.json.data.object.amount_total / 100).toFixed(2) }}",
+              "type": "string"
+            },
+            {
+              "id": "73319d80-61e3-48fd-8611-4541df96dbd7",
+              "name": "moneda",
+              "value": "={{ String($('Pago recibido').item.json.data.object.currency ?? '').toUpperCase() }}",
+              "type": "string"
+            },
+            {
+              "id": "0679efe1-4abe-4fd1-817f-775106b2fb0c",
+              "name": "fecha",
+              "value": "={{ DateTime.fromSeconds($('Pago recibido').item.json.created).toFormat('yyyy-MM-dd HH:mm') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "859f000b-710b-4c79-8057-2947f9101d95",
+      "name": "Preparar pedido",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        680,
+        80
+      ],
+      "notes": "Stripe envía los montos en centavos. Para monedas sin decimales (por ejemplo JPY), quita la división entre 100.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Pedidos",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID de evento": "={{ $json.evento }}",
+            "Sesión": "={{ $json.sesion }}",
+            "Fecha": "={{ $json.fecha }}",
+            "Cliente": "={{ $json.cliente }}",
+            "Correo": "={{ $json.correo }}",
+            "Monto": "={{ $json.monto }}",
+            "Moneda": "={{ $json.moneda }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID de evento",
+              "displayName": "ID de evento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sesión",
+              "displayName": "Sesión",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Cliente",
+              "displayName": "Cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Correo",
+              "displayName": "Correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Monto",
+              "displayName": "Monto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Moneda",
+              "displayName": "Moneda",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "id": "c97bc086-7669-45df-8778-2cdc357fccc8",
+      "name": "Registrar pedido",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        900,
+        80
+      ],
+      "notes": "Primero se registra y después se avisa: si algo falla más adelante, el reintento ya no duplica el pedido.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Preparar pedido').item.json.correo }}",
+        "subject": "=Recibimos tu pago de {{ $('Preparar pedido').item.json.monto }} {{ $('Preparar pedido').item.json.moneda }}",
+        "emailType": "text",
+        "message": "=Hola, {{ $('Preparar pedido').item.json.cliente }}:\n\nConfirmamos tu pago de {{ $('Preparar pedido').item.json.monto }} {{ $('Preparar pedido').item.json.moneda }} del {{ $('Preparar pedido').item.json.fecha }}. Ya estamos preparando tu pedido.\n\nReferencia: {{ $('Preparar pedido').item.json.sesion }}\n\nGracias por tu compra.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "42d9259a-1c5f-418f-8c9a-61ac3425aab7",
+      "name": "Enviar recibo",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        0
+      ],
+      "webhookId": "e1767cad-8a48-4d33-8b5f-452754207f6f"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#ventas",
+          "mode": "name"
+        },
+        "text": "=:moneybag: Nuevo pago: *{{ $('Preparar pedido').item.json.monto }} {{ $('Preparar pedido').item.json.moneda }}* de {{ $('Preparar pedido').item.json.cliente }} ({{ $('Preparar pedido').item.json.correo }})",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "96b01b00-7fb6-4d58-8b57-7d20f1d2824b",
+      "name": "Avisar a ventas",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        160
+      ]
+    }
+  ],
+  "connections": {
+    "Pago recibido": {
+      "main": [
+        [
+          {
+            "node": "Buscar evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar evento": {
+      "main": [
+        [
+          {
+            "node": "¿Ya procesado?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Ya procesado?": {
+      "main": [
+        [
+          {
+            "node": "Ignorar duplicado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Preparar pedido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar pedido": {
+      "main": [
+        [
+          {
+            "node": "Registrar pedido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar pedido": {
+      "main": [
+        [
+          {
+            "node": "Enviar recibo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Avisar a ventas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

@@ -1,0 +1,37 @@
+{
+  "slug": "pagos-stripe-idempotentes",
+  "titulo": "Pagos de Stripe sin pedidos duplicados (webhook idempotente)",
+  "resumen": "Registra cada pago de Stripe una sola vez aunque el webhook llegue repetido, envía el recibo y avisa a ventas.",
+  "problema": "Stripe reintenta los webhooks cuando tu servidor tarda o falla, y cada reintento puede crear un pedido duplicado, enviar dos recibos o descontar inventario dos veces. Es uno de los errores más caros y difíciles de detectar. Este flujo usa el ID del evento como llave de idempotencia: antes de hacer nada, busca si ese evento ya se registró; si existe, lo ignora. Si es nuevo, primero lo registra y solo después envía el recibo y avisa al equipo.",
+  "categoria": "finanzas",
+  "herramientas": [
+    "stripe",
+    "google-sheets",
+    "n8n",
+    "gmail",
+    "slack"
+  ],
+  "dificultad": "avanzada",
+  "tiempoEstimado": 35,
+  "requisitos": [
+    "Una instancia de n8n accesible desde internet con HTTPS, para recibir los webhooks de Stripe",
+    "Una cuenta de Stripe con Checkout y su clave secreta (usa primero la de modo de prueba)",
+    "Una cuenta de Google con Gmail y una hoja con la pestaña «Pedidos» (ID de evento, Sesión, Fecha, Cliente, Correo, Monto, Moneda)",
+    "Un espacio de Slack con un canal para ventas"
+  ],
+  "escenarios": [
+    "Tienda o servicio digital que cobra con Stripe Checkout y entrega por correo",
+    "Negocio que ya sufrió pedidos o correos duplicados por reintentos de webhooks",
+    "Equipo que quiere un registro de pagos simple antes de invertir en un ERP"
+  ],
+  "pasos": [
+    "Crea la hoja con la pestaña «Pedidos» y las columnas ID de evento, Sesión, Fecha, Cliente, Correo, Monto y Moneda.",
+    "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
+    "En «Pago recibido», crea la credencial de Stripe con tu clave secreta de modo de prueba.",
+    "Conecta Google en «Buscar evento» y «Registrar pedido» (misma hoja), Gmail en «Enviar recibo» y Slack en «Avisar a ventas».",
+    "Activa el flujo: n8n crea el webhook en Stripe. Haz un pago de prueba con la tarjeta 4242 4242 4242 4242 y revisa la hoja.",
+    "Para comprobar la idempotencia, reenvía el mismo evento desde el panel de Stripe (Desarrolladores > Eventos): no debe aparecer una segunda fila.",
+    "Con mucho volumen de pagos simultáneos, una hoja de cálculo no garantiza unicidad: conviene migrar el registro a una base de datos con una restricción única sobre el ID de evento."
+  ],
+  "destacado": true
+}

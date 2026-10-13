@@ -1,0 +1,84 @@
+{
+  "nodos": [
+    {
+      "id": "pago",
+      "etiqueta": "Pago recibido",
+      "herramienta": "stripe",
+      "tipo": "disparador"
+    },
+    {
+      "id": "buscar",
+      "etiqueta": "Buscar evento",
+      "herramienta": "google-sheets",
+      "tipo": "accion"
+    },
+    {
+      "id": "procesado",
+      "etiqueta": "¿Ya procesado?",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "ignorar",
+      "etiqueta": "Ignorar duplicado",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "preparar",
+      "etiqueta": "Preparar pedido",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
+      "id": "registrar",
+      "etiqueta": "Registrar pedido",
+      "herramienta": "google-sheets",
+      "tipo": "accion"
+    },
+    {
+      "id": "recibo",
+      "etiqueta": "Enviar recibo",
+      "herramienta": "gmail",
+      "tipo": "accion"
+    },
+    {
+      "id": "avisar",
+      "etiqueta": "Avisar a ventas",
+      "herramienta": "slack",
+      "tipo": "accion"
+    }
+  ],
+  "conexiones": [
+    {
+      "origen": "pago",
+      "destino": "buscar"
+    },
+    {
+      "origen": "buscar",
+      "destino": "procesado"
+    },
+    {
+      "origen": "procesado",
+      "destino": "ignorar",
+      "etiqueta": "sí"
+    },
+    {
+      "origen": "procesado",
+      "destino": "preparar",
+      "etiqueta": "no"
+    },
+    {
+      "origen": "preparar",
+      "destino": "registrar"
+    },
+    {
+      "origen": "registrar",
+      "destino": "recibo"
+    },
+    {
+      "origen": "registrar",
+      "destino": "avisar"
+    }
+  ]
+}
