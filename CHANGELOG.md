@@ -6,6 +6,16 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.4.0] - 2026-10-12
+
+Fase 3, lote 2: plantillas de nivel intermedio.
+
+### Añadido
+- Plantilla **onboarding-empleado**: un formulario de ingreso agenda la bienvenida, escribe a la persona, envía una lista de verificación al responsable, lo anuncia en Slack y lo registra.
+- Plantilla **cobranza-facturas-vencidas**: recordatorios de cobro con tono según los días de mora (amable, firme y escalado al responsable) y registro de cada gestión.
+- Plantilla **leads-a-hubspot-sin-duplicados**: normaliza los leads de un webhook y los crea o actualiza en HubSpot por correo; los inválidos van a una hoja para revisar.
+- Plantilla **alertas-de-errores-n8n**: flujo de errores central que registra los fallos, avisa en Slack y escala por correo los flujos marcados como [crítico].
+
 ## [0.3.0] - 2026-10-12
 
 Fase 3, lote 1: plantillas de nivel fácil.
@@ -68,7 +78,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.3.0...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.1.0...v0.1.1
