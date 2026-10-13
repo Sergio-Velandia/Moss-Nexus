@@ -17,7 +17,7 @@ const steps = [
   {
     icon: ClipboardPaste,
     title: 'Copia y pega',
-    text: 'Un clic copia el flujo. Lo pegas en n8n, conectas tus credenciales y lo pruebas.',
+    text: 'Un clic copia el flujo. Lo pegas en n8n, conectas tus credenciales, lo ajustas a tu caso y lo pruebas.',
     color: 'var(--c-nexus)',
   },
 ]
