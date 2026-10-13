@@ -90,7 +90,7 @@ export function Hero() {
               [stats.plantillas, 'plantillas'],
               [stats.niveles, 'niveles'],
               [stats.categorias, 'categorías'],
-              [stats.herramientas, 'herramientas'],
+              [stats.apps, 'apps conectadas'],
             ].map(([n, label]) => (
               <div key={label} className="glass rounded-2xl px-3 py-2.5">
                 <dt className="sr-only">{label}</dt>

@@ -1,3 +1,4 @@
+import { getTool } from '../data/tools'
 import type { Template, TemplateDiagram, TemplateMeta } from './types'
 import { validateDiagram, validateMeta } from './validate'
 
@@ -90,7 +91,8 @@ export function libraryStats(pool: Template[] = templates) {
     plantillas: pool.length,
     niveles: new Set(pool.map((t) => t.dificultad)).size,
     categorias: new Set(pool.map((t) => t.categoria)).size,
-    herramientas: new Set(pool.flatMap((t) => t.herramientas)).size,
+    // Servicios externos (Gmail, Slack…), sin contar la lógica propia de n8n
+    apps: new Set(pool.flatMap((t) => t.herramientas).filter((id) => !getTool(id)?.nativa)).size,
   }
 }
 

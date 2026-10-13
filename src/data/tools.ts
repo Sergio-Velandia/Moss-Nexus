@@ -32,6 +32,8 @@ export interface Tool {
   color: string
   /** Candidata a «Herramientas populares» del Inicio (solo se muestra si tiene al menos una plantilla) */
   popular?: boolean
+  /** Funcionalidad propia de n8n, no un servicio externo: no cuenta como «app conectada» */
+  nativa?: boolean
 }
 
 export const tools: Tool[] = [
@@ -43,14 +45,14 @@ export const tools: Tool[] = [
   { id: 'google-calendar', nombre: 'Google Calendar', icon: CalendarClock, color: '#5b8def', popular: true },
   { id: 'notion', nombre: 'Notion', icon: FileText, color: '#b9b4a8', popular: true },
   { id: 'openai', nombre: 'IA (OpenAI)', icon: Bot, color: '#5fc4b0', popular: true },
-  { id: 'webhook', nombre: 'Webhook', icon: Webhook, color: '#f2647a', popular: true },
-  { id: 'form', nombre: 'Formulario de n8n', icon: ClipboardList, color: '#e0a458', popular: true },
+  { id: 'webhook', nombre: 'Webhook', icon: Webhook, color: '#f2647a', popular: true, nativa: true },
+  { id: 'form', nombre: 'Formulario de n8n', icon: ClipboardList, color: '#e0a458', popular: true, nativa: true },
   { id: 'google-drive', nombre: 'Google Drive', icon: HardDrive, color: '#f4b942', popular: true },
   { id: 'hubspot', nombre: 'HubSpot', icon: Contact, color: '#ff7a59', popular: true },
   { id: 'stripe', nombre: 'Stripe', icon: CreditCard, color: '#8f84f5', popular: true },
-  { id: 'http', nombre: 'Petición HTTP', icon: Globe, color: '#7aa2d6' },
-  { id: 'schedule', nombre: 'Programación', icon: Clock, color: '#e0a458' },
-  { id: 'n8n', nombre: 'Lógica de n8n', icon: GitBranch, color: '#f2647a' },
+  { id: 'http', nombre: 'Petición HTTP', icon: Globe, color: '#7aa2d6', nativa: true },
+  { id: 'schedule', nombre: 'Programación', icon: Clock, color: '#e0a458', nativa: true },
+  { id: 'n8n', nombre: 'Lógica de n8n', icon: GitBranch, color: '#f2647a', nativa: true },
   { id: 'database', nombre: 'Base de datos', icon: Database, color: '#9b8fd6' },
 ]
 
