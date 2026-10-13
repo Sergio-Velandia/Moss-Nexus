@@ -16,6 +16,9 @@ Fase 3, lote 3: plantillas de nivel avanzado.
 - Plantilla **resumen-correos-con-ia**: resumen diario en Slack de los correos sin leer, ordenado por lo que requiere acción hoy.
 - Plantilla **pagos-stripe-idempotentes**: registra cada pago de Stripe una sola vez aunque el webhook llegue repetido, y luego envía el recibo y avisa a ventas.
 
+### Corregido
+- En pantallas angostas, el mapa se muestra como una lista de pasos numerados: los flujos con caminos en paralelo ya no se encogen hasta ser ilegibles.
+
 ## [0.4.0] - 2026-10-12
 
 Fase 3, lote 2: plantillas de nivel intermedio.

@@ -35,7 +35,7 @@ Librería de flujos de automatización para **n8n**, ya armados, explicados y li
 | --- | --- |
 | Fase 1: estructura, diseño, galería y detalle | ✅ Completa (v0.1.0) |
 | Fase 2: primeros flujos reales | ✅ Completa (v0.2.0): 2 plantillas publicadas, pendientes de probar en n8n |
-| Fase 3+: plantillas reales, de una en una | 🛠️ Siguiente |
+| Fase 3+: plantillas reales para entornos profesionales | 🛠️ En curso: primer lote de 12 publicado (v0.3.0 a v0.5.0), 14 plantillas en total, todas pendientes de probar en n8n |
 
 Historial completo en el [CHANGELOG](CHANGELOG.md).
 

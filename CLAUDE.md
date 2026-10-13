@@ -32,7 +32,9 @@ Orden acordado. Cada fase empieza solo cuando el usuario la pide y con un plan c
 - **Fase 1 (hecha, v0.1.0):** estructura, diseño, galería, detalle, mapa generado, copiar flujo y 2 plantillas `ejemplo: true`.
 - **Fase 1.5 (hecha, v0.1.1):** pulido del repo, convenciones de commits, versionado y CHANGELOG.
 - **Fase 2 (hecha, v0.2.0):** `whatsapp-a-sheets` (WhatsApp Cloud API oficial) y `reporte-diario-ventas`. Se publicaron «Sin probar» por decisión del usuario, y se eliminaron los ejemplos.
-- **Fase 3+:** plantillas reales para entornos profesionales, de nivel fácil, intermedio y avanzado. El primer lote tiene 12 plantillas, 4 por nivel, en tres versiones MINOR. Después, plantillas sueltas.
+- **Fase 3+:** plantillas reales para entornos profesionales, de nivel fácil, intermedio y avanzado. Primer lote hecho: 12 plantillas, 4 por nivel (v0.3.0 fáciles, v0.4.0 intermedias, v0.5.0 avanzadas), todas «Sin probar». Después, plantillas sueltas.
+  - Las plantillas se generan con nodos nativos. Para IA se usa una petición HTTP a la API de OpenAI con la credencial openAiApi y el modelo en un nodo «Configuración». La lógica de cada nodo Code se prueba con casos antes de commitear.
+  - El mapa: SVG desde md (vertical si hay más de 5 columnas) y lista de pasos (FlowSteps) en pantallas angostas.
 - **Fase Legal (MINOR):** rama `docs/legal`.
   - Antes de redactar, auditar con evidencia qué hace el sitio con los datos: almacenamiento, terceros, formularios y qué se copia o descarga. La privacidad describe solo lo verificado.
   - Páginas `/terminos`, `/privacidad` y `/contacto`, con carga perezosa y el mismo diseño. Contacto sin formulario: GitHub Issues más el placeholder `CONTACTO_EMAIL`, preguntando al usuario cuál usar.
