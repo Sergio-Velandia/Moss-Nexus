@@ -1,6 +1,22 @@
-import { BadgeCheck, Check, ClipboardList, Copy, HeartHandshake, ListOrdered, Network } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { ArrowRight, Check, ClipboardList, Copy, Gauge, HeartHandshake, ListOrdered, Network, ShieldCheck } from 'lucide-react'
+import { Fragment, type ReactNode } from 'react'
+import { Link } from 'react-router-dom'
+import { flowSteps } from '../../lib/diagram'
+import { difficultyLabel, formatMinutes } from '../../lib/format'
+import { getTemplate, templates } from '../../lib/templates'
+import type { Difficulty, Template } from '../../lib/types'
+import { DifficultyBadge, TestedSeal, UntestedBadge } from '../ui/Badges'
 import { Reveal, SectionHeading } from '../ui/Reveal'
+import { ToolIcon } from '../ui/ToolIcon'
+
+/** Plantilla que ilustra la sección. Si algún día se retira, se usa la primera disponible. */
+const EJEMPLO = 'cobranza-facturas-vencidas'
+
+const NIVELES: Record<Difficulty, string> = {
+  facil: 'Un disparador y pocas acciones. Se configura en minutos.',
+  media: 'Ramas, reglas de negocio o varias herramientas conectadas.',
+  avanzada: 'IA, aprobaciones, pagos o lógica que conviene probar con cuidado.',
+}
 
 function Tile({ icon, title, text, children, className = '', delay = 0 }: {
   icon: ReactNode
@@ -15,62 +31,104 @@ function Tile({ icon, title, text, children, className = '', delay = 0 }: {
       <span className="grid h-10 w-10 place-items-center rounded-xl bg-surface-2 text-nexus">{icon}</span>
       <h3 className="mt-4 font-semibold">{title}</h3>
       <p className="mt-1.5 text-sm text-ink-soft">{text}</p>
-      {children && <div className="mt-6 flex-1">{children}</div>}
+      {children && <div className="mt-5 flex-1">{children}</div>}
     </Reveal>
   )
 }
 
-/** Miniatura decorativa del mapa */
-function MiniMap() {
-  const nodes = [
-    { x: 8, y: 34, c: 'var(--c-nexus)' },
-    { x: 98, y: 34, c: 'var(--c-amber)' },
-    { x: 188, y: 8, c: 'var(--c-moss)' },
-    { x: 188, y: 60, c: 'var(--c-moss)' },
-  ]
+/** Miniatura real del flujo: cada paso con las herramientas que usa, leído de diagram.json */
+function MiniFlow({ template }: { template: Template }) {
+  const byId = new Map(template.diagrama.nodos.map((n) => [n.id, n]))
+  const steps = flowSteps(template.diagrama)
   return (
-    <svg viewBox="0 0 260 96" className="dot-grid h-auto w-full rounded-2xl border border-line" aria-hidden>
-      <path d="M72 48 C 85 48, 85 48, 98 48" stroke="var(--c-nexus)" strokeWidth="1.6" fill="none" />
-      <path d="M162 48 C 175 48, 175 22, 188 22" stroke="var(--c-nexus)" strokeWidth="1.6" fill="none" />
-      <path d="M162 48 C 175 48, 175 74, 188 74" stroke="var(--c-nexus)" strokeWidth="1.6" fill="none" />
-      {nodes.map((n, i) => (
-        <g key={i} transform={`translate(${n.x} ${n.y})`}>
-          <rect width="64" height="28" rx="8" fill="var(--c-surface)" stroke="var(--c-line-strong)" />
-          <rect x="6" y="6" width="16" height="16" rx="5" fill={n.c} opacity="0.35" />
-          <rect x="27" y="10" width="30" height="4" rx="2" fill="var(--c-line-strong)" />
-          <rect x="27" y="17" width="20" height="3" rx="1.5" fill="var(--c-line)" />
-        </g>
-      ))}
-    </svg>
+    <div className="dot-grid overflow-x-auto rounded-2xl border border-line p-4">
+      <ol className="flex min-w-max items-start" aria-label={`Pasos de «${template.titulo}»`}>
+        {steps.map((step, i) => {
+          const nodes = step.nodes.map((n) => byId.get(n.id)!)
+          return (
+            <Fragment key={i}>
+              {i > 0 && <li aria-hidden className="mx-1 mt-[1.1rem] h-px w-6 shrink-0 bg-gradient-to-r from-moss to-nexus" />}
+              <li className="flex w-24 shrink-0 flex-col items-center text-center">
+                <span className="flex -space-x-1.5">
+                  {nodes.map((n) => (
+                    <span key={n.id} className="rounded-xl ring-2 ring-bg">
+                      <ToolIcon id={n.herramienta} />
+                    </span>
+                  ))}
+                </span>
+                <span className="mt-2 text-[11px] leading-tight text-ink-soft">
+                  {nodes.length > 1 ? `${nodes.length} caminos` : nodes[0].etiqueta}
+                </span>
+              </li>
+            </Fragment>
+          )
+        })}
+      </ol>
+    </div>
   )
 }
 
+/** Las dos primeras frases del problema, para citarlo sin ocupar toda la tarjeta */
+const extracto = (texto: string) => (texto.match(/[^.]+\./g) ?? [texto]).slice(0, 2).join('').trim()
+
 export function Anatomy() {
+  const t = getTemplate(EJEMPLO) ?? templates[0]
+  if (!t) return null
+  const porNivel = (d: Difficulty) => templates.filter((x) => x.dificultad === d).length
+
   return (
     <section aria-labelledby="anatomia-title" className="mx-auto max-w-6xl px-4 py-20">
       <SectionHeading
         id="anatomia-title"
         eyebrow="Dentro de cada plantilla"
         title="No es solo un JSON. Es la historia completa."
-        intro="Cada plantilla sigue el mismo orden para que entiendas qué vas a instalar antes de instalarlo."
+        intro="Cada plantilla sigue el mismo orden para que entiendas qué vas a instalar antes de instalarlo. Así se ve en una plantilla real del catálogo."
       />
+      <Reveal className="mt-6">
+        <Link
+          to={`/plantillas/${t.slug}`}
+          className="group inline-flex items-center gap-2 rounded-xl border border-line-strong px-3 py-2 text-sm transition hover:border-nexus/50"
+        >
+          <span className="font-mono text-[11px] uppercase tracking-wider text-faint">Ejemplo real</span>
+          <span className="font-medium">{t.titulo}</span>
+          <ArrowRight size={15} aria-hidden className="text-nexus transition group-hover:translate-x-0.5" />
+        </Link>
+      </Reveal>
 
-      <div className="mt-12 grid gap-4 md:grid-cols-6">
+      <div className="mt-8 grid gap-4 md:grid-cols-6">
         <Tile
           className="md:col-span-4"
           icon={<Network size={20} aria-hidden />}
           title="Mapa visual"
-          text="Ves de un vistazo de dónde llega la información, por qué pasos pasa y a dónde termina."
+          text="De dónde llega la información, por qué pasos pasa y a dónde termina. En la plantilla lo ves completo, con cada conexión."
         >
-          <MiniMap />
+          <MiniFlow template={t} />
+          <p className="mt-3 font-mono text-[11px] text-faint">
+            {t.diagrama.nodos.length} nodos · {t.diagrama.conexiones.length} conexiones
+          </p>
         </Tile>
+
         <Tile
           className="md:col-span-2"
           delay={0.06}
           icon={<HeartHandshake size={20} aria-hidden />}
           title="Contexto humano"
           text="Qué problema resuelve y en qué situaciones te sirve, sin jerga."
-        />
+        >
+          <blockquote className="border-l-2 border-nexus/60 pl-3 text-sm italic leading-relaxed text-ink">
+            «{extracto(t.problema)}»
+          </blockquote>
+          <p className="mt-4 font-mono text-[11px] uppercase tracking-wider text-faint">Te sirve si…</p>
+          <ul className="mt-2 space-y-1.5 text-sm text-ink-soft">
+            {t.escenarios.slice(0, 3).map((e) => (
+              <li key={e} className="flex gap-2">
+                <span aria-hidden className="mt-2 h-1 w-1 shrink-0 rounded-full bg-nexus" />
+                {e}
+              </li>
+            ))}
+          </ul>
+        </Tile>
+
         <Tile
           className="md:col-span-2"
           delay={0.04}
@@ -79,44 +137,92 @@ export function Anatomy() {
           text="Las cuentas y accesos que necesitas, antes de que te los pida n8n."
         >
           <ul className="space-y-2 text-sm">
-            {['Cuenta de Google', 'Instancia de n8n'].map((r) => (
-              <li key={r} className="flex items-center gap-2 text-ink-soft">
-                <Check size={15} className="text-moss" aria-hidden /> {r}
+            {t.requisitos.slice(0, 3).map((r) => (
+              <li key={r} className="flex items-start gap-2 text-ink-soft">
+                <Check size={15} className="mt-0.5 shrink-0 text-moss" aria-hidden /> {r}
               </li>
             ))}
           </ul>
+          {t.requisitos.length > 3 && <p className="mt-2 text-xs text-faint">y {t.requisitos.length - 3} más en la plantilla</p>}
         </Tile>
+
         <Tile
           className="md:col-span-2"
           delay={0.08}
           icon={<ListOrdered size={20} aria-hidden />}
           title="Pasos numerados"
-          text="De copiar a tenerlo activo, sin saltarte nada."
+          text={`De copiar a tenerlo activo: ${t.pasos.length} pasos en esta plantilla, sin saltarte nada.`}
         >
           <ol className="space-y-2 text-sm text-ink-soft">
-            {['Copiar', 'Pegar en n8n', 'Conectar credenciales', 'Probar'].map((s, i) => (
-              <li key={s} className="flex items-center gap-2">
-                <span className="grid h-5 w-5 place-items-center rounded-md bg-surface-2 font-mono text-[11px] text-ink">{i + 1}</span>
-                {s}
+            {t.pasos.slice(0, 3).map((s, i) => (
+              <li key={s} className="flex items-start gap-2">
+                <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md bg-surface-2 font-mono text-[11px] text-ink">{i + 1}</span>
+                <span className="line-clamp-2">{s}</span>
               </li>
             ))}
           </ol>
         </Tile>
+
         <Tile
           className="md:col-span-2"
           delay={0.12}
           icon={<Copy size={20} aria-hidden />}
           title="Copiar flujo"
-          text="Un botón. El flujo completo en tu portapapeles, listo para pegar en el lienzo."
+          text="Un botón. El flujo completo en tu portapapeles, listo para pegar en el lienzo de n8n, o descargado como .json."
         >
-          <div className="flex flex-col gap-3">
-            <span aria-hidden className="inline-flex w-fit items-center gap-2 rounded-xl bg-nexus px-4 py-2.5 text-sm font-semibold text-on-accent">
-              <Copy size={16} /> Copiar flujo
-            </span>
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-moss">
-              <BadgeCheck size={15} aria-hidden /> Sello «Probado» con fecha y versión de n8n, cuando ya se verificó
-            </span>
-          </div>
+          <span aria-hidden className="inline-flex w-fit items-center gap-2 rounded-xl bg-nexus px-4 py-2.5 text-sm font-semibold text-on-accent">
+            <Copy size={16} /> Copiar flujo
+          </span>
+        </Tile>
+
+        <Tile
+          className="md:col-span-3"
+          delay={0.04}
+          icon={<Gauge size={20} aria-hidden />}
+          title="Nivel y tiempo"
+          text={`Esta plantilla es de nivel ${difficultyLabel[t.dificultad].toLowerCase()} y se configura en unos ${formatMinutes(t.tiempoEstimado)}.`}
+        >
+          <ul className="space-y-2.5">
+            {(Object.keys(NIVELES) as Difficulty[]).map((d) => (
+              <li
+                key={d}
+                className={`flex items-start gap-3 rounded-xl px-3 py-2 text-sm ${d === t.dificultad ? 'bg-surface-2' : ''}`}
+                aria-current={d === t.dificultad ? 'true' : undefined}
+              >
+                <span className="w-24 shrink-0 pt-0.5">
+                  <DifficultyBadge value={d} />
+                </span>
+                <span className="text-ink-soft">
+                  {NIVELES[d]} <span className="text-faint">({porNivel(d)} en la librería)</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Tile>
+
+        <Tile
+          className="md:col-span-3"
+          delay={0.08}
+          icon={<ShieldCheck size={20} aria-hidden />}
+          title="Probado o sin probar"
+          text="Cada plantilla dice con claridad si ya se ejecutó en una instancia real de n8n."
+        >
+          <dl className="space-y-3 text-sm">
+            <div className="rounded-xl bg-surface-2 px-3 py-2.5">
+              <dt>
+                <TestedSeal fecha="" version="" compact />
+              </dt>
+              <dd className="mt-1 text-ink-soft">Funcionó en una prueba real. Muestra la fecha y la versión de n8n en que se probó.</dd>
+            </div>
+            <div className="rounded-xl bg-surface-2 px-3 py-2.5">
+              <dt>
+                <UntestedBadge />
+              </dt>
+              <dd className="mt-1 text-ink-soft">
+                Está armada y explicada, pero aún no se ejecutó en n8n. Revísala y pruébala antes de usarla con datos reales.
+              </dd>
+            </div>
+          </dl>
         </Tile>
       </div>
     </section>
