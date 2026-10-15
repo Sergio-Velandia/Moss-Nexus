@@ -88,7 +88,8 @@ Agregar una plantilla es **solo crear una carpeta**. No hace falta tocar ningún
 | `dificultad` | `facil`, `media` o `avanzada` |
 | `tiempoEstimado` | Minutos para configurarla la primera vez |
 | `destacado` | `true` para que aparezca en «Destacadas» del Inicio |
-| `probado` | Opcional. Solo cuando el flujo se probó en una instancia real de n8n: `{ "fecha": "AAAA-MM-DD", "versionN8n": "1.x.x" }`. Sin él, la plantilla se muestra como «Sin probar» |
+| `probado` | Opcional. Solo cuando el flujo se probó en una instancia real de n8n: `{ "fecha": "AAAA-MM-DD", "hora": "HH:mm", "versionN8n": "2.x.x" }` (`hora` es opcional). Sin él, la plantilla se muestra como «Sin probar» |
+| `guias` | Opcional. Enlaces de apoyo que se muestran junto a los requisitos: `[{ "titulo": "…", "url": "https://…" }]` |
 | `ejemplo` | Opcional. `true` marca la plantilla como ficticia |
 
 ### `diagram.json`

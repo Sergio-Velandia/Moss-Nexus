@@ -23,7 +23,7 @@ Librería/cookbook estática de plantillas de n8n. Proyecto hermano de Moss (htt
 - `CHANGELOG.md` sigue Keep a Changelog, en español. El campo `version` de `package.json` siempre coincide con la última versión del changelog.
 - **Regla:** una plantilla suelta sube MINOR. Un lote planificado sube un MINOR por lote (la Fase 3 se publica por nivel: v0.3.0 fáciles, v0.4.0 intermedias y v0.5.0 avanzadas). La Fase 2 contó como un solo MINOR con sus dos plantillas.
 - Cada plantilla va en su propio commit. Al cerrar la plantilla suelta o el lote, un commit `chore(release): vX.Y.Z` sube la versión y agrega al CHANGELOG una línea por plantilla.
-- **Sello «Probado»:** solo se añade `probado` cuando el usuario da la fecha y la versión de n8n de su prueba. Nunca inventarlas. Marcar una plantilla existente como probada es PATCH: `fix(plantilla): marca <slug> como probada`.
+- **Sello «Probado»:** solo se añade `probado` cuando el usuario da la fecha y la versión de n8n de su prueba (y, si la da, la hora en `HH:mm`). Nunca inventarlas. Las guías de configuración de Moss (por ejemplo, OAuth 2 de Google) se enlazan con el campo `guias` de `meta.json`. Marcar una plantilla existente como probada es PATCH: `fix(plantilla): marca <slug> como probada`.
 - Cada versión se marca con un tag `vX.Y.Z` en `main`, que solo se crea con confirmación del usuario.
 
 ## Fases
