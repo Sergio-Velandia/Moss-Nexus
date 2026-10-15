@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, CircleCheck, FlaskConical, Lightbulb, ListChecks, Network, Rocket, Target } from 'lucide-react'
+import { ArrowLeft, BookOpen, CircleCheck, ExternalLink, FlaskConical, Lightbulb, ListChecks, Network, Rocket, Target } from 'lucide-react'
 import { getCategory } from '../data/categories'
 import { getTool } from '../data/tools'
 import { FlowMap } from '../components/diagram/FlowMap'
@@ -133,6 +133,29 @@ export default function TemplateDetail() {
                 </li>
               ))}
             </ul>
+            {t.guias && t.guias.length > 0 && (
+              <div className="mt-5">
+                <h3 className="flex items-center gap-2 text-sm font-semibold">
+                  <BookOpen size={16} className="text-moss" aria-hidden /> Guías útiles
+                </h3>
+                <ul className="mt-3 space-y-2">
+                  {t.guias.map((g) => (
+                    <li key={g.url}>
+                      <a
+                        href={g.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="glass group inline-flex min-h-11 items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition hover:border-moss/50"
+                      >
+                        {g.titulo}
+                        <ExternalLink size={14} aria-hidden className="text-moss transition group-hover:translate-x-0.5" />
+                        <span className="sr-only"> (se abre en una pestaña nueva)</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </Section>
 
           {/* 5. Cómo usarla */}

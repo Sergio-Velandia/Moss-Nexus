@@ -28,6 +28,8 @@ export interface TemplateMeta {
     hora?: string
   }
   destacado: boolean
+  /** Guías externas útiles para configurarla (por ejemplo, el manual de Moss). Opcional */
+  guias?: { titulo: string; url: string }[]
   /** Plantilla ficticia, solo para ver el diseño. Se muestra con una marca visible. */
   ejemplo?: boolean
 }

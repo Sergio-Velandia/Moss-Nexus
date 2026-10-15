@@ -100,6 +100,11 @@ describe('validateMeta', () => {
     expect(validateMeta(conHora('24:00'), 'demo').join()).toMatch(/hora/)
     expect(validateMeta(conHora('12:15 AM'), 'demo').join()).toMatch(/hora/)
   })
+  it('acepta guías con URL https y rechaza las demás', () => {
+    expect(validateMeta({ ...meta, guias: [{ titulo: 'Manual', url: 'https://ejemplo.com/guia' }] }, 'demo')).toEqual([])
+    expect(validateMeta({ ...meta, guias: [{ titulo: 'Manual', url: 'http://ejemplo.com' }] }, 'demo').join()).toMatch(/guias/)
+    expect(validateMeta({ ...meta, guias: [{ url: 'https://ejemplo.com' }] }, 'demo').join()).toMatch(/guias/)
+  })
   it('rechaza fechas con otro formato', () => {
     expect(validateMeta({ ...meta, probado: { fecha: '01/01/2026', versionN8n: '1' } }, 'demo').join()).toMatch(/probado/)
   })

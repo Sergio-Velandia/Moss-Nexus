@@ -52,6 +52,13 @@ export function validateMeta(meta: unknown, folder: string): string[] {
     }
   }
   need('destacado', typeof meta.destacado === 'boolean', 'true o false')
+  if (meta.guias !== undefined) {
+    need(
+      'guias',
+      Array.isArray(meta.guias) && meta.guias.every((g) => isObj(g) && isText(g.titulo) && typeof g.url === 'string' && g.url.startsWith('https://')),
+      'lista de { titulo, url } con URL https',
+    )
+  }
   if (meta.ejemplo !== undefined) need('ejemplo', typeof meta.ejemplo === 'boolean', 'true o false')
   return errors
 }
