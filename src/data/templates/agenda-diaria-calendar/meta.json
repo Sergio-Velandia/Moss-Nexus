@@ -11,10 +11,11 @@
     "gmail"
   ],
   "dificultad": "facil",
-  "tiempoEstimado": 10,
+  "tiempoEstimado": 20,
   "requisitos": [
     "Una instancia de n8n (cloud o autoalojada), con la zona horaria correcta en Settings > Timezone",
-    "Una cuenta de Google con acceso a Google Calendar y Gmail"
+    "Una cuenta de Google con acceso a Google Calendar y Gmail. Usa la que prefieras: el flujo no trae ninguna cuenta ni correo configurado",
+    "Un proyecto en Google Cloud Console con las APIs de Google Calendar y Gmail habilitadas, la pantalla de consentimiento OAuth configurada y un cliente OAuth 2.0 (ID y secreto) para crear las credenciales en n8n"
   ],
   "escenarios": [
     "Profesional con muchas reuniones que quiere planear el día antes de abrir el computador",
@@ -23,10 +24,17 @@
   ],
   "pasos": [
     "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
-    "En «Eventos de hoy», conecta tu cuenta de Google. Si quieres otro calendario, cambia «primary» por su ID.",
-    "En «Enviar por Gmail», conecta tu cuenta y cambia tu-correo@ejemplo.com por el correo donde quieres recibir la agenda.",
+    "En Google Cloud Console, habilita las APIs de Google Calendar y Gmail y crea un cliente OAuth 2.0. En n8n, usa su ID y su secreto para crear las credenciales de Google Calendar y de Gmail. Si no sabes cómo, sigue la guía de OAuth 2 de Moss enlazada en esta página.",
+    "En «Eventos de hoy», elige tu credencial de Google Calendar. Si quieres otro calendario, cambia «primary» por su ID.",
+    "En «Enviar por Gmail», elige tu credencial de Gmail y cambia tu-correo@ejemplo.com por el correo que quieras: el flujo no trae ninguna dirección real y la agenda puede llegar a cualquier buzón.",
     "Si prefieres otra hora o también los fines de semana, cambia la expresión del nodo «Días hábiles 7:00» (0 7 * * 1-5).",
-    "Pulsa «Test workflow» para recibir la agenda de hoy y, si está bien, activa el flujo."
+    "Pulsa «Execute workflow» para recibir la agenda de hoy y, si está bien, activa el flujo."
   ],
-  "destacado": false
+  "destacado": false,
+  "guias": [
+    {
+      "titulo": "Moss: conectar Gmail y Google Calendar a n8n con OAuth 2",
+      "url": "https://sergio-velandia.github.io/Moss/manual/n8n/oauth2-de-google-en-n8n#lista-de-comprobaci%C3%B3n"
+    }
+  ]
 }
