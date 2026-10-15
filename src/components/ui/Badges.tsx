@@ -66,7 +66,18 @@ export function UntestedNotice() {
   )
 }
 
-export function TestedSeal({ fecha, version, compact = false }: { fecha: string; version: string; compact?: boolean }) {
+export function TestedSeal({
+  fecha,
+  version,
+  hora,
+  compact = false,
+}: {
+  fecha: string
+  version: string
+  /** HH:mm, opcional */
+  hora?: string
+  compact?: boolean
+}) {
   if (compact) {
     return (
       <span className="inline-flex items-center gap-1 text-xs font-medium text-moss">
@@ -83,7 +94,8 @@ export function TestedSeal({ fecha, version, compact = false }: { fecha: string;
       <span className="leading-tight">
         <span className="block text-sm font-semibold text-moss">Probado</span>
         <span className="block text-xs text-ink-soft">
-          {formatDate(fecha)} · n8n <span className="font-mono">{version}</span>
+          {formatDate(fecha)}
+          {hora && <>, {hora}</>} · n8n <span className="font-mono">{version}</span>
         </span>
       </span>
     </div>

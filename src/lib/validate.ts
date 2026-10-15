@@ -47,6 +47,9 @@ export function validateMeta(meta: unknown, folder: string): string[] {
         isText(meta.probado.versionN8n),
       '{ fecha: "AAAA-MM-DD", versionN8n: "1.x.x" }',
     )
+    if (isObj(meta.probado) && meta.probado.hora !== undefined && !/^([01]\d|2[0-3]):[0-5]\d$/.test(String(meta.probado.hora))) {
+      errors.push('meta.probado.hora: formato HH:mm de 24 horas, por ejemplo "00:15"')
+    }
   }
   need('destacado', typeof meta.destacado === 'boolean', 'true o false')
   if (meta.ejemplo !== undefined) need('ejemplo', typeof meta.ejemplo === 'boolean', 'true o false')

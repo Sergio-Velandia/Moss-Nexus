@@ -93,6 +93,13 @@ describe('validateMeta', () => {
     const { probado: _omit, ...sinProbar } = meta
     expect(validateMeta(sinProbar, 'demo')).toEqual([])
   })
+  it('acepta la hora de la prueba en formato HH:mm y rechaza otros', () => {
+    const conHora = (hora: string) => ({ ...meta, probado: { fecha: '2026-10-15', versionN8n: '2.43.5', hora } })
+    expect(validateMeta(conHora('00:15'), 'demo')).toEqual([])
+    expect(validateMeta(conHora('23:59'), 'demo')).toEqual([])
+    expect(validateMeta(conHora('24:00'), 'demo').join()).toMatch(/hora/)
+    expect(validateMeta(conHora('12:15 AM'), 'demo').join()).toMatch(/hora/)
+  })
   it('rechaza fechas con otro formato', () => {
     expect(validateMeta({ ...meta, probado: { fecha: '01/01/2026', versionN8n: '1' } }, 'demo').join()).toMatch(/probado/)
   })

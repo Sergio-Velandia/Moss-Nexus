@@ -21,7 +21,12 @@ export interface TemplateMeta {
   escenarios: string[]
   pasos: string[]
   /** Solo se añade cuando el flujo se probó en una instancia real de n8n. Sin él, se muestra «Sin probar». */
-  probado?: { fecha: string; versionN8n: string }
+  probado?: {
+    fecha: string
+    versionN8n: string
+    /** Hora local de la prueba, HH:mm (24 h). Opcional */
+    hora?: string
+  }
   destacado: boolean
   /** Plantilla ficticia, solo para ver el diseño. Se muestra con una marca visible. */
   ejemplo?: boolean
