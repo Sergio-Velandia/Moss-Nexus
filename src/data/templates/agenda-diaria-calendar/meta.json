@@ -30,6 +30,11 @@
     "Si prefieres otra hora o también los fines de semana, cambia la expresión del nodo «Días hábiles 7:00» (0 7 * * 1-5).",
     "Pulsa «Execute workflow» para recibir la agenda de hoy y, si está bien, activa el flujo."
   ],
+  "probado": {
+    "fecha": "2026-10-15",
+    "hora": "00:15",
+    "versionN8n": "2.43.5"
+  },
   "destacado": false,
   "guias": [
     {
