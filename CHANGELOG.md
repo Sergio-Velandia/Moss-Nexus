@@ -6,6 +6,15 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.7.1] - 2026-10-15
+
+### Añadido
+- El sello «Probado» puede indicar la hora de la prueba (campo opcional `probado.hora`).
+- Campo opcional `guias` para enlazar guías de configuración desde una plantilla; se muestran junto a los requisitos.
+
+### Cambiado
+- **agenda-diaria-calendar**: primera plantilla con sello «Probado» (15 oct 2026, 00:15, n8n 2.43.5). Requisitos y pasos aclaran las credenciales OAuth 2.0 de Google Cloud Console, que el flujo no trae ninguna cuenta ni correo, y enlazan la guía de OAuth 2 del manual de Moss. Tiempo estimado: 20 minutos.
+
 ## [0.7.0] - 2026-10-12
 
 Fase Repaso: coherencia del inicio y de la información general.
@@ -126,7 +135,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.0...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.1...HEAD
+[0.7.1]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.4.0...v0.5.0
