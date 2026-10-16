@@ -65,7 +65,8 @@
   "probado": {
     "fecha": "2026-10-15",
     "hora": "21:40",
-    "versionN8n": "2.43.5"
+    "versionN8n": "2.43.5",
+    "datos": "ficticios"
   },
   "destacado": false,
   "guias": [
