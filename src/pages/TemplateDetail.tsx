@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, BookOpen, CircleCheck, ExternalLink, FlaskConical, Lightbulb, ListChecks, Network, Rocket, Target } from 'lucide-react'
+import { ArrowLeft, ArrowRight, BookOpen, CircleCheck, ExternalLink, FlaskConical, LifeBuoy, Lightbulb, ListChecks, Network, Rocket, Target, TriangleAlert } from 'lucide-react'
 import { getCategory } from '../data/categories'
 import { getTool } from '../data/tools'
 import { FlowMap } from '../components/diagram/FlowMap'
@@ -173,6 +173,40 @@ export default function TemplateDetail() {
             </ol>
           </Section>
 
+          {/* Problemas frecuentes: síntoma → solución, cuando la plantilla los documenta */}
+          {t.problemas && t.problemas.length > 0 && (
+            <Section id="problemas" icon={<LifeBuoy size={18} aria-hidden />} title="Problemas frecuentes">
+              <ul className="space-y-3">
+                {t.problemas.map((p) => (
+                  <li key={p.sintoma} className="glass rounded-2xl p-4">
+                    <p className="font-medium leading-relaxed">{p.sintoma}</p>
+                    <p className="mt-2 flex gap-2 text-sm leading-relaxed text-ink-soft">
+                      <ArrowRight size={16} className="mt-0.5 shrink-0 text-moss" aria-hidden />
+                      <span>
+                        <span className="sr-only">Solución: </span>
+                        {p.solucion}
+                      </span>
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </Section>
+          )}
+
+          {/* Limitaciones conocidas: visibles antes de copiar, nunca escondidas */}
+          {t.limitaciones && t.limitaciones.length > 0 && (
+            <Section id="limitaciones" icon={<TriangleAlert size={18} aria-hidden />} title="Limitaciones conocidas">
+              <ul className="space-y-2 rounded-2xl border border-amber/30 bg-amber/[0.05] p-4">
+                {t.limitaciones.map((l) => (
+                  <li key={l} className="flex gap-3 text-sm leading-relaxed">
+                    <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber" />
+                    {l}
+                  </li>
+                ))}
+              </ul>
+            </Section>
+          )}
+
           {/* 6 y 7. Copiar flujo + sello Probado */}
           <Reveal as="section" className="relative overflow-hidden rounded-3xl border border-nexus/30 bg-nexus/[0.06] p-6 sm:p-8">
             <div aria-hidden className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus/20 blur-3xl" />
@@ -225,6 +259,8 @@ export default function TemplateDetail() {
                   ['contexto', 'Qué problema resuelve'],
                   ['requisitos', 'Requisitos'],
                   ['pasos', 'Cómo usarla'],
+                  ...(t.problemas?.length ? [['problemas', 'Problemas frecuentes']] : []),
+                  ...(t.limitaciones?.length ? [['limitaciones', 'Limitaciones']] : []),
                   ['copiar', 'Copiar flujo'],
                 ].map(([id, label]) => (
                   <li key={id}>

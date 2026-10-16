@@ -52,6 +52,14 @@ export function validateMeta(meta: unknown, folder: string): string[] {
     }
   }
   need('destacado', typeof meta.destacado === 'boolean', 'true o false')
+  if (meta.problemas !== undefined) {
+    need(
+      'problemas',
+      Array.isArray(meta.problemas) && meta.problemas.every((p) => isObj(p) && isText(p.sintoma) && isText(p.solucion)),
+      'lista de { sintoma, solucion }',
+    )
+  }
+  if (meta.limitaciones !== undefined) need('limitaciones', isTextList(meta.limitaciones), 'lista de textos no vacía')
   if (meta.guias !== undefined) {
     need(
       'guias',

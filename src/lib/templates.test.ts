@@ -100,6 +100,12 @@ describe('validateMeta', () => {
     expect(validateMeta(conHora('24:00'), 'demo').join()).toMatch(/hora/)
     expect(validateMeta(conHora('12:15 AM'), 'demo').join()).toMatch(/hora/)
   })
+  it('acepta problemas frecuentes y limitaciones bien formados', () => {
+    const ok = { ...meta, problemas: [{ sintoma: 'Error X', solucion: 'Haz Y' }], limitaciones: ['No deduplica'] }
+    expect(validateMeta(ok, 'demo')).toEqual([])
+    expect(validateMeta({ ...meta, problemas: [{ sintoma: 'Error X' }] }, 'demo').join()).toMatch(/problemas/)
+    expect(validateMeta({ ...meta, limitaciones: [] }, 'demo').join()).toMatch(/limitaciones/)
+  })
   it('acepta guías con URL https y rechaza las demás', () => {
     expect(validateMeta({ ...meta, guias: [{ titulo: 'Manual', url: 'https://ejemplo.com/guia' }] }, 'demo')).toEqual([])
     expect(validateMeta({ ...meta, guias: [{ titulo: 'Manual', url: 'http://ejemplo.com' }] }, 'demo').join()).toMatch(/guias/)

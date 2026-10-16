@@ -28,6 +28,10 @@ export interface TemplateMeta {
     hora?: string
   }
   destacado: boolean
+  /** Errores habituales al montarla: qué ves y cómo resolverlo. Opcional */
+  problemas?: { sintoma: string; solucion: string }[]
+  /** Lo que la plantilla no resuelve o puede hacer mal. Se muestra a la vista, antes de copiar. Opcional */
+  limitaciones?: string[]
   /** Guías externas útiles para configurarla (por ejemplo, el manual de Moss). Opcional */
   guias?: { titulo: string; url: string }[]
   /** Plantilla ficticia, solo para ver el diseño. Se muestra con una marca visible. */
