@@ -60,6 +60,13 @@
     "Los envíos repetidos crean filas y avisos duplicados: no hay deduplicación por correo.",
     "Guarda datos personales (nombre, correo y teléfono). Si lo usas con clientes reales, informa en el formulario para qué usarás sus datos (en Colombia, Ley 1581 de 2012)."
   ],
+  "probado": {
+    "fecha": "2026-10-15",
+    "hora": "23:42",
+    "versionN8n": "2.43.5",
+    "datos": "reales",
+    "nota": "Probado con datos reales del propio autor: un envío del formulario con su correo y su teléfono, con su autorización. Esos datos no se publican ni se guardan en Moss Nexus."
+  },
   "destacado": true,
   "guias": [
     {
