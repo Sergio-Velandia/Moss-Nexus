@@ -58,6 +58,12 @@
     "Si el flujo no corre un día (n8n apagado o un error), el reporte de ese día no se recupera solo.",
     "«Más vendido» se cuenta por cantidad de ventas, no por dinero; para eso está «Mayor ingreso»."
   ],
+  "probado": {
+    "fecha": "2026-10-15",
+    "hora": "11:19",
+    "versionN8n": "2.43.5",
+    "datos": "ficticios"
+  },
   "destacado": true,
   "guias": [
     {
