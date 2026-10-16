@@ -6,6 +6,17 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.7.3] - 2026-10-15
+
+### Añadido
+- El sello «Probado» indica con qué datos se probó (campo opcional `probado.datos`). Las tres plantillas probadas aclaran que se usaron datos ficticios, creados solo para la prueba, y no datos de personas ni de negocios reales.
+
+### Cambiado
+- **reporte-diario-ventas**: sello «Probado» (15 oct 2026, 11:19, n8n 2.43.5). Requisitos, pasos y nota aclaran la hoja nativa de Google, el correo de destino, la zona horaria y la configuración regional de la hoja, y enlazan la guía de OAuth 2 de Moss. Documenta 4 problemas frecuentes y 4 limitaciones (entre ellas, que las devoluciones restan del total). El correo distingue «más vendido (por cantidad de ventas)» de «mayor ingreso». Tiempo estimado: 20 minutos.
+
+### Corregido
+- **reporte-diario-ventas**: los totales escritos como texto con formato colombiano («45.000», «$ 45.000», «45.000,50») sumaban 0 o mal sin avisar. Ahora se leen bien, y las filas con Total ilegible se cuentan y se avisan en el correo. Las fechas reales de la hoja se leen como número de serie, sin depender de su idioma. El dinero se muestra en pesos colombianos (`MONEDA`, configurable).
+
 ## [0.7.2] - 2026-10-15
 
 ### Añadido
@@ -146,7 +157,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.2...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.3...HEAD
+[0.7.3]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.6.0...v0.7.0
