@@ -6,6 +6,17 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.7.2] - 2026-10-15
+
+### Añadido
+- Campos opcionales `problemas` (síntoma → solución) y `limitaciones` en las plantillas. El detalle los muestra como «Problemas frecuentes» y «Limitaciones conocidas», antes de copiar el flujo.
+
+### Cambiado
+- **facturas-gmail-a-drive**: sello «Probado» (15 oct 2026, 21:40, n8n 2.43.5). Requisitos y pasos aclaran las APIs de Gmail, Drive y Sheets, la hoja nativa de Google y los encabezados exactos, y enlazan la guía de OAuth 2 de Moss. Documenta 5 problemas frecuentes y 3 limitaciones conocidas. Tiempo estimado: 25 minutos.
+
+### Corregido
+- **facturas-gmail-a-drive**: los logos y las imágenes de firma se subían como facturas. Ahora PDF, XML y ZIP siempre pasan, y las imágenes solo si pesan al menos 50 KB (`MIN_KB_IMAGEN`, ajustable) y su nombre no parece un logo, una firma o un ícono de red social. El enlace del registro usa el `webViewLink` de Drive.
+
 ## [0.7.1] - 2026-10-15
 
 ### Añadido
@@ -135,7 +146,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.1...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.2...HEAD
+[0.7.2]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.5.0...v0.6.0
