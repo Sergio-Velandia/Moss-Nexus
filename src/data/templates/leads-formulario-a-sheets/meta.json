@@ -2,7 +2,7 @@
   "slug": "leads-formulario-a-sheets",
   "titulo": "Leads del formulario web a Google Sheets con aviso en Slack",
   "resumen": "Cada solicitud del formulario queda registrada en una hoja y el equipo comercial se entera al momento en Slack.",
-  "problema": "Los contactos que llegan desde la web se quedan en un correo que nadie revisa a tiempo o en una herramienta que ventas no mira. Cuando alguien responde, el cliente ya habló con la competencia. Este flujo publica un formulario propio de n8n, guarda cada solicitud con su fecha en una hoja compartida y avisa en el canal de ventas con los datos clave para responder rápido.",
+  "problema": "Los contactos que llegan desde la web se quedan en un correo que nadie revisa a tiempo o en una herramienta que ventas no mira. Cuando alguien responde, el cliente ya habló con la competencia. Este flujo publica un formulario propio de n8n, guarda cada solicitud con su fecha en una hoja compartida y avisa en el canal de ventas con los datos clave para responder rápido. Además, guarda lo que escribe cada persona como texto plano: si alguien escribe una fórmula (por ejemplo =HYPERLINK(…)), la hoja nunca la ejecuta.",
   "categoria": "ventas",
   "herramientas": [
     "form",
@@ -10,12 +10,13 @@
     "slack"
   ],
   "dificultad": "facil",
-  "tiempoEstimado": 10,
+  "tiempoEstimado": 20,
   "requisitos": [
     "Una instancia de n8n accesible desde internet, para que el formulario tenga una URL pública",
-    "Una cuenta de Google con acceso a Google Sheets",
-    "Un espacio de Slack donde puedas conectar n8n y un canal para ventas (por ejemplo #ventas)",
-    "Una hoja con una pestaña «Leads» y las columnas Fecha, Nombre, Correo, Empresa, Teléfono y Necesidad"
+    "Una cuenta de Google con acceso a Google Sheets y un proyecto en Google Cloud Console con la API de Google Sheets habilitada y un cliente OAuth 2.0 para la credencial de n8n",
+    "Una hoja de cálculo de Google nativa (no un archivo .xlsx subido a Drive) con la pestaña «Leads» y, en la primera fila, exactamente: Fecha, Nombre, Correo, Empresa, Teléfono, Necesidad",
+    "Un espacio de Slack donde puedas crear una app y un canal para los avisos (por ejemplo #ventas)",
+    "Usa las cuentas que prefieras: el flujo no trae ninguna cuenta, hoja, canal ni token configurado"
   ],
   "escenarios": [
     "Sitio web sin CRM que necesita centralizar las solicitudes de contacto",
@@ -23,12 +24,51 @@
     "Agencia o consultora que recibe pedidos de cotización y los reparte entre el equipo"
   ],
   "pasos": [
-    "Crea la hoja con una pestaña llamada «Leads» y, en la primera fila, las columnas Fecha, Nombre, Correo, Empresa, Teléfono y Necesidad.",
+    "Crea una hoja de cálculo de Google con la pestaña «Leads» y, en la primera fila, Fecha, Nombre, Correo, Empresa, Teléfono y Necesidad. Si tu registro es un .xlsx, ábrelo y usa Archivo → Guardar como hoja de cálculo de Google.",
+    "Crea la credencial de Google Sheets en n8n con OAuth 2.0 (cliente creado en Google Cloud Console). Si no sabes cómo, sigue la guía de OAuth 2 de Google de Moss enlazada en esta página.",
+    "Crea la app de Slack: en api.slack.com/apps, «Create New App» → «From a manifest», instálala en tu espacio de trabajo y copia el «Bot User OAuth Token» (empieza por xoxb-) en una credencial «Slack API» de n8n. La guía de Slack de Moss trae el manifiesto listo para pegar. Ese token no se comparte ni se sube a ningún repositorio.",
+    "En Slack, invita el bot al canal de los avisos escribiendo /invite @Nexus Leads (o el nombre que le diste). Sin este paso, Slack responde not_in_channel.",
     "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
-    "En «Guardar lead», conecta tu cuenta de Google y pega la URL de tu hoja.",
-    "En «Avisar a ventas», conecta Slack y escribe el canal donde quieres los avisos.",
-    "Abre «Formulario de contacto», ajusta las preguntas si lo necesitas y copia su URL de producción para enlazarla desde tu web.",
-    "Activa el flujo, envía una solicitud de prueba y revisa la fila y el mensaje en Slack."
+    "En «Guardar lead», elige tu credencial de Google Sheets y pega la URL de tu hoja. En «Avisar a ventas», elige tu credencial de Slack y escribe el canal.",
+    "Abre «Formulario de contacto» y ajusta las preguntas si lo necesitas. La Test URL solo responde mientras pulsas «Execute workflow»; para tu web usa la Production URL, que funciona con el flujo publicado.",
+    "Publica el flujo, envía una solicitud de prueba con datos de ejemplo (como ana@ejemplo.com) y revisa la fila y el mensaje en Slack."
   ],
-  "destacado": true
+  "problemas": [
+    {
+      "sintoma": "Slack responde «not_in_channel»",
+      "solucion": "El bot no está en el canal. Entra al canal y escribe /invite @Nexus Leads (o el nombre de tu app)."
+    },
+    {
+      "sintoma": "«invalid_auth» o «not_authed» en «Avisar a ventas»",
+      "solucion": "El token está mal copiado, fue revocado o es un token de usuario (xoxp-). Usa el «Bot User OAuth Token», que empieza por xoxb-."
+    },
+    {
+      "sintoma": "«This operation is not supported for this document. The document must not be an Office file»",
+      "solucion": "La hoja es un archivo .xlsx subido a Drive. Ábrela, usa Archivo → Guardar como hoja de cálculo de Google y pega la URL de la copia en «Guardar lead»."
+    },
+    {
+      "sintoma": "«No columns found» al mapear «Guardar lead»",
+      "solucion": "La pestaña «Leads» no tiene la fila de encabezados exacta. Escribe Fecha, Nombre, Correo, Empresa, Teléfono y Necesidad en la primera fila y pulsa Retry."
+    },
+    {
+      "sintoma": "El formulario no responde o no crea filas",
+      "solucion": "Estás usando la Test URL sin «Execute workflow» activo. Para uso real, publica el flujo y usa la Production URL."
+    }
+  ],
+  "limitaciones": [
+    "No hay protección antispam (ni honeypot ni captcha): cualquiera con la URL puede enviar el formulario.",
+    "Los envíos repetidos crean filas y avisos duplicados: no hay deduplicación por correo.",
+    "Guarda datos personales (nombre, correo y teléfono). Si lo usas con clientes reales, informa en el formulario para qué usarás sus datos (en Colombia, Ley 1581 de 2012)."
+  ],
+  "destacado": true,
+  "guias": [
+    {
+      "titulo": "Moss: conectar Slack a n8n con un bot (token xoxb)",
+      "url": "https://sergio-velandia.github.io/Moss/manual/n8n/slack-en-n8n"
+    },
+    {
+      "titulo": "Moss: conectar cuentas de Google a n8n con OAuth 2",
+      "url": "https://sergio-velandia.github.io/Moss/manual/n8n/oauth2-de-google-en-n8n"
+    }
+  ]
 }

@@ -3,8 +3,8 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Leads del formulario → Sheets + Slack\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. Cuenta de Google y URL de tu hoja en «Guardar lead».\n2. Cuenta de Slack y canal en «Avisar a ventas».\n3. Ajusta las preguntas del formulario a tu negocio.\n\nLa hoja necesita una pestaña **Leads** con las columnas: Fecha, Nombre, Correo, Empresa, Teléfono, Necesidad.",
-        "height": 320,
+        "content": "## Leads del formulario → Sheets + Slack\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. Credencial de Google Sheets y URL de tu hoja en «Guardar lead»: debe ser un **Google Sheet nativo** (no un .xlsx) con la pestaña **Leads** y los encabezados Fecha, Nombre, Correo, Empresa, Teléfono, Necesidad.\n2. Credencial «Slack API» con el token del bot (xoxb-…) y el canal en «Avisar a ventas». Invita el bot al canal (/invite) o Slack responderá not_in_channel. **No compartas el token.**\n3. Ajusta las preguntas del formulario. La Test URL solo funciona con «Execute workflow»; para tu web usa la Production URL con el flujo publicado.\n\nLo que escriben en el formulario se guarda como texto (RAW): nunca se ejecuta como fórmula.",
+        "height": 400,
         "width": 400
       },
       "id": "d536e547-1a83-4745-8d02-ea837a4c9f09",
