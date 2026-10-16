@@ -3,8 +3,8 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Reporte diario de ventas\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. Cuenta de Google y URL de tu hoja en «Leer ventas».\n2. Cuenta de Gmail y tu correo en «Enviar reporte».\n3. Zona horaria correcta en Settings > Timezone.\n\nLa hoja necesita una pestaña **Ventas** con las columnas: Fecha (AAAA-MM-DD), Cliente, Producto, Total (número).",
-        "height": 300,
+        "content": "## Reporte diario de ventas\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. Cuenta de Google y URL de tu hoja en «Leer ventas»: debe ser un **Google Sheet nativo** (no un .xlsx).\n2. Cuenta de Gmail y el correo que quieras en «Enviar reporte» (cambia tu-correo@ejemplo.com).\n3. Zona horaria de tu negocio en Settings > Timezone (por ejemplo America/Bogota).\n\nPestaña **Ventas**: Fecha (fecha real o AAAA-MM-DD), Cliente, Producto, Total. Recomendado: configuración regional de la hoja en Colombia (Archivo → Configuración).\n\nLa moneda se cambia en `MONEDA` (COP por defecto), al inicio de «Calcular resumen».",
+        "height": 400,
         "width": 380
       },
       "id": "3f9a2b1c-5d7e-4a8b-9c0d-1e2f3a4b5c01",

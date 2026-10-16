@@ -1,18 +1,24 @@
 {
   "slug": "reporte-diario-ventas",
   "titulo": "Reporte diario de ventas por correo desde Google Sheets",
-  "resumen": "Cada mañana te llega un correo con las ventas de ayer: cuántas, cuánto sumaron y qué se vendió más.",
+  "resumen": "Cada mañana te llega un correo con las ventas de ayer: cuántas, cuánto sumaron, qué se vendió más y qué dejó más ingreso.",
   "problema": "Registras las ventas en una hoja de cálculo, pero para saber cómo fue el día hay que abrirla, filtrar por fecha y sumar a mano. Casi nunca se hace, y cuando se hace llega tarde. Este flujo lee la hoja cada mañana, calcula el resumen del día anterior y te lo envía por correo, incluso cuando no hubo ventas, para que el silencio no se confunda con un error.",
   "categoria": "reportes",
-  "herramientas": ["schedule", "google-sheets", "n8n", "gmail"],
+  "herramientas": [
+    "schedule",
+    "google-sheets",
+    "n8n",
+    "gmail"
+  ],
   "dificultad": "facil",
-  "tiempoEstimado": 15,
+  "tiempoEstimado": 20,
   "requisitos": [
-    "Una instancia de n8n (cloud o autoalojada), con la zona horaria correcta en Settings > Timezone",
-    "Una cuenta de Google con acceso a Google Sheets y Gmail",
-    "Una hoja de cálculo con una pestaña «Ventas» y las columnas Fecha, Cliente, Producto y Total",
-    "La columna Fecha con el formato AAAA-MM-DD (por ejemplo 2026-10-11) o DD/MM/AAAA",
-    "La columna Total con números, sin símbolo de moneda"
+    "Una instancia de n8n (cloud o autoalojada), con la zona horaria de tu negocio en Settings > Timezone (por ejemplo America/Bogota)",
+    "Una cuenta de Google con acceso a Google Sheets y Gmail. Usa la que prefieras: el flujo no trae ninguna cuenta, hoja ni correo configurado",
+    "Un proyecto en Google Cloud Console con las APIs de Google Sheets y Gmail habilitadas, la pantalla de consentimiento OAuth configurada y un cliente OAuth 2.0 (ID y secreto) para crear las credenciales en n8n",
+    "Una hoja de cálculo de Google nativa (no un archivo .xlsx subido a Drive) con la pestaña «Ventas» y las columnas Fecha, Cliente, Producto y Total",
+    "La columna Fecha como fecha real de la hoja o como texto AAAA-MM-DD. Recomendado: configuración regional de la hoja en Colombia (Archivo → Configuración)",
+    "La columna Total con números. Si es texto, con formato colombiano: «45.000», «$ 45.000» o «45.000,50»"
   ],
   "escenarios": [
     "Tienda o emprendimiento que anota sus ventas en Google Sheets y quiere el parte del día sin abrirla",
@@ -20,12 +26,43 @@
     "Equipo pequeño que quiere un histórico de correos diarios para comparar semanas"
   ],
   "pasos": [
-    "Prepara la hoja con una pestaña llamada «Ventas» y, en la primera fila, las columnas Fecha, Cliente, Producto y Total.",
+    "Prepara una hoja de cálculo de Google con la pestaña «Ventas» y, en la primera fila, las columnas Fecha, Cliente, Producto y Total. Si tu registro es un .xlsx, ábrelo y usa Archivo → Guardar como hoja de cálculo de Google.",
+    "En Google Cloud Console, habilita las APIs de Google Sheets y Gmail y crea un cliente OAuth 2.0. En n8n, usa su ID y su secreto para crear las credenciales. Si no sabes cómo, sigue la guía de OAuth 2 de Moss enlazada en esta página.",
     "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
-    "En «Leer ventas», conecta tu cuenta de Google y pega la URL de tu hoja.",
-    "En «Enviar reporte», conecta tu cuenta de Gmail y cambia tu-correo@ejemplo.com por el correo donde quieres recibirlo.",
-    "Si prefieres otra hora, cámbiala en el nodo «Cada día a las 8:00».",
-    "Pulsa «Test workflow» para recibir un reporte ahora mismo y, si está bien, activa el flujo."
+    "En «Leer ventas», elige tu credencial de Google Sheets y pega la URL de tu hoja.",
+    "En «Enviar reporte», elige tu credencial de Gmail y cambia tu-correo@ejemplo.com por el correo que quieras: el flujo no trae ninguna dirección real.",
+    "Si vendes en otra moneda, cambia MONEDA al inicio del nodo «Calcular resumen» (por defecto COP). Si prefieres otra hora, cámbiala en «Cada día a las 8:00».",
+    "Pulsa «Execute workflow» para recibir un reporte ahora mismo y, si está bien, activa el flujo."
   ],
-  "destacado": true
+  "problemas": [
+    {
+      "sintoma": "«This operation is not supported for this document. The document must not be an Office file»",
+      "solucion": "La hoja es un archivo .xlsx subido a Drive. Ábrela, usa Archivo → Guardar como hoja de cálculo de Google y pega la URL de la copia en «Leer ventas»."
+    },
+    {
+      "sintoma": "El correo dice «sin ventas», pero ayer sí hubo ventas",
+      "solucion": "Revisa que la columna Fecha sea una fecha real de la hoja o texto AAAA-MM-DD, y que la zona horaria de n8n (Settings > Timezone) sea la de tu negocio: «ayer» se calcula con ella."
+    },
+    {
+      "sintoma": "El correo avisa «N filas con Total no válido»",
+      "solucion": "Esas filas tienen en Total un texto que no es un monto (por ejemplo «pendiente» o vacío). Corrígelas en la hoja: no se suman al total, pero sí se cuentan como ventas."
+    },
+    {
+      "sintoma": "El total no coincide con la hoja",
+      "solucion": "Si escribes montos como texto, usa el formato colombiano («45.000» o «45.000,50»). Un texto como «45.5», con punto decimal, se lee como 455. Lo más seguro es usar celdas de número."
+    }
+  ],
+  "limitaciones": [
+    "Las devoluciones (montos negativos) restan del total y del ingreso del producto. Es el comportamiento esperado.",
+    "«Ayer» se calcula con la zona horaria de n8n, no con la de la hoja.",
+    "Si el flujo no corre un día (n8n apagado o un error), el reporte de ese día no se recupera solo.",
+    "«Más vendido» se cuenta por cantidad de ventas, no por dinero; para eso está «Mayor ingreso»."
+  ],
+  "destacado": true,
+  "guias": [
+    {
+      "titulo": "Moss: conectar cuentas de Google a n8n con OAuth 2",
+      "url": "https://sergio-velandia.github.io/Moss/manual/n8n/oauth2-de-google-en-n8n"
+    }
+  ]
 }
