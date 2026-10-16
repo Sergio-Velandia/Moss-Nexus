@@ -93,6 +93,12 @@ describe('validateMeta', () => {
     const { probado: _omit, ...sinProbar } = meta
     expect(validateMeta(sinProbar, 'demo')).toEqual([])
   })
+  it('acepta datos «ficticios» o «reales» en el sello y rechaza otros', () => {
+    const conDatos = (datos: string) => ({ ...meta, probado: { fecha: '2026-10-15', versionN8n: '2.43.5', datos } })
+    expect(validateMeta(conDatos('ficticios'), 'demo')).toEqual([])
+    expect(validateMeta(conDatos('reales'), 'demo')).toEqual([])
+    expect(validateMeta(conDatos('mixtos'), 'demo').join()).toMatch(/datos/)
+  })
   it('acepta la hora de la prueba en formato HH:mm y rechaza otros', () => {
     const conHora = (hora: string) => ({ ...meta, probado: { fecha: '2026-10-15', versionN8n: '2.43.5', hora } })
     expect(validateMeta(conHora('00:15'), 'demo')).toEqual([])

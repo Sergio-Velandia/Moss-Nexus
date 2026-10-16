@@ -26,6 +26,8 @@ export interface TemplateMeta {
     versionN8n: string
     /** Hora local de la prueba, HH:mm (24 h). Opcional */
     hora?: string
+    /** Con qué datos se probó. «ficticios»: creados solo para la prueba; «reales»: se aclara en el sello. Opcional */
+    datos?: 'ficticios' | 'reales'
   }
   destacado: boolean
   /** Errores habituales al montarla: qué ves y cómo resolverlo. Opcional */

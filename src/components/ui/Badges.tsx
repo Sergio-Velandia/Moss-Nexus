@@ -70,12 +70,15 @@ export function TestedSeal({
   fecha,
   version,
   hora,
+  datos,
   compact = false,
 }: {
   fecha: string
   version: string
   /** HH:mm, opcional */
   hora?: string
+  /** Con qué datos se hizo la prueba, opcional */
+  datos?: 'ficticios' | 'reales'
   compact?: boolean
 }) {
   if (compact) {
@@ -86,7 +89,7 @@ export function TestedSeal({
       </span>
     )
   }
-  return (
+  const seal = (
     <div className="inline-flex items-center gap-3 rounded-2xl border border-moss/30 bg-moss/10 py-2 pl-2 pr-4">
       <span className="grid h-10 w-10 place-items-center rounded-xl bg-moss/20 text-moss">
         <BadgeCheck size={22} aria-hidden />
@@ -98,6 +101,17 @@ export function TestedSeal({
           {hora && <>, {hora}</>} · n8n <span className="font-mono">{version}</span>
         </span>
       </span>
+    </div>
+  )
+  if (!datos) return seal
+  return (
+    <div className="space-y-2">
+      {seal}
+      <p className="max-w-md text-xs leading-relaxed text-faint">
+        {datos === 'ficticios'
+          ? 'Probado con datos ficticios, creados solo para la prueba: no son datos de personas ni de negocios reales.'
+          : 'Probado con datos reales, usados con autorización de su titular.'}
+      </p>
     </div>
   )
 }
