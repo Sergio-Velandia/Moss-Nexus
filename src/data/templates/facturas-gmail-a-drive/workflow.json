@@ -3,8 +3,8 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Facturas de Gmail → Google Drive\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. En Gmail, crea la etiqueta **facturas** y un filtro que la aplique a los correos de tus proveedores.\n2. Cuenta de Gmail en «Correo con factura».\n3. Cuenta de Google y URL de la carpeta en «Subir a Drive».\n4. URL de tu hoja en «Registrar factura» (pestaña **Registro**: Fecha, Remitente, Asunto, Archivo, Enlace).",
-        "height": 320,
+        "content": "## Facturas de Gmail → Google Drive\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. En Gmail, crea la etiqueta **facturas** y un filtro que la aplique a los correos de tus proveedores.\n2. Cuenta de Gmail en «Correo con factura».\n3. Cuenta de Google y URL de la carpeta en «Subir a Drive».\n4. URL de tu hoja en «Registrar factura»: debe ser un **Google Sheet nativo** (no un .xlsx) con la pestaña **Registro** y los encabezados Fecha, Remitente, Asunto, Archivo, Enlace.\n\n**Adjuntos:** PDF, XML y ZIP siempre se suben. Las imágenes, solo si pesan al menos `MIN_KB_IMAGEN` (50 KB, ajustable en «Separar adjuntos») y su nombre no parece un logo o una firma.",
+        "height": 380,
         "width": 400
       },
       "id": "be4085df-db1e-492a-861d-c28fe08f2889",
@@ -47,7 +47,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Un elemento por adjunto útil (PDF, XML o imagen), con un nombre de archivo ordenable\nconst TIPOS = ['application/pdf', 'application/xml', 'text/xml', 'image/jpeg', 'image/png'];\nconst salida = [];\n\nfor (const item of $input.all()) {\n  const correo = item.json;\n  const remitente = correo.from?.value?.[0]?.address || correo.from?.text || 'desconocido';\n  const fecha = DateTime.fromISO(new Date(correo.date || Date.now()).toISOString()).toFormat('yyyy-MM-dd');\n  const dominio = remitente.split('@')[1]?.split('.')[0] || 'proveedor';\n\n  for (const archivo of Object.values(item.binary || {})) {\n    if (!TIPOS.includes(archivo.mimeType)) continue;\n    salida.push({\n      json: {\n        fecha,\n        remitente,\n        asunto: correo.subject || '',\n        original: archivo.fileName,\n        nombreArchivo: fecha + '_' + dominio + '_' + archivo.fileName,\n      },\n      binary: { archivo },\n    });\n  }\n}\nreturn salida;"
+        "jsCode": "// Un elemento por adjunto que parezca factura, con un nombre de archivo ordenable.\n// PDF, XML y ZIP siempre pasan: la factura electrónica colombiana suele llegar como PDF + XML dentro de un ZIP.\n// Las imágenes (PNG, JPG, WEBP) solo pasan si pesan al menos MIN_KB_IMAGEN y su nombre no parece un logo,\n// una firma o un ícono de red social: hay proveedores que envían la factura como captura de pantalla.\nconst MIN_KB_IMAGEN = 50; // Súbelo si se cuelan logos; bájalo si tus proveedores envían capturas pequeñas\n\nconst DOCS_OK = ['.pdf', '.xml', '.zip'];\nconst IMG_EXT = ['.png', '.jpg', '.jpeg', '.webp'];\nconst NOMBRES_BASURA = /(logo|firma|signature|banner|^image\\d+|^outlook-|facebook|linkedin|instagram)/i;\n\n// n8n guarda fileSize como texto («12.3 kB»): hay que convertirlo a KB\nfunction aKB(txt) {\n  const m = String(txt || '').match(/([\\d.,]+)\\s*(bytes|b|kb|mb)/i);\n  if (!m) return 0;\n  const n = parseFloat(m[1].replace(',', '.'));\n  const u = m[2].toLowerCase();\n  return u === 'mb' ? n * 1024 : u === 'kb' ? n : n / 1024;\n}\n\nconst salida = [];\n\nfor (const item of $input.all()) {\n  const correo = item.json;\n  const remitente = correo.from?.value?.[0]?.address || correo.from?.text || 'desconocido';\n  const fecha = DateTime.fromISO(new Date(correo.date || Date.now()).toISOString()).toFormat('yyyy-MM-dd');\n  const dominio = remitente.split('@')[1]?.split('.')[0] || 'proveedor';\n\n  for (const archivo of Object.values(item.binary || {})) {\n    const nombre = (archivo.fileName || '').toLowerCase();\n    const esDoc = DOCS_OK.some((e) => nombre.endsWith(e));\n    const esImg = IMG_EXT.some((e) => nombre.endsWith(e));\n    const imagenValida = esImg && aKB(archivo.fileSize) >= MIN_KB_IMAGEN && !NOMBRES_BASURA.test(nombre);\n    if (!esDoc && !imagenValida) continue;\n\n    salida.push({\n      json: {\n        fecha,\n        remitente,\n        asunto: correo.subject || '',\n        original: archivo.fileName,\n        nombreArchivo: fecha + '_' + dominio + '_' + archivo.fileName,\n        tipoArchivo: archivo.mimeType,\n      },\n      // El binario debe seguir llamándose «archivo»: «Subir a Drive» lo busca con ese nombre\n      binary: { archivo },\n    });\n  }\n}\nreturn salida;"
       },
       "id": "f09756ec-1dbd-4510-8b8e-6dad7446fe74",
       "name": "Separar adjuntos",
@@ -57,7 +57,7 @@
         220,
         0
       ],
-      "notes": "Ignora logos y firmas: solo pasan PDF, XML e imágenes JPG o PNG.",
+      "notes": "PDF, XML y ZIP siempre pasan. Las imágenes, solo si pesan ≥ 50 KB y no parecen logos o firmas.",
       "notesInFlow": true
     },
     {
@@ -106,7 +106,7 @@
             "Remitente": "={{ $('Separar adjuntos').item.json.remitente }}",
             "Asunto": "={{ $('Separar adjuntos').item.json.asunto }}",
             "Archivo": "={{ $('Separar adjuntos').item.json.nombreArchivo }}",
-            "Enlace": "=https://drive.google.com/file/d/{{ $json.id }}/view"
+            "Enlace": "={{ $json.webViewLink }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -207,7 +207,8 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "binaryMode": "separate"
   },
   "pinData": {}
 }
