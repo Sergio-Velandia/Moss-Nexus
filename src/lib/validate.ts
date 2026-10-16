@@ -50,6 +50,9 @@ export function validateMeta(meta: unknown, folder: string): string[] {
     if (isObj(meta.probado) && meta.probado.datos !== undefined && !['ficticios', 'reales'].includes(meta.probado.datos as string)) {
       errors.push('meta.probado.datos: "ficticios" o "reales"')
     }
+    if (isObj(meta.probado) && meta.probado.nota !== undefined && !isText(meta.probado.nota)) {
+      errors.push('meta.probado.nota: texto no vacío')
+    }
     if (isObj(meta.probado) && meta.probado.hora !== undefined && !/^([01]\d|2[0-3]):[0-5]\d$/.test(String(meta.probado.hora))) {
       errors.push('meta.probado.hora: formato HH:mm de 24 horas, por ejemplo "00:15"')
     }

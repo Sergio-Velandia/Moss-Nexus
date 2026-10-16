@@ -93,6 +93,11 @@ describe('validateMeta', () => {
     const { probado: _omit, ...sinProbar } = meta
     expect(validateMeta(sinProbar, 'demo')).toEqual([])
   })
+  it('acepta una nota sobre los datos de la prueba y rechaza una vacía', () => {
+    const conNota = (nota: string) => ({ ...meta, probado: { fecha: '2026-10-15', versionN8n: '2.43.5', datos: 'reales', nota } })
+    expect(validateMeta(conNota('Probado con datos del propio autor.'), 'demo')).toEqual([])
+    expect(validateMeta(conNota('  '), 'demo').join()).toMatch(/nota/)
+  })
   it('acepta datos «ficticios» o «reales» en el sello y rechaza otros', () => {
     const conDatos = (datos: string) => ({ ...meta, probado: { fecha: '2026-10-15', versionN8n: '2.43.5', datos } })
     expect(validateMeta(conDatos('ficticios'), 'demo')).toEqual([])

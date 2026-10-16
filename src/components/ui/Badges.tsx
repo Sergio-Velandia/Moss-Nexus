@@ -71,6 +71,7 @@ export function TestedSeal({
   version,
   hora,
   datos,
+  nota,
   compact = false,
 }: {
   fecha: string
@@ -79,6 +80,8 @@ export function TestedSeal({
   hora?: string
   /** Con qué datos se hizo la prueba, opcional */
   datos?: 'ficticios' | 'reales'
+  /** Aclaración propia sobre los datos de la prueba; reemplaza el texto por defecto */
+  nota?: string
   compact?: boolean
 }) {
   if (compact) {
@@ -103,14 +106,15 @@ export function TestedSeal({
       </span>
     </div>
   )
-  if (!datos) return seal
+  if (!datos && !nota) return seal
   return (
     <div className="space-y-2">
       {seal}
       <p className="max-w-md text-xs leading-relaxed text-faint">
-        {datos === 'ficticios'
+        {nota ??
+          (datos === 'ficticios'
           ? 'Probado con datos ficticios, creados solo para la prueba: no son datos de personas ni de negocios reales.'
-          : 'Probado con datos reales, usados con autorización de su titular.'}
+            : 'Probado con datos reales, usados con autorización de su titular.')}
       </p>
     </div>
   )

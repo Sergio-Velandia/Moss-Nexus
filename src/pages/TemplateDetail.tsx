@@ -226,7 +226,7 @@ export default function TemplateDetail() {
             </div>
             {t.probado && (
               <div className="relative mt-8 border-t border-line pt-6">
-                <TestedSeal fecha={t.probado.fecha} version={t.probado.versionN8n} hora={t.probado.hora} datos={t.probado.datos} />
+                <TestedSeal fecha={t.probado.fecha} version={t.probado.versionN8n} hora={t.probado.hora} datos={t.probado.datos} nota={t.probado.nota} />
               </div>
             )}
           </Reveal>

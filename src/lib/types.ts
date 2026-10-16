@@ -28,6 +28,8 @@ export interface TemplateMeta {
     hora?: string
     /** Con qué datos se probó. «ficticios»: creados solo para la prueba; «reales»: se aclara en el sello. Opcional */
     datos?: 'ficticios' | 'reales'
+    /** Aclaración de con qué datos se probó; reemplaza el texto por defecto. Nunca con datos personales. Opcional */
+    nota?: string
   }
   destacado: boolean
   /** Errores habituales al montarla: qué ves y cómo resolverlo. Opcional */
