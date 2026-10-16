@@ -6,6 +6,14 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.7.4] - 2026-10-15
+
+### Añadido
+- Campo opcional `probado.nota` para aclarar con qué datos se hizo una prueba; reemplaza el texto por defecto del sello.
+
+### Cambiado
+- **leads-formulario-a-sheets**: sello «Probado» (15 oct 2026, 23:42, n8n 2.43.5), con datos reales del propio autor, que no se publican. La página explica cómo crear la app de Slack desde un manifiesto, el token de bot (que no se comparte), la invitación del bot al canal y la diferencia entre la Test URL y la Production URL. Enlaza las guías de Moss de Slack y de OAuth 2 de Google. Documenta 5 problemas frecuentes, 3 limitaciones (sin antispam, duplicados y datos personales según la Ley 1581 de 2012) y que el texto del formulario nunca se ejecuta como fórmula. Tiempo estimado: 20 minutos.
+
 ## [0.7.3] - 2026-10-15
 
 ### Añadido
@@ -157,7 +165,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.3...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.4...HEAD
+[0.7.4]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.3...v0.7.4
 [0.7.3]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.0...v0.7.1
