@@ -1,8 +1,8 @@
 {
   "slug": "facturas-gmail-a-drive",
   "titulo": "Facturas de proveedores de Gmail a Google Drive con registro",
-  "resumen": "Guarda en Drive cada factura que llega por correo, con un nombre ordenado, y la anota en una hoja con su enlace.",
-  "problema": "Las facturas de proveedores llegan al correo y ahí se quedan. A fin de mes, contabilidad pide los soportes y hay que buscar adjunto por adjunto, descargarlos y renombrarlos. Este flujo detecta los correos etiquetados como facturas, sube cada PDF, XML o imagen a una carpeta de Drive con un nombre del tipo fecha_proveedor_archivo y lo registra en una hoja con el enlace directo.",
+  "resumen": "Guarda en Drive cada factura que llega por correo (PDF, XML, ZIP o captura), ignora logos y firmas, y la anota en una hoja con su enlace.",
+  "problema": "Las facturas de proveedores llegan al correo y ahí se quedan. A fin de mes, contabilidad pide los soportes y hay que buscar adjunto por adjunto, descargarlos y renombrarlos. Este flujo detecta los correos etiquetados como facturas, sube a una carpeta de Drive cada PDF, XML o ZIP (la factura electrónica suele llegar así) y las capturas de pantalla de facturas, con un nombre del tipo fecha_proveedor_archivo, y lo registra en una hoja con el enlace directo. Los logos, firmas e íconos que traen los correos se descartan.",
   "categoria": "finanzas",
   "herramientas": [
     "gmail",
@@ -11,12 +11,14 @@
     "google-sheets"
   ],
   "dificultad": "facil",
-  "tiempoEstimado": 15,
+  "tiempoEstimado": 25,
   "requisitos": [
     "Una instancia de n8n (cloud o autoalojada)",
-    "Una cuenta de Google con acceso a Gmail, Google Drive y Google Sheets",
+    "Una cuenta de Google con acceso a Gmail, Google Drive y Google Sheets. Usa la que prefieras: el flujo no trae ninguna cuenta, carpeta ni hoja configurada",
+    "Un proyecto en Google Cloud Console con las APIs de Gmail, Google Drive y Google Sheets habilitadas, la pantalla de consentimiento OAuth configurada y un cliente OAuth 2.0 (ID y secreto) para crear las credenciales en n8n",
     "Una etiqueta «facturas» en Gmail, aplicada por un filtro a los correos de tus proveedores",
-    "Una carpeta de Drive para las facturas y una hoja con la pestaña «Registro» y las columnas Fecha, Remitente, Asunto, Archivo y Enlace"
+    "Una carpeta de Drive para las facturas",
+    "Una hoja de cálculo de Google nativa (no un archivo .xlsx subido a Drive) con la pestaña «Registro» y, en la primera fila, exactamente: Fecha, Remitente, Asunto, Archivo, Enlace"
   ],
   "escenarios": [
     "Pyme que entrega a su contador los soportes del mes en una sola carpeta",
@@ -25,11 +27,46 @@
   ],
   "pasos": [
     "En Gmail, crea la etiqueta «facturas» y un filtro que la aplique a los correos de tus proveedores (por remitente o por asunto).",
-    "Crea la carpeta en Drive y la hoja con la pestaña «Registro» y las columnas Fecha, Remitente, Asunto, Archivo y Enlace.",
+    "Crea la carpeta en Drive y una hoja de cálculo de Google nueva con la pestaña «Registro» y los encabezados Fecha, Remitente, Asunto, Archivo y Enlace. Si tu registro es un .xlsx, ábrelo y usa Archivo → Guardar como hoja de cálculo de Google.",
+    "En Google Cloud Console, habilita las APIs de Gmail, Google Drive y Google Sheets y crea un cliente OAuth 2.0. En n8n, usa su ID y su secreto para crear las credenciales. Si no sabes cómo, sigue la guía de OAuth 2 de Moss enlazada en esta página.",
     "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
-    "Conecta tu cuenta de Google en «Correo con factura», «Subir a Drive» y «Registrar factura», y pega las URL de la carpeta y de la hoja.",
-    "Envíate un correo con un PDF adjunto y la etiqueta «facturas», pulsa «Test workflow» y revisa la carpeta y la hoja.",
+    "Elige tus credenciales en «Correo con factura», «Subir a Drive» y «Registrar factura», y pega las URL de tu carpeta y de tu hoja.",
+    "Si tus proveedores envían capturas pequeñas o se cuela algún logo, ajusta MIN_KB_IMAGEN (50 KB por defecto) al inicio del nodo «Separar adjuntos». No cambies el nombre del binario «archivo» ni los campos que crea ese nodo.",
+    "Envíate un correo con un PDF adjunto y ponle la etiqueta «facturas» (si te lo envías a ti mismo, el filtro a veces no la aplica: ponla a mano). Pulsa «Execute workflow» y revisa la carpeta y la hoja.",
     "Activa el flujo: revisará el correo cada 5 minutos."
   ],
-  "destacado": false
+  "problemas": [
+    {
+      "sintoma": "«This operation is not supported for this document. The document must not be an Office file»",
+      "solucion": "La hoja es un archivo .xlsx subido a Drive. Ábrela, usa Archivo → Guardar como hoja de cálculo de Google y pega la URL de la copia en «Registrar factura»."
+    },
+    {
+      "sintoma": "«At least one value has to be added under 'Values to Send'» o «No columns found»",
+      "solucion": "La pestaña «Registro» no tiene la fila de encabezados exacta. Escribe Fecha, Remitente, Asunto, Archivo y Enlace en la primera fila y pulsa Retry en el mapeo de columnas."
+    },
+    {
+      "sintoma": "«The item has no binary field 'archivo'»",
+      "solucion": "Se editó «Separar adjuntos» y el binario ya no se llama «archivo», o una expresión pide un campo que el nodo dejó de crear. Conserva el binario «archivo» y los campos fecha, remitente, asunto, original y nombreArchivo."
+    },
+    {
+      "sintoma": "El flujo no detecta el correo de prueba",
+      "solucion": "Si te enviaste el correo a ti mismo, el filtro de Gmail a veces no aplica la etiqueta. Ponle la etiqueta «facturas» a mano y vuelve a ejecutar."
+    },
+    {
+      "sintoma": "Las credenciales de Google dejan de funcionar a los 7 días",
+      "solucion": "La app OAuth está en modo «Testing», y en ese modo el token caduca a los 7 días. Revisa la guía de OAuth 2 de Moss enlazada en esta página. Recuerda también habilitar las APIs de Drive y Sheets en Google Cloud Console."
+    }
+  ],
+  "limitaciones": [
+    "El filtro de imágenes es una aproximación: un logo de más de 50 KB con un nombre poco común podría subirse. Se prefiere subir de más antes que perder una factura.",
+    "No hay deduplicación: si ejecutas a mano el mismo correo, el archivo y la fila se crean de nuevo.",
+    "Revisa el correo cada 5 minutos: no es instantáneo."
+  ],
+  "destacado": false,
+  "guias": [
+    {
+      "titulo": "Moss: conectar cuentas de Google a n8n con OAuth 2",
+      "url": "https://sergio-velandia.github.io/Moss/manual/n8n/oauth2-de-google-en-n8n"
+    }
+  ]
 }
