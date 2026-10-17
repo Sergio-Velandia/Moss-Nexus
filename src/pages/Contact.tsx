@@ -6,7 +6,7 @@ import { copyText } from '../lib/clipboard'
 
 // El correo no aparece legible ni en el HTML ni en el código: se guarda invertido y se arma al pulsar el botón.
 // Frena a los recolectores de correos simples; no a una persona decidida, y no pretende hacerlo.
-const PARTES = ['z.raidnalev.oigres', 'moc.liamg']
+const PARTES = ['otcatnoc', 'ved.aidnalev-oigres']
 const armarCorreo = () => PARTES.map((p) => [...p].reverse().join('')).join('@')
 
 function RevealEmail() {

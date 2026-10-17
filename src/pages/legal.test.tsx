@@ -36,7 +36,7 @@ describe('páginas legales', () => {
   it('contacto enlaza a GitHub Issues y no expone el correo en el HTML', async () => {
     const html = await renderRoute('/contacto')
     expect(html).toContain('https://github.com/Sergio-Velandia/Moss-Nexus/issues')
-    expect(html).not.toMatch(/@gmail\.com|mailto:/)
+    expect(html).not.toMatch(/@gmail\.com|@sergio-velandia\.dev|mailto:/)
   })
 })
 
