@@ -2,7 +2,7 @@
 
 Librería de flujos de automatización para **n8n**, ya armados, explicados y listos para copiar. Está pensada para quien sabe qué quiere automatizar pero no quiere pelearse con webhooks, JSON ni tokens.
 
-**[Ver el sitio en vivo →](https://sergio-velandia.github.io/Moss-Nexus/)** · Proyecto hermano de **[Moss](https://sergio-velandia.github.io/Moss/)**: en Moss se aprende el porqué; en Nexus se copia el flujo y se usa.
+**[Ver el sitio en vivo →](https://sergio-velandia.dev/Moss-Nexus/)** · Proyecto hermano de **[Moss](https://sergio-velandia.dev/Moss/)**: en Moss se aprende el porqué; en Nexus se copia el flujo y se usa.
 
 ## Vista previa
 
