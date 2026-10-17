@@ -6,6 +6,13 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.7.5] - 2026-10-16
+
+### Cambiado
+- El sitio usa el dominio propio **sergio-velandia.dev**: URL canónicas, Open Graph, Twitter Card, `sitemap.xml`, páginas por ruta, enlaces a Moss y al portafolio, y los botones de guías de Moss en las plantillas. Las direcciones `github.io` anteriores redirigen solas.
+- El correo de contacto pasa a ser `contacto@sergio-velandia.dev`. Se sigue mostrando solo al pulsar «Mostrar correo», sin quedar legible en el HTML.
+- README y licencia de contenido con el dominio nuevo.
+
 ## [0.7.4] - 2026-10-15
 
 ### Añadido
@@ -165,7 +172,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.4...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.5...HEAD
+[0.7.5]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.4...v0.7.5
 [0.7.4]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.3...v0.7.4
 [0.7.3]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.1...v0.7.2
