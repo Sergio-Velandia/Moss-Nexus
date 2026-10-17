@@ -8,7 +8,7 @@ import type { Plugin } from 'vite'
  * propios, para que respondan 200 y se vean bien al compartirlas. También se genera sitemap.xml.
  */
 
-export const SITE_URL = 'https://sergio-velandia.github.io/Moss-Nexus/'
+export const SITE_URL = 'https://sergio-velandia.dev/Moss-Nexus/'
 
 export interface StaticPage {
   /** Ruta relativa al sitio, con barra final (así la sirve GitHub Pages) */
