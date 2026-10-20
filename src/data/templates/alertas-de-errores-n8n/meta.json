@@ -65,6 +65,13 @@
     "Las ejecuciones manuales («Execute») no disparan alertas: solo las automáticas.",
     "El token de Google en modo Testing caduca a los 7 días: publica la app OAuth o renueva la credencial (ver la guía de OAuth 2 de Moss)."
   ],
+  "probado": {
+    "fecha": "2026-10-19",
+    "hora": "20:04",
+    "versionN8n": "2.43.5",
+    "datos": "ficticios",
+    "nota": "Probado con un flujo de prueba que falla a propósito, sin datos de personas ni de negocios. Las alertas llegaron a las cuentas de Slack y de correo del propio autor, que no se publican."
+  },
   "destacado": false,
   "guias": [
     {
