@@ -29,6 +29,11 @@ export const STATIC_PAGES: StaticPage[] = [
   { path: 'terminos/', title: pagina('Términos y condiciones'), description: 'Términos de uso de Moss Nexus y de sus plantillas.' },
   { path: 'privacidad/', title: pagina('Política de privacidad'), description: 'Qué hace Moss Nexus con tus datos: sin cuentas, cookies ni analítica.' },
   { path: 'contacto/', title: pagina('Contacto'), description: 'Cómo contactar a Moss Nexus: GitHub Issues y correo.' },
+  {
+    path: 'propon-un-flujo/',
+    title: pagina('Propón un flujo'),
+    description: 'Propón un flujo de n8n para tu negocio: cuéntame el problema y tu idea, o escríbeme directamente.',
+  },
 ]
 
 /** Una página por plantilla, a partir de su meta.json */

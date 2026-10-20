@@ -13,6 +13,7 @@ const About = lazy(() => import('./pages/About'))
 const Terms = lazy(() => import('./pages/Terms'))
 const Privacy = lazy(() => import('./pages/Privacy'))
 const Contact = lazy(() => import('./pages/Contact'))
+const Propose = lazy(() => import('./pages/Propose'))
 
 function PageSkeleton() {
   return (
@@ -54,6 +55,7 @@ export function AppRoutes() {
         <Route path="terminos" element={<Terms />} />
         <Route path="privacidad" element={<Privacy />} />
         <Route path="contacto" element={<Contact />} />
+        <Route path="propon-un-flujo" element={<Propose />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
