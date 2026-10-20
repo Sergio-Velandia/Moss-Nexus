@@ -63,6 +63,13 @@
     "Si falla un aviso (por ejemplo, Slack o Gmail), el flujo se detiene con error y los avisos siguientes no salen; el registro en la hoja sí queda. Para enterarte de esos fallos, conecta la plantilla de alertas de errores.",
     "La reunión de bienvenida siempre es a las 9:00 y dura 30 minutos; cámbialo en «Preparar datos»."
   ],
+  "probado": {
+    "fecha": "2026-10-19",
+    "hora": "21:39",
+    "versionN8n": "2.43.5",
+    "datos": "ficticios",
+    "nota": "Probado con datos ficticios: empleado y responsable eran alias de correo del propio autor, que no se publican."
+  },
   "destacado": true,
   "guias": [
     {
