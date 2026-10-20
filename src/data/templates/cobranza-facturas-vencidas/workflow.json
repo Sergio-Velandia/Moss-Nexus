@@ -3,8 +3,8 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Cobranza de facturas vencidas\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. Cuenta de Google y URL de la hoja en «Leer facturas» y «Registrar gestión».\n2. Cuenta de Gmail en los tres nodos de correo.\n3. Revisa los textos y el calendario de recordatorios en «Calcular mora».\n\nPestaña **Facturas**: Número, Cliente, Correo, Monto, Vencimiento, Estado, Responsable.\nPestaña **Gestiones**: Fecha, Factura, Cliente, Días de mora, Acción.",
-        "height": 320,
+        "content": "## Cobranza de facturas vencidas\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:** credenciales de Google Sheets (URL de una hoja nativa) y de Gmail en los tres correos.\n\nPestaña **Facturas**: Número, Cliente, Correo, Monto, Vencimiento, Estado, Responsable.\nPestaña **Gestiones**: Fecha, Factura, Cliente, Días de mora, Acción.\n\nCalendario (`CALENDARIO` en «Calcular mora»): días 1 y 7 amable · 15 y 22 firme · 30 y cada 7 escalar. Los lunes también atiende el fin de semana. Moneda: `MONEDA` (COP).\n\n**Prueba con tu propio correo** y vencimientos =TEXT(TODAY()-N;\"yyyy-mm-dd\"). Ejecutar dos veces el mismo día envía dos veces: borra los datos de prueba antes de activar.",
+        "height": 460,
         "width": 400
       },
       "id": "7e79ae49-0fdb-4efa-8cec-ac9d40dfee1d",

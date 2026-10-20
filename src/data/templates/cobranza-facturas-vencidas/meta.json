@@ -2,7 +2,7 @@
   "slug": "cobranza-facturas-vencidas",
   "titulo": "Cobranza automática de facturas vencidas con recordatorios escalonados",
   "resumen": "Lee tus facturas pendientes y envía recordatorios con el tono adecuado según los días de mora, escalando los casos difíciles.",
-  "problema": "Cobrar facturas vencidas se hace a mano, tarde y sin criterio: a unos clientes se les escribe cada semana y a otros nunca. La cartera crece y la caja se resiente. Este flujo revisa cada mañana la hoja de facturas y aplica un calendario de cobro: recordatorio amable los días 1 y 7, firme con copia al responsable los días 15 y 22, y desde el día 30 escala el caso a una persona cada semana. Cada gestión queda registrada.",
+  "problema": "Cobrar facturas vencidas se hace a mano, tarde y sin criterio: a unos clientes se les escribe cada semana y a otros nunca. La cartera crece y la caja se resiente. Este flujo revisa cada mañana hábil la hoja de facturas y aplica un calendario de cobro: recordatorio amable los días 1 y 7 de mora, firme con copia al responsable los días 15 y 22, y desde el día 30 escala el caso a una persona cada semana. Los lunes también atiende lo que cayó el fin de semana. Una factura sin correo válido no detiene a las demás: queda anotada para corregirla, y cada gestión, incluidos los envíos fallidos, queda registrada.",
   "categoria": "finanzas",
   "herramientas": [
     "schedule",
@@ -11,13 +11,15 @@
     "gmail"
   ],
   "dificultad": "media",
-  "tiempoEstimado": 25,
+  "tiempoEstimado": 30,
   "requisitos": [
-    "Una instancia de n8n (cloud o autoalojada), con la zona horaria correcta en Settings > Timezone",
-    "Una cuenta de Google con acceso a Google Sheets y Gmail",
-    "Una pestaña «Facturas» con las columnas Número, Cliente, Correo, Monto, Vencimiento, Estado y Responsable",
-    "Una pestaña «Gestiones» con las columnas Fecha, Factura, Cliente, Días de mora y Acción",
-    "Vencimiento en formato AAAA-MM-DD o DD/MM/AAAA, y Estado «Pagada» cuando la factura se cobra"
+    "Una instancia de n8n (cloud o autoalojada), con la zona horaria de tu negocio en Settings > Timezone (por ejemplo America/Bogota)",
+    "Una cuenta de Google con Gmail y Google Sheets, y un proyecto en Google Cloud Console con esas APIs habilitadas y un cliente OAuth 2.0 para las credenciales de n8n",
+    "Una hoja de cálculo de Google nativa (no un archivo .xlsx subido a Drive) con dos pestañas",
+    "«Facturas», con la primera fila exactamente: Número, Cliente, Correo, Monto, Vencimiento, Estado, Responsable",
+    "«Gestiones», con la primera fila exactamente: Fecha, Factura, Cliente, Días de mora, Acción",
+    "Vencimiento como fecha real de la hoja o como texto AAAA-MM-DD o DD/MM/AAAA. Monto como número o texto colombiano («$ 1.500.000»). Estado «Pagada» (con cualquier mayúscula) cuando la factura se cobra",
+    "Usa las cuentas que prefieras: el flujo no trae ninguna cuenta, hoja ni correo configurado"
   ],
   "escenarios": [
     "Empresa de servicios con facturación mensual a decenas de clientes",
@@ -25,12 +27,51 @@
     "Equipo comercial que necesita saber qué clientes escalar sin revisar la hoja a diario"
   ],
   "pasos": [
-    "Prepara las pestañas «Facturas» y «Gestiones» con sus columnas. Marca como «Pagada» cada factura cobrada.",
+    "Prepara la hoja con las pestañas «Facturas» y «Gestiones» y sus encabezados exactos. Marca como «Pagada» cada factura cobrada.",
     "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
-    "Conecta tu cuenta de Google en «Leer facturas» y «Registrar gestión», y pega la URL de la hoja.",
-    "Conecta Gmail en los tres nodos de correo y adapta los textos al tono de tu empresa.",
-    "Si tu política de cobro es distinta, cambia los días en la función «etapa» del nodo «Calcular mora».",
-    "Crea una factura de prueba con tu correo y un vencimiento de hace 1 día, pulsa «Test workflow» y revisa el correo y la gestión registrada. Luego activa el flujo."
+    "Elige tu credencial de Google Sheets en «Leer facturas» y «Registrar gestión» y pega la URL de la hoja. La plantilla busca las pestañas por nombre («Facturas» y «Gestiones»): si las eliges de la lista, n8n guarda su ID y las sigue aunque las renombres. Las dos formas sirven.",
+    "Elige tu credencial de Gmail en los tres nodos de correo y adapta los textos al tono de tu empresa.",
+    "Si tu política de cobro es distinta, cambia la constante CALENDARIO al inicio de «Calcular mora». Si facturas en otra moneda, cambia MONEDA.",
+    "Prueba sin molestar a clientes: crea facturas ficticias con tu propio correo en Correo y en Responsable, y escribe el vencimiento con la fórmula =TEXT(TODAY()-N;\"yyyy-mm-dd\") para simular N días de mora (por ejemplo 1, 7, 15 o 30). Pulsa «Execute workflow» y revisa los correos y la pestaña «Gestiones».",
+    "Cada ejecución envía todo lo que toca ese día: si ejecutas dos veces el mismo día, se envía dos veces. Al terminar la prueba, borra las facturas y las gestiones de prueba, y solo entonces activa el flujo."
   ],
-  "destacado": true
+  "problemas": [
+    {
+      "sintoma": "En «Gestiones» aparece «Sin correo válido: no se envió»",
+      "solucion": "Esa factura no tiene un correo válido para su etapa: el del cliente para los recordatorios, o el del responsable para escalar. Corrige la columna Correo o Responsable; las demás facturas se procesaron con normalidad."
+    },
+    {
+      "sintoma": "En «Gestiones» aparece «Error al enviar: …»",
+      "solucion": "Gmail rechazó ese envío (credencial vencida, límite de envíos o dirección rechazada). Lo que sí salió quedó registrado. Revisa el mensaje y la credencial de Gmail."
+    },
+    {
+      "sintoma": "«Recordatorio firme (sin copia…)» en «Gestiones»",
+      "solucion": "El responsable de esa factura no tiene un correo válido: el recordatorio se envió al cliente sin copia. Completa la columna Responsable."
+    },
+    {
+      "sintoma": "Una factura vencida no recibió nada hoy",
+      "solucion": "Es lo esperado si hoy no es uno de sus días de recordatorio (1, 7, 15, 22, 30 y cada 7 desde ahí). Los lunes también se atienden los días del fin de semana."
+    },
+    {
+      "sintoma": "«This operation is not supported for this document. The document must not be an Office file»",
+      "solucion": "La hoja es un archivo .xlsx. Ábrela, usa Archivo → Guardar como hoja de cálculo de Google y pega la URL de la copia."
+    }
+  ],
+  "limitaciones": [
+    "No considera festivos: el flujo corre de lunes a viernes. Si un recordatorio cae en festivo, sale ese día igual.",
+    "No hay deduplicación por día: ejecutarlo dos veces el mismo día envía todo dos veces.",
+    "Si la pestaña «Gestiones» falla, los correos ya enviados no quedan registrados. Combínala con la plantilla «Alertas cuando falla cualquier flujo de n8n» para enterarte.",
+    "El texto con punto decimal al estilo de EE. UU. («1500.5») se lee con formato colombiano (como 15005). Usa celdas de número o formato colombiano."
+  ],
+  "destacado": true,
+  "guias": [
+    {
+      "titulo": "Moss: conectar cuentas de Google a n8n con OAuth 2",
+      "url": "https://sergio-velandia.dev/Moss/manual/n8n/oauth2-de-google-en-n8n"
+    },
+    {
+      "titulo": "Nexus: alertas cuando falla cualquier flujo de n8n",
+      "url": "https://sergio-velandia.dev/Moss-Nexus/plantillas/alertas-de-errores-n8n/"
+    }
+  ]
 }
