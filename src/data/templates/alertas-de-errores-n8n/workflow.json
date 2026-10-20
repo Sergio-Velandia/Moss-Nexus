@@ -64,7 +64,7 @@
             {
               "id": "0f3f3a8d-c47d-4cdd-8d58-730d8ddcdfef",
               "name": "critico",
-              "value": "={{ ($json.workflow?.name ?? '').toLowerCase().includes('[crítico]') }}",
+              "value": "={{ ($json.workflow?.name ?? '').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().includes('[critico]') }}",
               "type": "boolean"
             }
           ]
