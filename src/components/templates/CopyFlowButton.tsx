@@ -6,15 +6,32 @@ import type { Template } from '../../lib/types'
 
 type State = 'idle' | 'loading' | 'copied' | 'error'
 
-const LABEL: Record<State, string> = {
-  idle: 'Copiar flujo',
+const LABEL: Record<Exclude<State, 'idle'>, string> = {
   loading: 'Preparando…',
   copied: '¡Copiado!',
   error: 'No se pudo copiar',
 }
 
-/** El botón maestro: copia el JSON de n8n listo para pegar en el lienzo. */
-export function CopyFlowButton({ template, size = 'lg' }: { template: Template; size?: 'md' | 'lg' }) {
+/**
+ * El botón maestro: copia el JSON de n8n listo para pegar en el lienzo.
+ * Con `load`, `label` y `fileName` copia otro JSON de la plantilla (por ejemplo, su flujo de prueba).
+ */
+export function CopyFlowButton({
+  template,
+  size = 'lg',
+  load = template.loadWorkflow,
+  label = 'Copiar flujo',
+  fileName = `${template.slug}.json`,
+  variant = 'primary',
+}: {
+  template: Template
+  size?: 'md' | 'lg'
+  load?: () => Promise<unknown>
+  label?: string
+  fileName?: string
+  /** secondary: para JSON de apoyo, que no compita con el botón principal */
+  variant?: 'primary' | 'secondary'
+}) {
   const [state, setState] = useState<State>('idle')
   const [json, setJson] = useState<string | null>(null)
   const timer = useRef<number>(undefined)
@@ -22,16 +39,16 @@ export function CopyFlowButton({ template, size = 'lg' }: { template: Template; 
   // El workflow se descarga en cuanto se abre el detalle: al pulsar, la copia es instantánea
   useEffect(() => {
     let alive = true
-    template.loadWorkflow().then((wf) => alive && setJson(JSON.stringify(wf, null, 2)))
+    load().then((wf) => alive && setJson(JSON.stringify(wf, null, 2)))
     return () => {
       alive = false
       window.clearTimeout(timer.current)
     }
-  }, [template])
+  }, [load])
 
   const copy = async () => {
     setState('loading')
-    const text = json ?? JSON.stringify(await template.loadWorkflow(), null, 2)
+    const text = json ?? JSON.stringify(await load(), null, 2)
     const ok = await copyText(text)
     setState(ok ? 'copied' : 'error')
     window.clearTimeout(timer.current)
@@ -54,7 +71,9 @@ export function CopyFlowButton({ template, size = 'lg' }: { template: Template; 
             ? 'bg-moss text-on-accent'
             : state === 'error'
               ? 'bg-amber text-on-accent'
-              : 'bg-nexus text-on-accent shadow-[0_10px_34px_-10px_var(--c-nexus)] hover:brightness-110'
+              : variant === 'secondary'
+                ? 'border border-line-strong text-ink hover:border-nexus/50'
+                : 'bg-nexus text-on-accent shadow-[0_10px_34px_-10px_var(--c-nexus)] hover:brightness-110'
         }`}
       >
         <AnimatePresence mode="popLayout" initial={false}>
@@ -67,14 +86,14 @@ export function CopyFlowButton({ template, size = 'lg' }: { template: Template; 
             className="inline-flex items-center gap-2"
           >
             <Icon size={lg ? 20 : 17} aria-hidden className={state === 'loading' ? 'animate-spin' : ''} />
-            {LABEL[state]}
+            {state === 'idle' ? label : LABEL[state]}
           </motion.span>
         </AnimatePresence>
       </button>
       {json && (
         <button
           type="button"
-          onClick={() => downloadJson(`${template.slug}.json`, json)}
+          onClick={() => downloadJson(fileName, json)}
           className={`inline-flex items-center gap-2 rounded-xl px-4 font-medium text-ink-soft transition hover:bg-surface-2 hover:text-ink ${
             lg ? 'min-h-13 text-sm' : 'min-h-11 text-sm'
           }`}

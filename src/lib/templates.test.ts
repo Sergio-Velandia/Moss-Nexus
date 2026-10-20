@@ -48,11 +48,16 @@ describe('plantillas del repositorio', () => {
 describe('workflows publicables', () => {
   type Workflow = { nodes?: { name: string; credentials?: unknown }[]; pinData?: Record<string, unknown>; meta?: Record<string, unknown> }
 
-  it('ningún nodo incluye credenciales', async () => {
+  it('ningún nodo incluye credenciales (ni en el flujo ni en el de prueba)', async () => {
     for (const t of templates) {
-      const wf = (await t.loadWorkflow()) as Workflow
-      const withCreds = (wf.nodes ?? []).filter((n) => n.credentials !== undefined).map((n) => n.name)
-      expect(withCreds, `${t.slug}: quita "credentials" de estos nodos`).toEqual([])
+      for (const [archivo, load] of [['workflow.json', t.loadWorkflow], ['prueba.json', t.loadPrueba]] as const) {
+        if (!load) continue
+        const wf = (await load()) as Workflow
+        const withCreds = (wf.nodes ?? []).filter((n) => n.credentials !== undefined).map((n) => n.name)
+        expect(withCreds, `${t.slug}/${archivo}: quita "credentials" de estos nodos`).toEqual([])
+        expect(Object.keys(wf.pinData ?? {}), `${t.slug}/${archivo}: vacía "pinData"`).toEqual([])
+        expect(wf.meta?.instanceId, `${t.slug}/${archivo}: quita "meta.instanceId"`).toBeUndefined()
+      }
     }
   })
   it('las conexiones apuntan a nodos existentes y los nombres no se repiten', async () => {
@@ -169,6 +174,15 @@ describe('buildTemplates', () => {
     )
     expect(ok.map((t) => t.slug)).toEqual(['demo'])
     expect(Object.keys(errors)).toEqual(['rota'])
+  })
+  it('prueba.json y meta.prueba deben venir juntos', () => {
+    const conPrueba = { ...meta, prueba: { descripcion: 'Flujo que falla a propósito' } }
+    const sinArchivo = buildTemplates({ '../t/demo/meta.json': conPrueba }, { '../t/demo/diagram.json': diagram }, { '../t/demo/workflow.json': wf })
+    expect(sinArchivo.errors.demo).toContain('meta.prueba existe pero falta prueba.json')
+    const sinMeta = buildTemplates({ '../t/demo/meta.json': meta }, { '../t/demo/diagram.json': diagram }, { '../t/demo/workflow.json': wf }, { '../t/demo/prueba.json': wf })
+    expect(sinMeta.errors.demo).toContain('hay prueba.json pero falta meta.prueba')
+    const ok = buildTemplates({ '../t/demo/meta.json': conPrueba }, { '../t/demo/diagram.json': diagram }, { '../t/demo/workflow.json': wf }, { '../t/demo/prueba.json': wf })
+    expect(ok.templates[0].loadPrueba).toBeTypeOf('function')
   })
   it('exige workflow.json', () => {
     const { errors } = buildTemplates({ '../t/demo/meta.json': meta }, { '../t/demo/diagram.json': diagram }, {})

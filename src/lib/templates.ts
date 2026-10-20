@@ -10,6 +10,7 @@ import { validateDiagram, validateMeta } from './validate'
 const metas = import.meta.glob('../data/templates/*/meta.json', { eager: true, import: 'default' })
 const diagrams = import.meta.glob('../data/templates/*/diagram.json', { eager: true, import: 'default' })
 const workflows = import.meta.glob('../data/templates/*/workflow.json', { import: 'default' })
+const pruebas = import.meta.glob('../data/templates/*/prueba.json', { import: 'default' })
 
 const folderOf = (path: string) => path.split('/').at(-2)!
 
@@ -17,10 +18,12 @@ export function buildTemplates(
   metaFiles: Record<string, unknown>,
   diagramFiles: Record<string, unknown>,
   workflowFiles: Record<string, () => Promise<unknown>>,
+  pruebaFiles: Record<string, () => Promise<unknown>> = {},
 ) {
   const byFolder = <T>(files: Record<string, T>) => new Map(Object.entries(files).map(([p, v]) => [folderOf(p), v]))
   const diagramsBy = byFolder(diagramFiles)
   const workflowsBy = byFolder(workflowFiles)
+  const pruebasBy = byFolder(pruebaFiles)
 
   const templates: Template[] = []
   const errors: Record<string, string[]> = {}
@@ -29,6 +32,9 @@ export function buildTemplates(
     const folder = folderOf(path)
     const problems = [...validateMeta(meta, folder), ...validateDiagram(diagramsBy.get(folder))]
     if (!workflowsBy.has(folder)) problems.push('falta workflow.json')
+    const declaraPrueba = (meta as { prueba?: unknown } | null)?.prueba !== undefined
+    if (declaraPrueba && !pruebasBy.has(folder)) problems.push('meta.prueba existe pero falta prueba.json')
+    if (!declaraPrueba && pruebasBy.has(folder)) problems.push('hay prueba.json pero falta meta.prueba')
     if (problems.length > 0) {
       errors[folder] = problems
       continue
@@ -37,6 +43,7 @@ export function buildTemplates(
       ...(meta as TemplateMeta),
       diagrama: diagramsBy.get(folder) as TemplateDiagram,
       loadWorkflow: workflowsBy.get(folder)!,
+      ...(pruebasBy.has(folder) ? { loadPrueba: pruebasBy.get(folder)! } : {}),
     })
   }
 
@@ -50,7 +57,7 @@ export function buildTemplates(
   return { templates, errors }
 }
 
-const built = buildTemplates(metas, diagrams, workflows)
+const built = buildTemplates(metas, diagrams, workflows, pruebas)
 
 if (Object.keys(built.errors).length > 0) {
   // Una plantilla rota no tumba el sitio: se omite y se avisa en consola (y las pruebas fallan)

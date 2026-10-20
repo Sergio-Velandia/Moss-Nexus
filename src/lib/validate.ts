@@ -66,6 +66,13 @@ export function validateMeta(meta: unknown, folder: string): string[] {
     )
   }
   if (meta.limitaciones !== undefined) need('limitaciones', isTextList(meta.limitaciones), 'lista de textos no vacía')
+  if (meta.prueba !== undefined) {
+    need(
+      'prueba',
+      isObj(meta.prueba) && isText(meta.prueba.descripcion) && (meta.prueba.aviso === undefined || isText(meta.prueba.aviso)),
+      '{ descripcion, aviso? }',
+    )
+  }
   if (meta.guias !== undefined) {
     need(
       'guias',

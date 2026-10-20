@@ -36,6 +36,8 @@ export interface TemplateMeta {
   problemas?: { sintoma: string; solucion: string }[]
   /** Lo que la plantilla no resuelve o puede hacer mal. Se muestra a la vista, antes de copiar. Opcional */
   limitaciones?: string[]
+  /** Flujo de prueba opcional (archivo prueba.json en la carpeta): cómo usarlo y aviso destacado */
+  prueba?: { descripcion: string; aviso?: string }
   /** Guías externas útiles para configurarla (por ejemplo, el manual de Moss). Opcional */
   guias?: { titulo: string; url: string }[]
   /** Plantilla ficticia, solo para ver el diseño. Se muestra con una marca visible. */
@@ -54,4 +56,6 @@ export interface Template extends TemplateMeta {
   diagrama: TemplateDiagram
   /** Carga perezosa del JSON de n8n: solo se descarga al abrir el detalle o copiar */
   loadWorkflow: () => Promise<unknown>
+  /** Carga perezosa de prueba.json, si la plantilla lo trae */
+  loadPrueba?: () => Promise<unknown>
 }

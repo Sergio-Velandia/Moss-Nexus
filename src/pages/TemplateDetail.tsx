@@ -173,6 +173,29 @@ export default function TemplateDetail() {
             </ol>
           </Section>
 
+          {/* Flujo de prueba opcional: un JSON de apoyo para probar la plantilla sin esperar un caso real */}
+          {t.prueba && t.loadPrueba && (
+            <Section id="probarla" icon={<FlaskConical size={18} aria-hidden />} title="Cómo probarla">
+              <p className="max-w-2xl text-pretty leading-relaxed text-ink-soft">{t.prueba.descripcion}</p>
+              {t.prueba.aviso && (
+                <p className="mt-4 flex items-start gap-3 rounded-2xl border border-amber/40 bg-amber/[0.06] px-4 py-3 text-sm">
+                  <TriangleAlert size={18} className="mt-0.5 shrink-0 text-amber" aria-hidden />
+                  <strong className="font-semibold text-ink">{t.prueba.aviso}</strong>
+                </p>
+              )}
+              <div className="mt-5">
+                <CopyFlowButton
+                  template={t}
+                  size="md"
+                  variant="secondary"
+                  load={t.loadPrueba}
+                  label="Copiar flujo de prueba"
+                  fileName={`${t.slug}-prueba.json`}
+                />
+              </div>
+            </Section>
+          )}
+
           {/* Problemas frecuentes: síntoma → solución, cuando la plantilla los documenta */}
           {t.problemas && t.problemas.length > 0 && (
             <Section id="problemas" icon={<LifeBuoy size={18} aria-hidden />} title="Problemas frecuentes">
@@ -259,6 +282,7 @@ export default function TemplateDetail() {
                   ['contexto', 'Qué problema resuelve'],
                   ['requisitos', 'Requisitos'],
                   ['pasos', 'Cómo usarla'],
+                  ...(t.prueba && t.loadPrueba ? [['probarla', 'Cómo probarla']] : []),
                   ...(t.problemas?.length ? [['problemas', 'Problemas frecuentes']] : []),
                   ...(t.limitaciones?.length ? [['limitaciones', 'Limitaciones']] : []),
                   ['copiar', 'Copiar flujo'],
