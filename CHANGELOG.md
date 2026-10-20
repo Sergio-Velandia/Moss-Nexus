@@ -6,6 +6,20 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.7.8] - 2026-10-20
+
+### Añadido
+- Pruebas del repositorio que ejecutan el nodo «Calcular mora» de cobranza tal como está publicado: 20 casos de calendario, fines de semana, correos, montos y fechas. Para eso se agrega `luxon` 3.7.2 como dependencia de desarrollo; no entra al build del sitio.
+
+### Cambiado
+- **cobranza-facturas-vencidas**: sello «Probado» (19 oct 2026, 21:00, n8n 2.43.5), con facturas ficticias y el correo del propio autor. La página explica cómo probar sin molestar a clientes (fórmula de vencimiento y borrado de los datos de prueba), la pestaña por nombre o por lista, y documenta 5 problemas frecuentes y 4 limitaciones (festivos, sin deduplicación por día, registro y formato de montos). Enlaza la guía de OAuth 2 de Moss y la plantilla de alertas de errores. Tiempo estimado: 30 minutos.
+
+### Corregido
+- **cobranza-facturas-vencidas**: los recordatorios y escalamientos que caían en fin de semana nunca se enviaban. Los lunes ahora se revisan también el sábado y el domingo, con el calendario en la constante `CALENDARIO`.
+- **cobranza-facturas-vencidas**: una factura sin correo detenía el envío y dejaba sin registrar lo que ya había salido. Ahora sale por la ruta «Sin correo», los errores de Gmail se registran como «Error al enviar», y «firme» sin un responsable válido se envía sin copia y lo anota.
+- **cobranza-facturas-vencidas**: montos en COP sin decimales, con lectura de texto colombiano («$ 1.500.000»), y fechas leídas como número de serie, sin depender del idioma de la hoja.
+- En el mapa, las conexiones que saltan pasos tienen su propio carril y ya no quedan ocultas detrás de otro nodo.
+
 ## [0.7.7] - 2026-10-19
 
 ### Añadido
@@ -189,7 +203,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.7...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.8...HEAD
+[0.7.8]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.7...v0.7.8
 [0.7.7]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.6...v0.7.7
 [0.7.6]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.5...v0.7.6
 [0.7.5]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.4...v0.7.5
