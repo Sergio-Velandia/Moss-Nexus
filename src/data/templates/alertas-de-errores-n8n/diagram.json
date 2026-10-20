@@ -20,7 +20,7 @@
     },
     {
       "id": "aviso-registro",
-      "etiqueta": "Aviso: registro fallido",
+      "etiqueta": "Registro fallido",
       "herramienta": "slack",
       "tipo": "accion"
     },
