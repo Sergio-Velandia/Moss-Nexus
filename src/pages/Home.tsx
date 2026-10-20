@@ -5,6 +5,7 @@ import { Featured } from '../components/home/Featured'
 import { Hero } from '../components/home/Hero'
 import { HowItWorks } from '../components/home/HowItWorks'
 import { PopularTools } from '../components/home/PopularTools'
+import { ProposeCta } from '../components/home/ProposeCta'
 import { Problem } from '../components/home/Problem'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
 
@@ -19,6 +20,7 @@ export default function Home() {
       <Featured />
       <PopularTools />
       <Anatomy />
+      <ProposeCta />
       <Ecosystem />
     </>
   )

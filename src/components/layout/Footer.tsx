@@ -36,6 +36,9 @@ export function Footer() {
           <li>
             <Link to="/acerca" className={linkCls}>Qué es Nexus</Link>
           </li>
+          <li>
+            <Link to="/propon-un-flujo" className={linkCls}>Propón un flujo</Link>
+          </li>
         </Column>
         <Column title="Ecosistema">
           <li>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Check, Copy, ExternalLink, Mail } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { ArrowRight, Check, Copy, ExternalLink, Mail } from 'lucide-react'
 import { LegalPage } from '../components/legal/LegalPage'
 import { site } from '../data/site'
 import { copyText } from '../lib/clipboard'
@@ -50,11 +51,29 @@ export default function Contact() {
       updated={site.legalUpdated}
       intro={
         <p>
-          Moss Nexus no tiene formulario de contacto, porque no tiene servidor que lo reciba. Estos son los dos canales para
-          escribirme.
+          Estos son los canales para escribirme. Si quieres proponer un flujo para tu negocio o conversar directamente, usa el
+          formulario de <Link to="/propon-un-flujo">Propón un flujo</Link>.
         </p>
       }
       sections={[
+        {
+          id: 'formulario',
+          title: 'Propón un flujo o habla conmigo',
+          content: (
+            <>
+              <p>
+                Para proponer una automatización (tu negocio, el problema y tu idea) o para escribirme sin más preguntas. El
+                mensaje me llega por correo y te respondo a la dirección que indiques.
+              </p>
+              <Link
+                to="/propon-un-flujo"
+                className="glass inline-flex min-h-11 items-center gap-2 rounded-xl px-4 text-sm font-semibold !text-ink !no-underline transition hover:-translate-y-0.5"
+              >
+                Ir al formulario <ArrowRight size={15} className="text-nexus" aria-hidden />
+              </Link>
+            </>
+          ),
+        },
         {
           id: 'github',
           title: 'GitHub Issues (recomendado)',
@@ -103,8 +122,9 @@ export default function Contact() {
           title: 'Qué esperar',
           content: (
             <p>
-              Moss Nexus es un proyecto personal y gratuito: respondo cuando puedo, sin un plazo garantizado. No ofrezco soporte
-              técnico ni consultoría por estos canales, aunque las sugerencias sí ayudan a decidir qué plantillas publicar después.
+              Moss Nexus es un proyecto personal y gratuito: respondo cuando puedo, sin un plazo garantizado. Por GitHub y por
+              correo no ofrezco soporte técnico; si quieres implementar un flujo en tu negocio, cuéntamelo en el formulario y lo
+              conversamos. Las sugerencias también ayudan a decidir qué plantillas publicar después.
             </p>
           ),
         },

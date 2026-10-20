@@ -10,6 +10,7 @@ import { ThemeToggle } from './ThemeToggle'
 const links = [
   { to: '/plantillas', label: 'Plantillas' },
   { to: '/acerca', label: 'Acerca' },
+  { to: '/propon-un-flujo', label: 'Propón un flujo' },
 ]
 
 export default function Layout() {
