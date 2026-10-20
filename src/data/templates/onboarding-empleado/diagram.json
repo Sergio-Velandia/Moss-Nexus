@@ -19,6 +19,12 @@
       "tipo": "accion"
     },
     {
+      "id": "fecha",
+      "etiqueta": "¿Fecha futura?",
+      "herramienta": "n8n",
+      "tipo": "logica"
+    },
+    {
       "id": "agendar",
       "etiqueta": "Agendar bienvenida",
       "herramienta": "google-calendar",
@@ -54,7 +60,12 @@
     },
     {
       "origen": "registrar",
-      "destino": "agendar"
+      "destino": "fecha"
+    },
+    {
+      "origen": "fecha",
+      "destino": "agendar",
+      "etiqueta": "sí"
     },
     {
       "origen": "registrar",
