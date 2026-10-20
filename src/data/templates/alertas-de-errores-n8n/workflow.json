@@ -162,7 +162,8 @@
       "position": [
         460,
         -120
-      ]
+      ],
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -262,6 +263,28 @@
         700,
         280
       ]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#alertas",
+          "mode": "name"
+        },
+        "text": ":warning: No se pudo registrar el error en la hoja (revisa URL, pestaña «Errores», permisos o credencial de Google).",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "160afc0f-d0c8-4296-8777-bd6185142b5b",
+      "name": "Aviso: registro fallido",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        700,
+        -240
+      ]
     }
   ],
   "connections": {
@@ -309,6 +332,18 @@
         [
           {
             "node": "Alerta en Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar error": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Aviso: registro fallido",
             "type": "main",
             "index": 0
           }
