@@ -6,6 +6,18 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.7.9] - 2026-10-20
+
+### Añadido
+- Pruebas del repositorio para onboarding: evalúan la detección de fecha pasada, el aviso del checklist, la condición del IF y el orden de ejecución tal como están en el flujo publicado.
+
+### Cambiado
+- **onboarding-empleado**: sello «Probado» (19 oct 2026, 21:39, n8n 2.43.5), con datos ficticios y alias de correo del propio autor. La página explica cómo probar con la Test URL y alias de correo, compartir la Production URL, elegir la zona horaria e invitar al bot de Slack, y documenta 5 problemas frecuentes y 4 limitaciones (duplicados, fines de semana y festivos, avisos tras un fallo y horario fijo). Enlaza las guías de Moss de OAuth 2 de Google y Slack, y la plantilla de alertas de errores.
+
+### Corregido
+- **onboarding-empleado**: si fallaba Slack, Gmail o Calendar, el ingreso podía quedar sin registrar. Ahora se registra en la hoja antes de enviar cualquier aviso.
+- **onboarding-empleado**: con una fecha de ingreso pasada se agendaba una reunión en el pasado. Ahora no se agenda, el checklist al responsable empieza con un aviso para revisarla y el correo de bienvenida no menciona la reunión.
+
 ## [0.7.8] - 2026-10-20
 
 ### Añadido
@@ -203,7 +215,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.8...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.9...HEAD
+[0.7.9]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.8...v0.7.9
 [0.7.8]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.7...v0.7.8
 [0.7.7]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.6...v0.7.7
 [0.7.6]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.5...v0.7.6
