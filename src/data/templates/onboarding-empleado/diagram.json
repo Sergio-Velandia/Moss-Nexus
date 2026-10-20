@@ -13,6 +13,12 @@
       "tipo": "logica"
     },
     {
+      "id": "registrar",
+      "etiqueta": "Registrar ingreso",
+      "herramienta": "google-sheets",
+      "tipo": "accion"
+    },
+    {
       "id": "agendar",
       "etiqueta": "Agendar bienvenida",
       "herramienta": "google-calendar",
@@ -35,12 +41,6 @@
       "etiqueta": "Anunciar al equipo",
       "herramienta": "slack",
       "tipo": "accion"
-    },
-    {
-      "id": "registrar",
-      "etiqueta": "Registrar ingreso",
-      "herramienta": "google-sheets",
-      "tipo": "accion"
     }
   ],
   "conexiones": [
@@ -50,23 +50,23 @@
     },
     {
       "origen": "preparar",
+      "destino": "registrar"
+    },
+    {
+      "origen": "registrar",
       "destino": "agendar"
     },
     {
-      "origen": "preparar",
+      "origen": "registrar",
       "destino": "bienvenida"
     },
     {
-      "origen": "preparar",
+      "origen": "registrar",
       "destino": "checklist"
     },
     {
-      "origen": "preparar",
+      "origen": "registrar",
       "destino": "anunciar"
-    },
-    {
-      "origen": "preparar",
-      "destino": "registrar"
     }
   ]
 }
