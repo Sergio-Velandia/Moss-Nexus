@@ -68,7 +68,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Decide qué facturas vencidas reciben gestión hoy y con qué tono. Sin estado ni base de datos.\n// Calendario de cobro: días de mora en los que toca recordatorio. Cámbialo aquí si tu política es otra.\nconst CALENDARIO = {\n  amable: [1, 7],\n  firme: [15, 22],\n  escalarDesde: 30, // desde este día de mora se escala al responsable…\n  escalarCada: 7, // …y se repite cada tantos días\n};\n\nconst hoy = $now.startOf('day');\n// El flujo corre de lunes a viernes. Los lunes revisa también el sábado y el domingo (ventana de 3 días)\n// para no perder recordatorios ni escalamientos que cayeron en fin de semana. Los demás días, solo hoy.\nconst ventana = hoy.weekday === 1 ? 3 : 1;\n\nfunction fecha(valor) {\n  const texto = String(valor ?? '').trim();\n  const dma = texto.match(/^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4})/);\n  if (dma) return DateTime.fromObject({ year: +dma[3], month: +dma[2], day: +dma[1] });\n  return DateTime.fromISO(texto.slice(0, 10));\n}\n\n// Etapa que corresponde a un día de mora exacto, o null si ese día no toca recordatorio\nfunction etapaDelDia(dia) {\n  if (CALENDARIO.amable.includes(dia)) return 'amable';\n  if (CALENDARIO.firme.includes(dia)) return 'firme';\n  if (dia >= CALENDARIO.escalarDesde && (dia - CALENDARIO.escalarDesde) % CALENDARIO.escalarCada === 0) return 'escalar';\n  return null;\n}\n\n// Revisa los días de mora de la ventana (hoy y, si es lunes, el sábado y el domingo).\n// Si varios tocan recordatorio, gana el día más alto.\nfunction etapaEnVentana(diasHoy) {\n  for (let dia = diasHoy; dia > diasHoy - ventana; dia--) {\n    if (dia < 1) break;\n    const etapa = etapaDelDia(dia);\n    if (etapa) return etapa;\n  }\n  return null;\n}\n\nconst dinero = new Intl.NumberFormat('es', { minimumFractionDigits: 2, maximumFractionDigits: 2 });\n\nconst salida = [];\nfor (const { json: f } of $input.all()) {\n  const estado = String(f.Estado ?? '').trim().toLowerCase();\n  if (!f['Número'] || estado.startsWith('pagad')) continue;\n  const vence = fecha(f.Vencimiento);\n  if (!vence.isValid) continue;\n  const dias = Math.round(hoy.diff(vence.startOf('day'), 'days').days);\n  const tono = etapaEnVentana(dias);\n  if (!tono) continue;\n\n  salida.push({\n    json: {\n      numero: String(f['Número']),\n      cliente: f.Cliente,\n      correo: String(f.Correo ?? '').trim(),\n      responsable: String(f.Responsable ?? '').trim(),\n      monto: '$' + dinero.format(Number(f.Monto) || 0),\n      vencimiento: vence.setLocale('es').toFormat(\"d 'de' LLLL\"),\n      dias,\n      etapa: tono,\n    },\n  });\n}\nreturn salida;"
+        "jsCode": "// Decide qué facturas vencidas reciben gestión hoy y con qué tono. Sin estado ni base de datos.\n// Calendario de cobro: días de mora en los que toca recordatorio. Cámbialo aquí si tu política es otra.\nconst CALENDARIO = {\n  amable: [1, 7],\n  firme: [15, 22],\n  escalarDesde: 30, // desde este día de mora se escala al responsable…\n  escalarCada: 7, // …y se repite cada tantos días\n};\n\nconst hoy = $now.startOf('day');\n// El flujo corre de lunes a viernes. Los lunes revisa también el sábado y el domingo (ventana de 3 días)\n// para no perder recordatorios ni escalamientos que cayeron en fin de semana. Los demás días, solo hoy.\nconst ventana = hoy.weekday === 1 ? 3 : 1;\n\nfunction fecha(valor) {\n  const texto = String(valor ?? '').trim();\n  const dma = texto.match(/^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4})/);\n  if (dma) return DateTime.fromObject({ year: +dma[3], month: +dma[2], day: +dma[1] });\n  return DateTime.fromISO(texto.slice(0, 10));\n}\n\n// Etapa que corresponde a un día de mora exacto, o null si ese día no toca recordatorio\nfunction etapaDelDia(dia) {\n  if (CALENDARIO.amable.includes(dia)) return 'amable';\n  if (CALENDARIO.firme.includes(dia)) return 'firme';\n  if (dia >= CALENDARIO.escalarDesde && (dia - CALENDARIO.escalarDesde) % CALENDARIO.escalarCada === 0) return 'escalar';\n  return null;\n}\n\n// Revisa los días de mora de la ventana (hoy y, si es lunes, el sábado y el domingo).\n// Si varios tocan recordatorio, gana el día más alto.\nfunction etapaEnVentana(diasHoy) {\n  for (let dia = diasHoy; dia > diasHoy - ventana; dia--) {\n    if (dia < 1) break;\n    const etapa = etapaDelDia(dia);\n    if (etapa) return etapa;\n  }\n  return null;\n}\n\nconst dinero = new Intl.NumberFormat('es', { minimumFractionDigits: 2, maximumFractionDigits: 2 });\n\nconst esCorreo = (texto) => /^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(texto);\nconst ACCIONES = { amable: 'Recordatorio amable', firme: 'Recordatorio firme', escalar: 'Escalado al responsable' };\n\nconst salida = [];\nfor (const { json: f } of $input.all()) {\n  const estado = String(f.Estado ?? '').trim().toLowerCase();\n  if (!f['Número'] || estado.startsWith('pagad')) continue;\n  const vence = fecha(f.Vencimiento);\n  if (!vence.isValid) continue;\n  const dias = Math.round(hoy.diff(vence.startOf('day'), 'days').days);\n  const tono = etapaEnVentana(dias);\n  if (!tono) continue;\n\n  const correo = String(f.Correo ?? '').trim();\n  const responsable = String(f.Responsable ?? '').trim();\n  // Quién debe tener un correo válido: «amable» el cliente; «firme» el cliente (el responsable va en copia\n  // solo si es válido); «escalar» el responsable, que es el destinatario.\n  const sinCorreo = tono === 'escalar' ? !esCorreo(responsable) : !esCorreo(correo);\n  const conCopia = tono === 'firme' && esCorreo(responsable);\n  let accion = ACCIONES[tono];\n  if (sinCorreo) accion = 'Sin correo válido: no se envió';\n  else if (tono === 'firme' && !conCopia) accion = 'Recordatorio firme (sin copia: el responsable no tiene un correo válido)';\n\n  salida.push({\n    json: {\n      numero: String(f['Número']),\n      cliente: f.Cliente,\n      correo,\n      responsable,\n      cc: conCopia ? responsable : '',\n      monto: '$' + dinero.format(Number(f.Monto) || 0),\n      vencimiento: vence.setLocale('es').toFormat(\"d 'de' LLLL\"),\n      dias,\n      // «sin_correo» sale por su propia salida del Switch: no se envía nada y se registra para corregirlo\n      etapa: sinCorreo ? 'sin_correo' : tono,\n      accion,\n    },\n  });\n}\nreturn salida;"
       },
       "id": "0762e947-805f-44df-840f-f0a84dcbefc9",
       "name": "Calcular mora",
@@ -156,6 +156,30 @@
               },
               "renameOutput": true,
               "outputKey": "Escalar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f3fbdf78-9082-4a0f-8373-1cd1290ccdf9",
+                    "leftValue": "={{ $json.etapa }}",
+                    "rightValue": "sin_correo",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Sin correo"
             }
           ]
         },
@@ -188,7 +212,8 @@
         900,
         -160
       ],
-      "webhookId": "543d4d62-83ff-491d-8af6-8f4fb2db600d"
+      "webhookId": "543d4d62-83ff-491d-8af6-8f4fb2db600d",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -198,7 +223,7 @@
         "message": "=Hola, {{ $json.cliente }}:\n\nLa factura {{ $json.numero }} por {{ $json.monto }} tiene {{ $json.dias }} días de vencida (venció el {{ $json.vencimiento }}). Te pedimos confirmar la fecha de pago en respuesta a este correo.\n\nSi existe algún inconveniente con la factura, cuéntanos para resolverlo.\n\nUn saludo",
         "options": {
           "appendAttribution": false,
-          "ccList": "={{ $json.responsable }}"
+          "ccList": "={{ $json.cc }}"
         }
       },
       "id": "de0ca81b-7852-4077-8e26-5e4bc381ba34",
@@ -209,7 +234,8 @@
         900,
         0
       ],
-      "webhookId": "20970219-580e-46d0-8908-dc3250152307"
+      "webhookId": "20970219-580e-46d0-8908-dc3250152307",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -229,7 +255,8 @@
         900,
         160
       ],
-      "webhookId": "be6bb96f-1435-43b9-881b-fe8144dc9328"
+      "webhookId": "be6bb96f-1435-43b9-881b-fe8144dc9328",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -251,7 +278,7 @@
             "Factura": "={{ $('Calcular mora').item.json.numero }}",
             "Cliente": "={{ $('Calcular mora').item.json.cliente }}",
             "Días de mora": "={{ $('Calcular mora').item.json.dias }}",
-            "Acción": "={{ { amable: 'Recordatorio amable', firme: 'Recordatorio firme', escalar: 'Escalado al responsable' }[$('Calcular mora').item.json.etapa] }}"
+            "Acción": "={{ $json.error ? 'Error al enviar: ' + ($json.error.message ?? String($json.error)) : $('Calcular mora').item.json.accion }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -372,11 +399,25 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Registrar gestión",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
     "Recordatorio amable": {
       "main": [
+        [
+          {
+            "node": "Registrar gestión",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "Registrar gestión",
@@ -394,11 +435,25 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Registrar gestión",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
     "Escalar al responsable": {
       "main": [
+        [
+          {
+            "node": "Registrar gestión",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "Registrar gestión",

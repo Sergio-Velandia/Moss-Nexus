@@ -88,6 +88,11 @@
     {
       "origen": "escalar",
       "destino": "registrar"
+    },
+    {
+      "origen": "tono",
+      "destino": "registrar",
+      "etiqueta": "sin correo"
     }
   ]
 }
