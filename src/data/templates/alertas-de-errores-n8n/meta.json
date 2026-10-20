@@ -2,7 +2,7 @@
   "slug": "alertas-de-errores-n8n",
   "titulo": "Alertas cuando falla cualquier flujo de n8n",
   "resumen": "Un flujo de errores central: registra cada fallo, avisa en Slack y escala por correo los flujos marcados como críticos.",
-  "problema": "Un flujo deja de funcionar un viernes y nadie se entera hasta que un cliente pregunta por qué no le llegó la factura. n8n registra el error, pero nadie revisa las ejecuciones a diario. Este flujo se conecta como «Error workflow» de tus automatizaciones: cada fallo queda en una hoja con su enlace, llega a un canal de Slack y, si el flujo lleva «[crítico]» en el nombre, también te escribe por correo y menciona a todo el canal.",
+  "problema": "Un flujo deja de funcionar un viernes y nadie se entera hasta que un cliente pregunta por qué no le llegó la factura. n8n registra el error, pero nadie revisa las ejecuciones a diario. Este flujo se conecta como «Error workflow» de tus automatizaciones: cada fallo queda en una hoja con su enlace, llega a un canal de Slack y, si el flujo lleva «[crítico]» en el nombre (con o sin tilde, en mayúsculas o minúsculas), también te escribe por correo y menciona a todo el canal. Y si la hoja falla (pestaña renombrada, permisos o token vencido), las alertas llegan igual y además te avisa que no pudo registrar.",
   "categoria": "operaciones",
   "herramientas": [
     "n8n",
@@ -11,11 +11,13 @@
     "slack"
   ],
   "dificultad": "media",
-  "tiempoEstimado": 15,
+  "tiempoEstimado": 25,
   "requisitos": [
-    "Una instancia de n8n con flujos activos que quieras vigilar",
-    "Un espacio de Slack con un canal para alertas (por ejemplo #alertas)",
-    "Una cuenta de Google con acceso a Gmail y a una hoja con la pestaña «Errores» (Fecha, Flujo, Nodo, Error, Enlace)"
+    "Una instancia de n8n con los flujos que quieras vigilar, publicados",
+    "Un espacio de Slack con un canal para alertas (por ejemplo #alertas) y una app de Slack con su token de bot invitada a ese canal",
+    "Una cuenta de Google con Gmail y Google Sheets, y un proyecto en Google Cloud Console con esas APIs habilitadas y un cliente OAuth 2.0 para las credenciales de n8n",
+    "Una hoja de cálculo de Google nativa (no un archivo .xlsx subido a Drive) con la pestaña «Errores» y, en la primera fila, exactamente: Fecha, Flujo, Nodo, Error, Enlace",
+    "Usa las cuentas que prefieras: el flujo no trae ninguna cuenta, hoja, canal ni correo configurado"
   ],
   "escenarios": [
     "Empresa que ya tiene varias automatizaciones en producción y no quiere fallos silenciosos",
@@ -23,11 +25,55 @@
     "Equipo de TI que necesita trazabilidad de incidentes para revisarlos cada semana"
   ],
   "pasos": [
+    "Crea la hoja de cálculo de Google con la pestaña «Errores» y los encabezados Fecha, Flujo, Nodo, Error y Enlace. En Slack, crea el canal #alertas e invita al bot con /invite @tu-bot (si no, Slack responde not_in_channel).",
     "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n. Guárdalo con un nombre como «Alertas de errores».",
-    "Conecta Google en «Registrar error» (con la URL de la hoja), Gmail en «Avisar por correo» con tu dirección, y Slack en los dos nodos de alerta.",
-    "En cada flujo que quieras vigilar, abre Settings > Error workflow y elige «Alertas de errores».",
-    "Agrega «[crítico]» al nombre de los flujos cuyo fallo debe llegar también por correo.",
-    "Para probarlo, crea un flujo con un nodo que falle a propósito, asígnale este Error workflow, actívalo y provoca el error."
+    "Elige tus credenciales: Google Sheets en «Registrar error» (con la URL de la hoja), Gmail en «Avisar por correo» (cambia tu-correo@ejemplo.com por el tuyo) y Slack en los tres nodos de Slack.",
+    "Publica el flujo de alertas. n8n valida la URL de la hoja al publicar.",
+    "En cada flujo que quieras vigilar: ⋯ → Settings → Error Workflow → elige «Alertas de errores» → Save. El flujo vigilado también debe estar publicado.",
+    "Marca los flujos importantes agregando «[crítico]» al nombre, por ejemplo «Facturas a Drive [crítico]» o «Reporte de ventas [critico]»: funciona con o sin tilde y en mayúsculas. Sus fallos llegan además por correo y con @channel en Slack.",
+    "Prueba con el flujo de prueba de esta página (sección «Cómo probarla»). Ten en cuenta que pulsar «Execute» no dispara alertas: n8n solo las envía en ejecuciones automáticas."
   ],
-  "destacado": false
+  "prueba": {
+    "descripcion": "Un flujo mínimo que falla a propósito cada minuto: «Cada minuto» → un nodo Code que lanza un error. Pégalo en un flujo nuevo, asígnale «Alertas de errores» como Error Workflow (⋯ → Settings → Error Workflow) y publícalo. En un minuto te llegará la primera alerta. Para probar el modo crítico, agrega «[crítico]» a su nombre. El botón «Fetch Test Event» del Error Trigger también sirve para ver el formato, pero su enlace de ejecución es de ejemplo (/execution/workflow/1/231) y da 404: es normal.",
+    "aviso": "Despublícalo al terminar o te enviará una alerta cada minuto."
+  },
+  "problemas": [
+    {
+      "sintoma": "Ejecuto el flujo vigilado con «Execute» y no llega ninguna alerta",
+      "solucion": "Es el comportamiento de n8n: el Error workflow solo se dispara en ejecuciones automáticas. Publica el flujo vigilado y el de alertas, y espera a que falle en una ejecución automática (o usa el flujo de prueba)."
+    },
+    {
+      "sintoma": "Slack responde «not_in_channel»",
+      "solucion": "El bot no está en #alertas. Entra al canal y escribe /invite @tu-bot."
+    },
+    {
+      "sintoma": "Llega «No se pudo registrar el error en la hoja»",
+      "solucion": "La alerta llegó, pero falló el registro: revisa la URL de la hoja, que la pestaña se llame «Errores», los permisos de la cuenta y la credencial de Google (en modo Testing caduca a los 7 días)."
+    },
+    {
+      "sintoma": "El enlace de «Fetch Test Event» da 404",
+      "solucion": "Es un evento de ejemplo con un enlace inventado. Las alertas de fallos reales sí traen el enlace a la ejecución."
+    },
+    {
+      "sintoma": "Un flujo marcado como crítico llega como alerta normal",
+      "solucion": "Revisa que el nombre lleve la marca entre corchetes: «[crítico]» o «[critico]», sin espacios dentro de los corchetes."
+    }
+  ],
+  "limitaciones": [
+    "Si falla el propio flujo de alertas (por ejemplo, Slack caído), nadie avisa.",
+    "No lo pongas como Error Workflow de sí mismo: crearía un bucle.",
+    "Las ejecuciones manuales («Execute») no disparan alertas: solo las automáticas.",
+    "El token de Google en modo Testing caduca a los 7 días: publica la app OAuth o renueva la credencial (ver la guía de OAuth 2 de Moss)."
+  ],
+  "destacado": false,
+  "guias": [
+    {
+      "titulo": "Moss: conectar Slack a n8n con un bot (token xoxb)",
+      "url": "https://sergio-velandia.dev/Moss/manual/n8n/slack-en-n8n"
+    },
+    {
+      "titulo": "Moss: conectar cuentas de Google a n8n con OAuth 2",
+      "url": "https://sergio-velandia.dev/Moss/manual/n8n/oauth2-de-google-en-n8n"
+    }
+  ]
 }

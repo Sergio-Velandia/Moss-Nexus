@@ -3,8 +3,8 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Alertas de errores de n8n\nPlantilla de **Moss Nexus**.\n\n**Cómo se usa:** en cada flujo que quieras vigilar, abre Settings > Error workflow y elige este flujo.\n\nPon **[crítico]** en el nombre de los flujos importantes: sus fallos además llegan por correo y con @channel en Slack.\n\n**Antes de activar:** Slack, Gmail y la URL de la hoja (pestaña **Errores**: Fecha, Flujo, Nodo, Error, Enlace).",
-        "height": 320,
+        "content": "## Alertas de errores de n8n\nPlantilla de **Moss Nexus**.\n\n**Cómo se activa:** en cada flujo vigilado, ⋯ → Settings → Error Workflow → elige este flujo → Save. **Este flujo y los vigilados deben estar publicados.** «Execute» no dispara alertas: solo las ejecuciones automáticas.\n\n**[crítico]** en el nombre (con o sin tilde, en mayúsculas): ej. «Facturas a Drive [crítico]», «Reporte de ventas [critico]». Sus fallos llegan también por correo y con @channel.\n\n**Antes de publicar:** Slack en los tres nodos (invita el bot a #alertas), Gmail con tu correo y la URL de una hoja nativa de Google con la pestaña **Errores** (Fecha, Flujo, Nodo, Error, Enlace).\n\nSi la hoja falla, las alertas llegan igual y además avisa «registro fallido». No lo uses como Error Workflow de sí mismo.",
+        "height": 460,
         "width": 400
       },
       "id": "bb5c15cb-01ec-46e2-8664-53d60ba7c2fc",

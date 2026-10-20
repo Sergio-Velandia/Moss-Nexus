@@ -1,0 +1,70 @@
+{
+  "name": "Prueba de alertas (despublicar al terminar)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Flujo de prueba de alertas\nFalla a propósito cada minuto.\n\n1. ⋯ → Settings → Error Workflow → «Alertas de errores» → Save.\n2. Publícalo y espera un minuto.\n\n**Despublícalo al terminar o te enviará una alerta cada minuto.**",
+        "height": 260,
+        "width": 400
+      },
+      "id": "0893fdcb-29c6-4839-8cb5-bb286ddd4032",
+      "name": "Nota de configuración",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "a92575ec-a7ee-40fb-86e9-15e03d2a6c44",
+      "name": "Cada minuto",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Este error es intencional: sirve para probar el flujo «Alertas de errores»\nthrow new Error('Prueba de alertas de Moss Nexus: este error es intencional');"
+      },
+      "id": "81424f6b-ac60-4844-8d49-16f98d20fadc",
+      "name": "Fallar a propósito",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Cada minuto": {
+      "main": [
+        [
+          {
+            "node": "Fallar a propósito",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}
