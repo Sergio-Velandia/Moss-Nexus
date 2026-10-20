@@ -63,6 +63,13 @@
     "Si la pestaña «Gestiones» falla, los correos ya enviados no quedan registrados. Combínala con la plantilla «Alertas cuando falla cualquier flujo de n8n» para enterarte.",
     "El texto con punto decimal al estilo de EE. UU. («1500.5») se lee con formato colombiano (como 15005). Usa celdas de número o formato colombiano."
   ],
+  "probado": {
+    "fecha": "2026-10-19",
+    "hora": "21:00",
+    "versionN8n": "2.43.5",
+    "datos": "ficticios",
+    "nota": "Probado con facturas ficticias, con el correo del propio autor en Correo y en Responsable: ningún cliente real recibió mensajes. Ese correo no se publica."
+  },
   "destacado": true,
   "guias": [
     {
