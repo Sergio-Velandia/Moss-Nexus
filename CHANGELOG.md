@@ -6,6 +6,11 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.7.6] - 2026-10-19
+
+### Eliminado
+- Plantilla **monitor-sitio-caido** (monitor de sitio web caído con alertas por Telegram). Su página deja de existir y la librería queda en 13 plantillas.
+
 ## [0.7.5] - 2026-10-16
 
 ### Cambiado
@@ -172,7 +177,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.5...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.6...HEAD
+[0.7.6]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.5...v0.7.6
 [0.7.5]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.4...v0.7.5
 [0.7.4]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.3...v0.7.4
 [0.7.3]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.2...v0.7.3
