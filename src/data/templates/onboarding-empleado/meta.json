@@ -1,23 +1,25 @@
 {
   "slug": "onboarding-empleado",
   "titulo": "Onboarding de empleados: calendario, correos, Slack y registro",
-  "resumen": "Un formulario dispara todo el ingreso: reunión de bienvenida, correo al nuevo, checklist al responsable, anuncio y registro.",
-  "problema": "El primer día de alguien nuevo depende de la memoria del equipo: nadie agendó la bienvenida, el computador no está listo y el resto se entera por pasillo. Esa primera impresión cuesta. Con este flujo, RR. HH. llena un formulario y n8n se encarga del resto en paralelo: agenda la reunión de bienvenida, escribe a la persona, envía al responsable una lista de verificación, lo anuncia en Slack y deja el ingreso registrado.",
+  "resumen": "Un formulario dispara todo el ingreso: registro, reunión de bienvenida, correo al nuevo, checklist al responsable y anuncio.",
+  "problema": "El primer día de alguien nuevo depende de la memoria del equipo: nadie agendó la bienvenida, el computador no está listo y el resto se entera por pasillo. Esa primera impresión cuesta. Con este flujo, RR. HH. llena un formulario y n8n se encarga del resto: primero deja el ingreso registrado en una hoja y luego agenda la reunión de bienvenida, escribe a la persona, envía al responsable una lista de verificación y lo anuncia en Slack. Como el registro va primero, si después falla un aviso el ingreso no se pierde. Y si la fecha de ingreso ya pasó, no agenda una reunión en el pasado: el checklist empieza avisando que hay que revisarla.",
   "categoria": "rrhh",
   "herramientas": [
     "form",
+    "google-sheets",
     "google-calendar",
     "gmail",
-    "slack",
-    "google-sheets"
+    "slack"
   ],
   "dificultad": "media",
   "tiempoEstimado": 25,
   "requisitos": [
     "Una instancia de n8n accesible desde internet, para que el formulario tenga una URL",
-    "Una cuenta de Google con acceso a Google Calendar, Gmail y Google Sheets",
-    "Un espacio de Slack donde puedas conectar n8n",
-    "Una hoja con una pestaña «Ingresos» y las columnas Fecha de registro, Nombre, Cargo, Área, Fecha de ingreso, Correo y Responsable"
+    "Una cuenta de Google con Google Calendar, Gmail y Google Sheets, y un proyecto en Google Cloud Console con esas APIs habilitadas y un cliente OAuth 2.0 para las credenciales de n8n",
+    "Un espacio de Slack con una app de Slack con su token de bot, invitada al canal donde se anuncian los ingresos",
+    "Una hoja de cálculo de Google nativa con la pestaña «Ingresos» y, en la primera fila, exactamente: Fecha de registro, Nombre, Cargo, Área, Fecha de ingreso, Correo y Responsable",
+    "La zona horaria de tu país en ⋯ → Settings → Timezone del flujo, para que la reunión quede a las 9:00 de tu hora",
+    "Usa las cuentas que prefieras: el flujo no trae ninguna cuenta, hoja, canal ni correo configurado"
   ],
   "escenarios": [
     "Empresa en crecimiento que contrata cada mes y quiere un ingreso consistente",
@@ -25,12 +27,55 @@
     "Equipos remotos donde el primer día ocurre por videollamada"
   ],
   "pasos": [
-    "Crea la hoja con la pestaña «Ingresos» y las columnas Fecha de registro, Nombre, Cargo, Área, Fecha de ingreso, Correo y Responsable.",
+    "Crea la hoja de cálculo de Google con la pestaña «Ingresos» y los encabezados Fecha de registro, Nombre, Cargo, Área, Fecha de ingreso, Correo y Responsable. En Slack, invita al bot al canal de anuncios con /invite @tu-bot (si no, Slack responde not_in_channel).",
     "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
-    "Conecta tu cuenta de Google en «Agendar bienvenida», en los dos nodos de Gmail y en «Registrar ingreso» (con la URL de la hoja).",
-    "Conecta Slack en «Anunciar al equipo» y elige el canal.",
+    "En ⋯ → Settings, elige la zona horaria de tu país en Timezone y guarda.",
+    "Elige tus credenciales: Google Sheets en «Registrar ingreso» (con la URL de la hoja), Google Calendar en «Agendar bienvenida» (usa tu calendario principal), Gmail en los dos nodos de correo y Slack en «Anunciar al equipo», con tu canal.",
     "Ajusta las áreas del formulario, el texto de bienvenida y la lista de verificación a tu empresa.",
-    "Activa el flujo y prueba el formulario con tus propios correos antes de compartir la URL con RR. HH."
+    "Prueba con «Test URL» del formulario: llénalo con una fecha futura y con correos tuyos (sirven alias como tu-correo+empleado@gmail.com y tu-correo+responsable@gmail.com). Revisa la fila en la hoja, la reunión en tu calendario, los dos correos y el mensaje de Slack. Repite con una fecha pasada: no se agenda nada y el checklist empieza con el aviso.",
+    "Publica el flujo y comparte con RR. HH. la «Production URL» del formulario, no la de prueba."
   ],
-  "destacado": true
+  "problemas": [
+    {
+      "sintoma": "Slack responde «not_in_channel»",
+      "solucion": "El bot no está en el canal. Entra al canal y escribe /invite @tu-bot. El ingreso ya quedó registrado en la hoja: solo falta el anuncio."
+    },
+    {
+      "sintoma": "El formulario abre con la URL de prueba pero no con la que compartí, o deja de funcionar",
+      "solucion": "La «Test URL» solo escucha mientras el editor está esperando una prueba. Para RR. HH., publica el flujo y comparte la «Production URL»."
+    },
+    {
+      "sintoma": "La reunión de bienvenida aparece a otra hora",
+      "solucion": "El flujo usa la zona horaria de sus ajustes. Elige la de tu país en ⋯ → Settings → Timezone y guarda."
+    },
+    {
+      "sintoma": "No se creó la reunión de bienvenida y el checklist empieza con «⚠️ La fecha de ingreso registrada (…) ya pasó»",
+      "solucion": "Es lo esperado: la fecha del formulario era anterior a hoy. Corrige la fecha en la hoja y agenda la reunión a mano, o vuelve a enviar el formulario con la fecha correcta."
+    },
+    {
+      "sintoma": "Probé con alias de mi propio correo y la reunión no aparece como invitación",
+      "solucion": "La reunión se crea en el calendario de la cuenta conectada a n8n y los alias (+empleado, +responsable) llegan a esa misma cuenta, así que la verás como evento propio y no como invitación. Con correos de otras personas, les llega la invitación normal."
+    }
+  ],
+  "limitaciones": [
+    "Si RR. HH. envía dos veces el mismo formulario, se crean dos filas, dos reuniones y dos rondas de avisos: no detecta duplicados.",
+    "No tiene en cuenta fines de semana ni festivos: si la fecha de ingreso cae en uno, agenda la reunión ese día igual.",
+    "Si falla un aviso (por ejemplo, Slack o Gmail), el flujo se detiene con error y los avisos siguientes no salen; el registro en la hoja sí queda. Para enterarte de esos fallos, conecta la plantilla de alertas de errores.",
+    "La reunión de bienvenida siempre es a las 9:00 y dura 30 minutos; cámbialo en «Preparar datos»."
+  ],
+  "destacado": true,
+  "guias": [
+    {
+      "titulo": "Moss: conectar cuentas de Google a n8n con OAuth 2",
+      "url": "https://sergio-velandia.dev/Moss/manual/n8n/oauth2-de-google-en-n8n"
+    },
+    {
+      "titulo": "Moss: conectar Slack a n8n con un bot (token xoxb)",
+      "url": "https://sergio-velandia.dev/Moss/manual/n8n/slack-en-n8n"
+    },
+    {
+      "titulo": "Moss Nexus: alertas cuando falla cualquier flujo de n8n",
+      "url": "https://sergio-velandia.dev/Moss-Nexus/plantillas/alertas-de-errores-n8n/"
+    }
+  ]
 }

@@ -3,17 +3,17 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Onboarding de un empleado nuevo\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. Cuenta de Google en «Agendar bienvenida» y «Registrar ingreso» (URL de la hoja, pestaña **Ingresos**).\n2. Cuenta de Gmail en los dos nodos de correo.\n3. Slack y canal en «Anunciar al equipo».\n4. Ajusta las áreas del formulario y el texto de bienvenida a tu empresa.",
-        "height": 320,
-        "width": 400
+        "content": "## Onboarding de un empleado nuevo\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. ⋯ → Settings → **Timezone**: la de tu país.\n2. Google Sheets en «Registrar ingreso» (URL de la hoja, pestaña **Ingresos**).\n3. Google Calendar en «Agendar bienvenida» y Gmail en los dos nodos de correo.\n4. Slack y canal en «Anunciar al equipo». Invita al bot: `/invite @tu-bot`.\n5. Ajusta las áreas del formulario y los textos a tu empresa.\n\n**Orden:** primero se registra el ingreso; luego salen los avisos. Si la fecha ya pasó, no se agenda la reunión y el checklist lo avisa.\n\nPrueba con la **Test URL**; a RR. HH. compártele la **Production URL**.",
+        "height": 540,
+        "width": 440
       },
       "id": "a1efea63-c174-4dbd-806f-ba49e3588b77",
       "name": "Nota de configuración",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -460,
-        -260
+        -500,
+        -280
       ]
     },
     {
