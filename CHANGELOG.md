@@ -6,6 +6,18 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.7.7] - 2026-10-19
+
+### Añadido
+- Flujo de prueba opcional por plantilla (`prueba.json`), con su propio botón «Copiar flujo de prueba» y un aviso destacado. La prueba de seguridad también lo revisa.
+
+### Cambiado
+- **alertas-de-errores-n8n**: sello «Probado» (19 oct 2026, 20:04, n8n 2.43.5), con un flujo que falla a propósito. Explica cómo activar el Error Workflow (los dos flujos publicados; «Execute» no dispara alertas), incluye el flujo de prueba con el aviso de despublicarlo y documenta 5 problemas frecuentes y 4 limitaciones. Enlaza las guías de Moss de manejo de errores, Slack y OAuth 2 de Google. Tiempo estimado: 25 minutos.
+
+### Corregido
+- **alertas-de-errores-n8n**: «[critico]» sin tilde o en mayúsculas no se detectaba como crítico. Ahora funciona con o sin tilde y en mayúsculas, con una prueba que evalúa la expresión real del flujo.
+- **alertas-de-errores-n8n**: si la hoja de registro fallaba, no llegaba ninguna alerta. Ahora las alertas llegan igual y además se avisa en Slack que no se pudo registrar.
+
 ## [0.7.6] - 2026-10-19
 
 ### Eliminado
@@ -177,7 +189,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.6...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.7...HEAD
+[0.7.7]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.6...v0.7.7
 [0.7.6]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.5...v0.7.6
 [0.7.5]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.4...v0.7.5
 [0.7.4]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.3...v0.7.4
