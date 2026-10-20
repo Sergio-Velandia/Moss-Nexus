@@ -4,6 +4,7 @@ import type { TemplateDiagram } from './types'
  * Posiciona los nodos del mapa a partir de diagram.json, sin coordenadas escritas a mano.
  * 1. Cada nodo va a la columna de su camino más largo desde un disparador (así el flujo siempre avanza).
  * 2. Dentro de cada columna, los nodos se ordenan por la posición media de sus padres para cruzar menos líneas.
+ * 3. Las conexiones que saltan columnas reservan un carril propio en cada columna intermedia.
  * El resultado se puede dibujar en horizontal (escritorio) o vertical (móvil) intercambiando ejes.
  */
 
@@ -24,6 +25,9 @@ export interface PlacedEdge {
   to: string
   label?: string
   path: string
+  /** Dónde va la etiqueta de la conexión (punto medio del primer tramo) */
+  labelX: number
+  labelY: number
 }
 
 export interface Layout {
@@ -72,13 +76,32 @@ export function layoutDiagram(diagram: TemplateDiagram, opts: LayoutOptions): La
   const columns: string[][] = []
   for (const n of diagram.nodos) (columns[rank.get(n.id)!] ??= []).push(n.id)
 
+  // Las conexiones que saltan columnas pasan por «carriles»: puntos invisibles en cada columna intermedia
+  // que reservan su propio hueco, para que la línea no quede detrás de otro nodo
+  const parents = new Map<string, string[]>(diagram.nodos.map((n) => [n.id, []]))
+  const carriles = new Map<number, string[]>() // índice de la conexión → ids de sus carriles, en orden
+  diagram.conexiones.forEach((c, i) => {
+    const desde = rank.get(c.origen)!
+    const hasta = rank.get(c.destino)!
+    let anterior = c.origen
+    const ids: string[] = []
+    for (let r = desde + 1; r < hasta; r++) {
+      const id = `carril:${i}:${r}`
+      columns[r].push(id)
+      parents.set(id, [anterior])
+      ids.push(id)
+      anterior = id
+    }
+    parents.get(c.destino)!.push(anterior)
+    carriles.set(i, ids)
+  })
+
   // Ordenar cada columna por el slot medio de sus padres (barycenter de una pasada)
   const slot = new Map<string, number>()
-  const parentsOf = (id: string) => diagram.conexiones.filter((c) => c.destino === id).map((c) => c.origen)
   columns.forEach((col, r) => {
     if (r > 0) {
       const weight = (id: string) => {
-        const ps = parentsOf(id).filter((p) => slot.has(p))
+        const ps = (parents.get(id) ?? []).filter((p) => slot.has(p))
         return ps.length ? ps.reduce((s, p) => s + slot.get(p)!, 0) / ps.length : 0
       }
       col.sort((a, b) => weight(a) - weight(b))
@@ -93,36 +116,55 @@ export function layoutDiagram(diagram: TemplateDiagram, opts: LayoutOptions): La
   const crossSpan = maxPerCol * crossSize + (maxPerCol - 1) * gapCross
   const mainSpan = columns.length * mainSize + (columns.length - 1) * gapMain
 
+  const lugar = (r: number, s: number) => {
+    const main = padding + r * (mainSize + gapMain)
+    const cross = padding + crossSpan / 2 - crossSize / 2 + s * (crossSize + gapCross)
+    return { x: horizontal ? main : cross, y: horizontal ? cross : main }
+  }
+
   const nodes: PlacedNode[] = diagram.nodos.map((n) => {
     const r = rank.get(n.id)!
     const s = slot.get(n.id)!
-    const main = padding + r * (mainSize + gapMain)
-    const cross = padding + crossSpan / 2 - crossSize / 2 + s * (crossSize + gapCross)
-    return {
-      id: n.id,
-      rank: r,
-      slot: s,
-      x: horizontal ? main : cross,
-      y: horizontal ? cross : main,
-    }
+    return { id: n.id, rank: r, slot: s, ...lugar(r, s) }
   })
 
+  // Puntos de salida y de entrada de una caja (nodo real o carril) en la dirección del flujo
+  const salida = (p: { x: number; y: number }) =>
+    horizontal ? { x: p.x + nodeW, y: p.y + nodeH / 2 } : { x: p.x + nodeW / 2, y: p.y + nodeH }
+  const entrada = (p: { x: number; y: number }) =>
+    horizontal ? { x: p.x, y: p.y + nodeH / 2 } : { x: p.x + nodeW / 2, y: p.y }
+  // Curva de Bézier suave con tangentes en la dirección del flujo, como en el lienzo de n8n
+  const curva = (a: { x: number; y: number }, b: { x: number; y: number }) => {
+    const bend = Math.max(24, (horizontal ? b.x - a.x : b.y - a.y) / 2)
+    return horizontal
+      ? `C ${a.x + bend} ${a.y}, ${b.x - bend} ${b.y}, ${b.x} ${b.y}`
+      : `C ${a.x} ${a.y + bend}, ${b.x} ${b.y - bend}, ${b.x} ${b.y}`
+  }
+
   const pos = new Map(nodes.map((n) => [n.id, n]))
-  const edges: PlacedEdge[] = diagram.conexiones.map((c) => {
-    const a = pos.get(c.origen)!
-    const b = pos.get(c.destino)!
-    let x1, y1, x2, y2
-    if (horizontal) {
-      ;[x1, y1, x2, y2] = [a.x + nodeW, a.y + nodeH / 2, b.x, b.y + nodeH / 2]
-    } else {
-      ;[x1, y1, x2, y2] = [a.x + nodeW / 2, a.y + nodeH, b.x + nodeW / 2, b.y]
+  const edges: PlacedEdge[] = diagram.conexiones.map((c, i) => {
+    const cajas = [
+      pos.get(c.origen)!,
+      ...carriles.get(i)!.map((id) => lugar(Number(id.split(':')[2]), slot.get(id)!)),
+      pos.get(c.destino)!,
+    ]
+    let actual = salida(cajas[0])
+    let path = `M ${actual.x} ${actual.y}`
+    let labelX = 0
+    let labelY = 0
+    for (let k = 1; k < cajas.length; k++) {
+      const llegada = entrada(cajas[k])
+      // La etiqueta va en el primer tramo, cerca de donde sale la rama. Las curvas son simétricas: su punto medio
+      // es el promedio de los extremos
+      if (k === 1) [labelX, labelY] = [(actual.x + llegada.x) / 2, (actual.y + llegada.y) / 2]
+      path += ` ${curva(actual, llegada)}`
+      if (k < cajas.length - 1) {
+        // Atraviesa el carril en línea recta
+        actual = salida(cajas[k])
+        path += ` L ${actual.x} ${actual.y}`
+      }
     }
-    // Curva de Bézier suave con tangentes en la dirección del flujo, como en el lienzo de n8n
-    const bend = Math.max(24, (horizontal ? x2 - x1 : y2 - y1) / 2)
-    const path = horizontal
-      ? `M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}`
-      : `M ${x1} ${y1} C ${x1} ${y1 + bend}, ${x2} ${y2 - bend}, ${x2} ${y2}`
-    return { from: c.origen, to: c.destino, label: c.etiqueta, path }
+    return { from: c.origen, to: c.destino, label: c.etiqueta, path, labelX, labelY }
   })
 
   const width = padding * 2 + (horizontal ? mainSpan : crossSpan)

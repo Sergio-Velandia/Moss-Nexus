@@ -110,11 +110,8 @@ export function FlowMap({
         {layout.edges
           .filter((e) => e.label)
           .map((e) => {
-            const a = layout.nodes.find((n) => n.id === e.from)!
-            const b = layout.nodes.find((n) => n.id === e.to)!
-            // Las curvas son simétricas: su punto medio es el promedio de los extremos
-            const mx = horizontal ? (a.x + NODE_W + b.x) / 2 : (a.x + b.x) / 2 + NODE_W / 2
-            const my = horizontal ? (a.y + b.y) / 2 + NODE_H / 2 : (a.y + NODE_H + b.y) / 2
+            // El layout calcula dónde va cada etiqueta (también en las conexiones que usan carriles)
+            const [mx, my] = [e.labelX, e.labelY]
             const w = e.label!.length * 7 + 16
             return (
               <g key={`l-${e.from}-${e.to}`} transform={`translate(${mx - w / 2} ${my - 10})`}>

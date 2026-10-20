@@ -113,3 +113,37 @@ describe('flowSteps', () => {
     expect(steps.flatMap((s) => s.nodes).every((n) => !n.rama && !n.despuesDe)).toBe(true)
   })
 })
+
+describe('carriles para conexiones que saltan columnas', () => {
+  // a → b → c  y  a → c (salta la columna de b)
+  const salto: TemplateDiagram = {
+    nodos: ['a', 'b', 'c'].map(node),
+    conexiones: [
+      { origen: 'a', destino: 'b' },
+      { origen: 'b', destino: 'c' },
+      { origen: 'a', destino: 'c', etiqueta: 'directo' },
+    ],
+  }
+  for (const orientation of ['horizontal', 'vertical'] as const) {
+    it(`${orientation}: la conexión larga no atraviesa el nodo intermedio`, () => {
+      const l = layoutDiagram(salto, { orientation })
+      const b = l.nodes.find((n) => n.id === 'b')!
+      const larga = l.edges.find((e) => e.from === 'a' && e.to === 'c')!
+      // Todos los puntos de la línea (extremos de cada tramo) quedan fuera de la caja de b
+      const puntos = [...larga.path.matchAll(/(?:[ML]|, )\s*(-?[\d.]+) (-?[\d.]+)/g)].map((m) => [Number(m[1]), Number(m[2])])
+      expect(puntos.length).toBeGreaterThan(2)
+      for (const [x, y] of puntos) {
+        const dentro = x > b.x && x < b.x + l.nodeW && y > b.y && y < b.y + l.nodeH
+        expect(dentro, `(${x}, ${y}) cae dentro de b`).toBe(false)
+      }
+    })
+  }
+  it('los carriles no se dibujan como nodos y la etiqueta queda en el primer tramo', () => {
+    const l = layoutDiagram(salto, { orientation: 'vertical' })
+    expect(l.nodes.map((n) => n.id)).toEqual(['a', 'b', 'c'])
+    const a = l.nodes.find((n) => n.id === 'a')!
+    const larga = l.edges.find((e) => e.label === 'directo')!
+    expect(larga.labelY).toBeGreaterThan(a.y + l.nodeH)
+    expect(larga.labelY).toBeLessThan(l.nodes.find((n) => n.id === 'b')!.y + l.nodeH)
+  })
+})
