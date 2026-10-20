@@ -152,6 +152,24 @@ export default function Terms() {
           ),
         },
         {
+          id: 'propuestas',
+          title: 'Propuestas de flujos',
+          content: (
+            <>
+              <p>
+                Enviar una propuesta o un mensaje desde <Link to="/propon-un-flujo">Propón un flujo</Link> no crea una relación
+                comercial ni me obliga a implementarla, publicarla o responder en un plazo concreto. Si quieres que te ayude a
+                implementar un flujo, las condiciones se acuerdan aparte, por escrito.
+              </p>
+              <p>
+                Si marcas la casilla de publicación, autorizas que la idea que describes se use para crear una plantilla pública de
+                Moss Nexus, bajo la licencia del proyecto y sin tus datos ni los de tu negocio. Si no la marcas, la idea no se
+                publica. Cómo se tratan tus datos se explica en la <Link to="/privacidad#formularios">política de privacidad</Link>.
+              </p>
+            </>
+          ),
+        },
+        {
           id: 'cambios',
           title: 'Cambios en estos términos',
           content: (

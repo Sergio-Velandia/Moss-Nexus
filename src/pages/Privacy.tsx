@@ -9,8 +9,9 @@ export default function Privacy() {
       updated={site.legalUpdated}
       intro={
         <p>
-          En resumen: Moss Nexus no tiene cuentas, formularios, cookies ni analítica, y no envía tus datos a ningún servidor
-          propio, porque no tiene uno. Esta página explica con detalle lo poco que ocurre con tus datos al usar el sitio.
+          En resumen: Moss Nexus no tiene cuentas, cookies ni analítica, ni un servidor propio. Lo único que envía datos
+          personales es el formulario de <Link to="/propon-un-flujo">Propón un flujo</Link>, y solo cuando tú lo envías. Esta
+          página explica con detalle qué ocurre con tus datos al usar el sitio.
         </p>
       }
       sections={[
@@ -55,6 +56,40 @@ export default function Privacy() {
           ),
         },
         {
+          id: 'formularios',
+          title: 'El formulario «Propón un flujo»',
+          content: (
+            <>
+              <p>
+                <strong>Qué datos:</strong> tu nombre, tu correo y lo que escribas en el formulario. En «Propón un flujo» son,
+                además, el negocio, el sector, el tamaño del equipo, el problema, cómo lo resuelves hoy, tu idea, las
+                herramientas, la frecuencia, qué buscas y si aceptas que la idea se publique como plantilla. En «Habla conmigo»,
+                el asunto y el mensaje. Los campos marcados como opcionales puedes dejarlos vacíos.
+              </p>
+              <p>
+                <strong>Para qué:</strong> para responderte y dar seguimiento a lo que me propones. Solo si marcas la casilla
+                correspondiente, la idea (no tus datos ni los de tu negocio) puede convertirse en una plantilla pública. No uso
+                estos datos para publicidad, no los vendo y no los comparto con nadie más.
+              </p>
+              <p>
+                <strong>Cómo viajan:</strong> al pulsar «Enviar», tu navegador manda el contenido del formulario al servicio{' '}
+                <a href="https://www.emailjs.com/legal/privacy-policy/">EmailJS</a>, que lo convierte en un correo y lo entrega
+                en el buzón de Moss Nexus. EmailJS trata esos datos y los datos técnicos de la conexión (como la dirección IP)
+                según su política de privacidad, y puede hacerlo en servidores fuera de Colombia. Antes de pulsar «Enviar», nada
+                sale de tu navegador.
+              </p>
+              <p>
+                <strong>Cuánto tiempo:</strong> conservo el mensaje mientras sea necesario para responderte y dar seguimiento a
+                tu propuesta. Puedes pedirme que lo borre cuando quieras.
+              </p>
+              <p>
+                El formulario no usa cookies ni guarda nada en tu navegador. Incluye un campo oculto para frenar a los bots: si
+                llega con texto, el mensaje se descarta.
+              </p>
+            </>
+          ),
+        },
+        {
           id: 'alojamiento',
           title: 'Alojamiento del sitio',
           content: (
@@ -71,11 +106,12 @@ export default function Privacy() {
         },
         {
           id: 'terceros',
-          title: 'Sin analítica ni recursos de terceros',
+          title: 'Sin analítica ni rastreo',
           content: (
             <p>
               El sitio no usa analítica, publicidad, píxeles de seguimiento, redes de distribución de contenido ni contenido
-              incrustado de otros sitios. Las tipografías van incluidas en el propio sitio. Los enlaces a sitios externos, como
+              incrustado de otros sitios. El único servicio de terceros es EmailJS, y solo se contacta cuando envías el
+              formulario. Las tipografías van incluidas en el propio sitio. Los enlaces a sitios externos, como
               Moss o GitHub, se rigen por la política de privacidad de cada uno cuando los visitas.
             </p>
           ),
@@ -97,13 +133,16 @@ export default function Privacy() {
           content: (
             <>
               <p>
-                Como el sitio no recopila datos personales, no hay información tuya guardada del lado de Moss Nexus que consultar,
-                corregir o borrar.
+                El responsable del tratamiento de los datos que envías por el formulario o por correo es {site.author}, autor de
+                Moss Nexus, en Colombia. Según la Ley 1581 de 2012, puedes conocer, actualizar y rectificar tus datos, pedir prueba
+                de tu autorización, saber cómo se han usado, revocar la autorización o pedir que los borre, y presentar quejas
+                ante la Superintendencia de Industria y Comercio.
               </p>
               <p>
-                Si tienes dudas sobre esta política, usa los canales de la página de <Link to="/contacto">contacto</Link>. Si me
-                escribes por GitHub o por correo, uso tus datos solo para responderte; esos mensajes quedan además sujetos a la
-                política de privacidad de GitHub o de tu proveedor de correo.
+                Para ejercer esos derechos o resolver dudas sobre esta política, escríbeme por los canales de la página de{' '}
+                <Link to="/contacto">contacto</Link>. Respondo las consultas en un máximo de 10 días hábiles y los reclamos en un
+                máximo de 15, como fija la ley. Si me escribes por GitHub, ese mensaje queda además sujeto a la política de
+                privacidad de GitHub.
               </p>
             </>
           ),
