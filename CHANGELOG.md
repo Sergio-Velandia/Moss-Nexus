@@ -6,6 +6,17 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.8.0] - 2026-10-20
+
+### Añadido
+- Página «Propón un flujo» (`/propon-un-flujo`) con dos formularios: una propuesta detallada (negocio, sector, tamaño del equipo, problema, cómo se resuelve hoy, idea, herramientas, frecuencia y objetivo) y «Habla conmigo» para escribir directamente. Validación por campo, avisos accesibles, autorización de datos obligatoria, casilla opcional para publicar la idea como plantilla y campo trampa contra bots. Los mensajes se envían con EmailJS, sin dependencias nuevas, y el correo de destino no aparece en el sitio.
+- Enlaces a «Propón un flujo» en el menú, el footer, la página de contacto y una tarjeta nueva en el inicio. La ruta tiene página estática y entrada en el sitemap.
+
+### Cambiado
+- Privacidad: describe qué datos recogen los formularios, para qué, cuánto se guardan, EmailJS como tercero y los derechos de la Ley 1581 de 2012 con sus plazos.
+- Términos: nueva sección sobre propuestas de flujos (no crean relación comercial y la idea solo se publica con autorización).
+- Contacto: presenta el formulario como el canal para proponer flujos o conversar sobre implementarlos.
+
 ## [0.7.9] - 2026-10-20
 
 ### Añadido
@@ -215,7 +226,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.9...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.9...v0.8.0
 [0.7.9]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.8...v0.7.9
 [0.7.8]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.7...v0.7.8
 [0.7.7]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.6...v0.7.7
