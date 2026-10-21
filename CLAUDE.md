@@ -48,6 +48,7 @@ Orden acordado. Cada fase empieza solo cuando el usuario la pide y con un plan c
   - Aclarar en el inicio que cada plantilla es un punto de partida y puede requerir personalizaciones y ajustes según la persona o la empresa (sus datos, columnas, reglas de negocio y herramientas).
   - No inventar cifras ni funciones. Pedir al usuario lo que falte.
   - Proponer PATCH o MINOR al final.
+- **Propón un flujo (hecha, v0.8.0):** `/propon-un-flujo` con dos pestañas, «Propón un flujo» y «Habla conmigo» (`?formulario=habla-conmigo`). Campos y validación en `src/lib/contact-form.ts`; envío con la API REST de EmailJS vía `fetch`, sin SDK. Las IDs públicas están en `site.emailjs`; el correo de destino se configura solo en la plantilla de EmailJS, nunca en el código. Campo trampa `sitio_web` contra bots. Si cambian los campos o el servicio, actualizar antes `/privacidad#formularios` y `site.legalUpdated`.
 
 ## Stack
 React 19 + Vite + TypeScript estricto, Tailwind CSS 4 (tokens en variables CSS, en `src/index.css`), React Router 7, `motion`, `lucide-react`, Vitest y oxlint. Se usa npm. Se despliega en GitHub Pages bajo `/Moss-Nexus/` y se genera `404.html` para las rutas de la SPA. No añadir dependencias sin preguntar.
