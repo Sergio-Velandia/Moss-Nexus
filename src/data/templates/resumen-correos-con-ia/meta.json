@@ -8,14 +8,14 @@
     "schedule",
     "n8n",
     "gmail",
-    "openai",
+    "gemini",
     "slack"
   ],
   "dificultad": "avanzada",
   "tiempoEstimado": 20,
   "requisitos": [
     "Una instancia de n8n (cloud o autoalojada), con la zona horaria correcta en Settings > Timezone",
-    "Una cuenta de OpenAI con una clave de API y saldo disponible",
+    "Una clave de API de Gemini de Google AI Studio (el nivel gratuito alcanza), u otro proveedor de IA compatible con n8n",
     "Una cuenta de Gmail",
     "Un espacio de Slack con un canal privado para ti (o enviar el resumen como mensaje directo)"
   ],
@@ -26,7 +26,7 @@
   ],
   "pasos": [
     "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
-    "Conecta Gmail en «Correos sin leer» y crea la credencial de OpenAI en «Resumir con IA». En «Configuración», elige el modelo.",
+    "Conecta Gmail en «Correos sin leer» y crea la credencial «Google Gemini (PaLM) API» en «Google Gemini Chat Model». Para usar OpenAI o Anthropic, cambia solo ese sub-nodo.",
     "Conecta Slack en «Enviar resumen» y «Bandeja al día» y escribe tu canal privado.",
     "Si quieres afinar qué correos entran, cambia la búsqueda de «Correos sin leer» (usa la misma sintaxis que el buscador de Gmail).",
     "Pulsa «Test workflow» para recibir el resumen ahora y, si está bien, activa el flujo."

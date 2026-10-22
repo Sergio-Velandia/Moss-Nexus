@@ -7,12 +7,6 @@
       "tipo": "disparador"
     },
     {
-      "id": "config",
-      "etiqueta": "Configuración",
-      "herramienta": "n8n",
-      "tipo": "logica"
-    },
-    {
       "id": "gmail",
       "etiqueta": "Correos sin leer",
       "herramienta": "gmail",
@@ -33,7 +27,7 @@
     {
       "id": "resumir",
       "etiqueta": "Resumir con IA",
-      "herramienta": "openai",
+      "herramienta": "gemini",
       "tipo": "accion"
     },
     {
@@ -52,10 +46,6 @@
   "conexiones": [
     {
       "origen": "cada",
-      "destino": "config"
-    },
-    {
-      "origen": "config",
       "destino": "gmail"
     },
     {

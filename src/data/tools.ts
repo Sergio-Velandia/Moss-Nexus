@@ -45,6 +45,7 @@ export const tools: Tool[] = [
   { id: 'google-calendar', nombre: 'Google Calendar', icon: CalendarClock, color: '#5b8def', popular: true },
   { id: 'notion', nombre: 'Notion', icon: FileText, color: '#b9b4a8', popular: true },
   { id: 'openai', nombre: 'IA (OpenAI)', icon: Bot, color: '#5fc4b0', popular: true },
+  { id: 'gemini', nombre: 'IA (Gemini)', icon: Bot, color: '#7b9cf0', popular: true },
   { id: 'webhook', nombre: 'Webhook', icon: Webhook, color: '#f2647a', popular: true, nativa: true },
   { id: 'form', nombre: 'Formulario de n8n', icon: ClipboardList, color: '#e0a458', popular: true, nativa: true },
   { id: 'google-drive', nombre: 'Google Drive', icon: HardDrive, color: '#f4b942', popular: true },
