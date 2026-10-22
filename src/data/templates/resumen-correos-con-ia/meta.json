@@ -54,6 +54,12 @@
     "El resumen no reemplaza leer los correos importantes: solo ve el remitente, el asunto y un extracto.",
     "Revisa como máximo 40 correos por ejecución; si tienes más, el resumen solo cubre los primeros."
   ],
+  "probado": {
+    "fecha": "2026-10-21",
+    "versionN8n": "2.43.5",
+    "datos": "ficticios",
+    "nota": "Probado con Gemini Flash-Lite (nivel gratuito) y correos ficticios marcados con una etiqueta de prueba."
+  },
   "destacado": false,
   "guias": [
     {
