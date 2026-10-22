@@ -77,7 +77,7 @@ export default function Terms() {
           content: (
             <p>
               Moss Nexus es un proyecto independiente. No está afiliado, patrocinado ni respaldado por n8n GmbH, Meta (WhatsApp),
-              Google (Gmail, Google Sheets, Google Drive, Google Calendar), Slack, Telegram, HubSpot, Stripe, OpenAI ni ninguna
+              Google (Gmail, Google Sheets, Google Drive, Google Calendar, Gemini), Slack, Telegram, HubSpot, Stripe, OpenAI ni ninguna
               otra empresa mencionada. Sus nombres y marcas pertenecen a sus respectivos dueños y se usan solo para indicar con
               qué herramientas funciona cada flujo. El sitio usa íconos genéricos, no logotipos de marcas.
             </p>
