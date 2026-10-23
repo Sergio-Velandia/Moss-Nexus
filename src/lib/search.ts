@@ -8,9 +8,11 @@ export interface Filters {
   herramientas: string[]
   categoria: string | null
   dificultad: Difficulty | null
+  /** Solo plantillas con sello «Probado» */
+  probadas: boolean
 }
 
-export const emptyFilters: Filters = { q: '', herramientas: [], categoria: null, dificultad: null }
+export const emptyFilters: Filters = { q: '', herramientas: [], categoria: null, dificultad: null, probadas: false }
 
 /** Minúsculas y sin tildes: "automatización" encuentra "automatizacion" y al revés */
 export const normalize = (s: string) =>
@@ -38,6 +40,7 @@ export function filterTemplates(pool: Template[], f: Filters): Template[] {
   return pool.filter((t) => {
     if (f.categoria && t.categoria !== f.categoria) return false
     if (f.dificultad && t.dificultad !== f.dificultad) return false
+    if (f.probadas && !t.probado) return false
     if (!f.herramientas.every((h) => t.herramientas.includes(h))) return false
     if (words.length === 0) return true
     const text = haystack(t)
@@ -55,6 +58,7 @@ export function filtersFromParams(p: URLSearchParams): Filters {
     herramientas: (p.get('herramienta') ?? '').split(',').filter(Boolean),
     categoria: p.get('categoria') || null,
     dificultad: DIFFS.includes(dif as Difficulty) ? (dif as Difficulty) : null,
+    probadas: p.get('probadas') === '1',
   }
 }
 
@@ -64,8 +68,9 @@ export function paramsFromFilters(f: Filters): URLSearchParams {
   if (f.herramientas.length) p.set('herramienta', f.herramientas.join(','))
   if (f.categoria) p.set('categoria', f.categoria)
   if (f.dificultad) p.set('dificultad', f.dificultad)
+  if (f.probadas) p.set('probadas', '1')
   return p
 }
 
 export const isFiltering = (f: Filters) =>
-  f.q.trim() !== '' || f.herramientas.length > 0 || f.categoria !== null || f.dificultad !== null
+  f.q.trim() !== '' || f.herramientas.length > 0 || f.categoria !== null || f.dificultad !== null || f.probadas

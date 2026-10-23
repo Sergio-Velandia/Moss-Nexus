@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
-import { SlidersHorizontal, X } from 'lucide-react'
+import { BadgeCheck, SlidersHorizontal, X } from 'lucide-react'
 import { categories } from '../data/categories'
 import { getTool, tools } from '../data/tools'
 import { EmptyState } from '../components/templates/EmptyState'
@@ -41,6 +41,7 @@ export default function Templates() {
   }
 
   const results = useMemo(() => filterTemplates(templates, filters), [filters])
+  const probadas = templates.filter((t) => t.probado).length
   const usage = useMemo(() => toolUsage(), [])
   // Primero las herramientas que tienen plantillas; las elegidas siempre visibles
   const toolChips = tools.filter((t) => usage.has(t.id) || filters.herramientas.includes(t.id))
@@ -93,7 +94,7 @@ export default function Templates() {
           </div>
         </fieldset>
 
-        <div className="grid gap-4 sm:grid-cols-[1fr_auto]">
+        <div className="grid gap-4 sm:grid-cols-[1fr_auto_auto]">
           <fieldset>
             <legend className="mb-2 font-mono text-[11px] uppercase tracking-[0.16em] text-faint">Categoría</legend>
             <div className="flex flex-wrap gap-2">
@@ -109,6 +110,20 @@ export default function Templates() {
                 )
               })}
             </div>
+          </fieldset>
+
+          <fieldset>
+            <legend className="mb-2 font-mono text-[11px] uppercase tracking-[0.16em] text-faint">Pruebas</legend>
+            <button
+              type="button"
+              aria-pressed={filters.probadas}
+              onClick={() => update({ probadas: !filters.probadas })}
+              className={`${chipBase} ${filters.probadas ? chipOn : chipOff}`}
+            >
+              <BadgeCheck size={15} aria-hidden className="text-moss" />
+              Solo probadas
+              <span className="font-mono text-[11px] text-faint">{probadas}</span>
+            </button>
           </fieldset>
 
           <fieldset>

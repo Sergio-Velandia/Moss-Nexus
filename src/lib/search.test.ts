@@ -18,7 +18,7 @@ const mk = (over: Partial<Template>) =>
 const pool = [
   mk({ slug: 'wa', titulo: 'WhatsApp a Sheets', herramientas: ['whatsapp', 'google-sheets', 'gmail'] }),
   mk({ slug: 'rep', titulo: 'Reporte diario', categoria: 'reportes', dificultad: 'media', herramientas: ['slack', 'google-sheets'] }),
-  mk({ slug: 'auto', titulo: 'Automatización de facturas', herramientas: ['gmail'] }),
+  mk({ slug: 'auto', titulo: 'Automatización de facturas', herramientas: ['gmail'], probado: { fecha: '2026-10-15', versionN8n: '2.43.5' } }),
 ]
 const slugs = (ts: Template[]) => ts.map((t) => t.slug)
 
@@ -51,9 +51,19 @@ describe('filterTemplates', () => {
   })
 })
 
+describe('solo probadas', () => {
+  it('por defecto se ven todas; con el filtro, solo las que tienen sello', () => {
+    expect(filterTemplates(pool, emptyFilters)).toHaveLength(3)
+    expect(slugs(filterTemplates(pool, { ...emptyFilters, probadas: true }))).toEqual(['auto'])
+  })
+  it('se combina con los demás filtros', () => {
+    expect(slugs(filterTemplates(pool, { ...emptyFilters, probadas: true, herramientas: ['google-sheets'] }))).toEqual([])
+  })
+})
+
 describe('filtros en la URL', () => {
   it('ida y vuelta sin pérdidas', () => {
-    const f = { q: 'hola', herramientas: ['gmail', 'slack'], categoria: 'ventas', dificultad: 'media' as const }
+    const f = { q: 'hola', herramientas: ['gmail', 'slack'], categoria: 'ventas', dificultad: 'media' as const, probadas: true }
     expect(filtersFromParams(paramsFromFilters(f))).toEqual(f)
   })
   it('ignora dificultades inventadas', () => {
@@ -63,5 +73,8 @@ describe('filtros en la URL', () => {
     expect(isFiltering(emptyFilters)).toBe(false)
     expect(isFiltering({ ...emptyFilters, q: ' ' })).toBe(false)
     expect(isFiltering({ ...emptyFilters, categoria: 'ventas' })).toBe(true)
+    expect(isFiltering({ ...emptyFilters, probadas: true })).toBe(true)
+    expect(filtersFromParams(new URLSearchParams('probadas=1')).probadas).toBe(true)
+    expect(paramsFromFilters(emptyFilters).toString()).toBe('')
   })
 })
