@@ -6,6 +6,21 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.8.3] - 2026-10-22
+
+Auditoría transversal: ¿un aviso o una acción secundaria que falla puede impedir el registro? Se revisaron las 13 plantillas; 11 ya registraban antes de avisar o no registran nada.
+
+### Añadido
+- Pruebas del repositorio para facturas (las dos salidas de Drive llegan al registro), aprobación de gastos (registro previo y actualización por ID) y los montos en COP.
+- **alertas-de-errores-n8n**, **leads-formulario-a-sheets**, **onboarding-empleado**, **leads-a-hubspot-sin-duplicados** y **pagos-stripe-idempotentes**: paso «¿No usas Slack?», como en las plantillas de IA. Las alternativas no están probadas; el sello cubre solo Slack.
+- **aprobacion-de-gastos**, **pagos-stripe-idempotentes**, **leads-a-hubspot-sin-duplicados** y **whatsapp-a-sheets**: limitaciones y guías de Moss. Siguen «Sin probar».
+
+### Corregido
+- **facturas-gmail-a-drive** (⚠️ cambio en una plantilla probada; el sello conserva su fecha hasta repetir la prueba corta): si fallaba la subida a Drive, la factura no quedaba registrada y el trigger no volvía a tomar ese correo. Ahora se registra igual, con «No se subió a Drive: …» en la columna Enlace.
+- **aprobacion-de-gastos**: si fallaba el correo de aprobación, la solicitud se perdía. Ahora se registra como «Pendiente» antes de pedir la aprobación y la decisión actualiza esa misma fila (nueva columna ID).
+- **aprobacion-de-gastos**: el umbral pasa a 500.000 COP y los correos muestran el monto como «$ 1.500.000», con el mismo formato que cobranza y reporte de ventas.
+- **pagos-stripe-idempotentes**: el recibo y el aviso mostraban «150000.00 COP»; ahora muestran «$ 150.000» (y dos decimales en monedas como USD).
+
 ## [0.8.2] - 2026-10-22
 
 ### Añadido
@@ -257,7 +272,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.2...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.3...HEAD
+[0.8.3]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.9...v0.8.0
