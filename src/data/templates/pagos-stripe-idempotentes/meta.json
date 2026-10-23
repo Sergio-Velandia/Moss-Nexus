@@ -31,7 +31,8 @@
     "Conecta Google en «Buscar evento» y «Registrar pedido» (misma hoja), Gmail en «Enviar recibo» y Slack en «Avisar a ventas».",
     "Activa el flujo: n8n crea el webhook en Stripe. Haz un pago de prueba con la tarjeta 4242 4242 4242 4242 y revisa la hoja.",
     "Para comprobar la idempotencia, reenvía el mismo evento desde el panel de Stripe (Desarrolladores > Eventos): no debe aparecer una segunda fila.",
-    "Con mucho volumen de pagos simultáneos, una hoja de cálculo no garantiza unicidad: conviene migrar el registro a una base de datos con una restricción única sobre el ID de evento."
+    "Con mucho volumen de pagos simultáneos, una hoja de cálculo no garantiza unicidad: conviene migrar el registro a una base de datos con una restricción única sobre el ID de evento.",
+    "¿No usas Slack? Cambia solo «Avisar a ventas» por el nodo de Gmail u Outlook, Microsoft Teams, Telegram, Discord o WhatsApp (vía su API) y pega en él el mismo texto; el resto del flujo no cambia. El texto usa marcas propias de Slack (*negrita* y emojis como :wave:): ajústalas al formato del nuevo canal. Esas alternativas tampoco están probadas."
   ],
   "destacado": true
 }

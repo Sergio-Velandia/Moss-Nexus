@@ -30,7 +30,8 @@
     "En «Crear o actualizar», crea la credencial de HubSpot con el token.",
     "Conecta Slack en «Avisar a ventas» y Google en «Leads para revisar» (con la URL de la hoja).",
     "Activa el flujo y configura tu formulario para enviar un POST con JSON a la URL de producción de «Lead recibido».",
-    "Envía un lead de prueba, y luego el mismo con el correo en mayúsculas: en HubSpot debe quedar un solo contacto actualizado."
+    "Envía un lead de prueba, y luego el mismo con el correo en mayúsculas: en HubSpot debe quedar un solo contacto actualizado.",
+    "¿No usas Slack? Cambia solo «Avisar a ventas» por el nodo de Gmail u Outlook, Microsoft Teams, Telegram, Discord o WhatsApp (vía su API) y pega en él el mismo texto; el resto del flujo no cambia. El texto usa marcas propias de Slack (*negrita* y emojis como :wave:): ajústalas al formato del nuevo canal. Esas alternativas tampoco están probadas."
   ],
   "destacado": false
 }

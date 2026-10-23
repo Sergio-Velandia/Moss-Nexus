@@ -31,12 +31,9 @@
     "Publica el flujo de alertas. n8n valida la URL de la hoja al publicar.",
     "En cada flujo que quieras vigilar: ⋯ → Settings → Error Workflow → elige «Alertas de errores» → Save. El flujo vigilado también debe estar publicado.",
     "Marca los flujos importantes agregando «[crítico]» al nombre, por ejemplo «Facturas a Drive [crítico]» o «Reporte de ventas [critico]»: funciona con o sin tilde y en mayúsculas. Sus fallos llegan además por correo y con @channel en Slack.",
-    "Prueba con el flujo de prueba de esta página (sección «Cómo probarla»). Ten en cuenta que pulsar «Execute» no dispara alertas: n8n solo las envía en ejecuciones automáticas."
+    "Prueba con el flujo de prueba de esta página (sección «Cómo probarla»). Ten en cuenta que pulsar «Execute» no dispara alertas: n8n solo las envía en ejecuciones automáticas.",
+    "¿No usas Slack? Cambia solo «Alerta urgente», «Alerta en Slack» y «Aviso: registro fallido» por el nodo de Gmail u Outlook, Microsoft Teams, Telegram, Discord o WhatsApp (vía su API) y pega en él el mismo texto; el resto del flujo no cambia. El texto usa marcas propias de Slack (*negrita* y emojis como :wave:), además de <!channel> para avisar a todo el canal: ajústalas al formato del nuevo canal. Estas alternativas no están probadas: el sello «Probado» cubre solo Slack."
   ],
-  "prueba": {
-    "descripcion": "Un flujo mínimo que falla a propósito cada minuto: «Cada minuto» → un nodo Code que lanza un error. Pégalo en un flujo nuevo, asígnale «Alertas de errores» como Error Workflow (⋯ → Settings → Error Workflow) y publícalo. En un minuto te llegará la primera alerta. Para probar el modo crítico, agrega «[crítico]» a su nombre. El botón «Fetch Test Event» del Error Trigger también sirve para ver el formato, pero su enlace de ejecución es de ejemplo (/execution/workflow/1/231) y da 404: es normal.",
-    "aviso": "Despublícalo al terminar o te enviará una alerta cada minuto."
-  },
   "problemas": [
     {
       "sintoma": "Ejecuto el flujo vigilado con «Execute» y no llega ninguna alerta",
@@ -65,6 +62,10 @@
     "Las ejecuciones manuales («Execute») no disparan alertas: solo las automáticas.",
     "El token de Google en modo Testing caduca a los 7 días: publica la app OAuth o renueva la credencial (ver la guía de OAuth 2 de Moss)."
   ],
+  "prueba": {
+    "descripcion": "Un flujo mínimo que falla a propósito cada minuto: «Cada minuto» → un nodo Code que lanza un error. Pégalo en un flujo nuevo, asígnale «Alertas de errores» como Error Workflow (⋯ → Settings → Error Workflow) y publícalo. En un minuto te llegará la primera alerta. Para probar el modo crítico, agrega «[crítico]» a su nombre. El botón «Fetch Test Event» del Error Trigger también sirve para ver el formato, pero su enlace de ejecución es de ejemplo (/execution/workflow/1/231) y da 404: es normal.",
+    "aviso": "Despublícalo al terminar o te enviará una alerta cada minuto."
+  },
   "probado": {
     "fecha": "2026-10-19",
     "hora": "20:04",

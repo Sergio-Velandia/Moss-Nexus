@@ -33,7 +33,8 @@
     "Elige tus credenciales: Google Sheets en «Registrar ingreso» (con la URL de la hoja), Google Calendar en «Agendar bienvenida» (usa tu calendario principal), Gmail en los dos nodos de correo y Slack en «Anunciar al equipo», con tu canal.",
     "Ajusta las áreas del formulario, el texto de bienvenida y la lista de verificación a tu empresa.",
     "Prueba con «Test URL» del formulario: llénalo con una fecha futura y con correos tuyos (sirven alias como tu-correo+empleado@gmail.com y tu-correo+responsable@gmail.com). Revisa la fila en la hoja, la reunión en tu calendario, los dos correos y el mensaje de Slack. Repite con una fecha pasada: no se agenda nada y el checklist empieza con el aviso.",
-    "Publica el flujo y comparte con RR. HH. la «Production URL» del formulario, no la de prueba."
+    "Publica el flujo y comparte con RR. HH. la «Production URL» del formulario, no la de prueba.",
+    "¿No usas Slack? Cambia solo «Anunciar al equipo» por el nodo de Gmail u Outlook, Microsoft Teams, Telegram, Discord o WhatsApp (vía su API) y pega en él el mismo texto; el resto del flujo no cambia. El texto usa marcas propias de Slack (*negrita* y emojis como :wave:): ajústalas al formato del nuevo canal. Estas alternativas no están probadas: el sello «Probado» cubre solo Slack."
   ],
   "problemas": [
     {

@@ -31,7 +31,8 @@
     "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
     "En «Guardar lead», elige tu credencial de Google Sheets y pega la URL de tu hoja. En «Avisar a ventas», elige tu credencial de Slack y escribe el canal.",
     "Abre «Formulario de contacto» y ajusta las preguntas si lo necesitas. La Test URL solo responde mientras pulsas «Execute workflow»; para tu web usa la Production URL, que funciona con el flujo publicado.",
-    "Publica el flujo, envía una solicitud de prueba con datos de ejemplo (como ana@ejemplo.com) y revisa la fila y el mensaje en Slack."
+    "Publica el flujo, envía una solicitud de prueba con datos de ejemplo (como ana@ejemplo.com) y revisa la fila y el mensaje en Slack.",
+    "¿No usas Slack? Cambia solo «Avisar a ventas» por el nodo de Gmail u Outlook, Microsoft Teams, Telegram, Discord o WhatsApp (vía su API) y pega en él el mismo texto; el resto del flujo no cambia. El texto usa marcas propias de Slack (*negrita* y emojis como :wave:): ajústalas al formato del nuevo canal. Estas alternativas no están probadas: el sello «Probado» cubre solo Slack."
   ],
   "problemas": [
     {
