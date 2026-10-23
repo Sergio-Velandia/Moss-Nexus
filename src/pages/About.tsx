@@ -1,9 +1,29 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, BadgeCheck, BookOpen, Code2, FolderGit2, Languages, Scale, Sprout, Workflow, Wrench } from 'lucide-react'
 import { site } from '../data/site'
+import { templates } from '../lib/templates'
 import { ButtonLink } from '../components/ui/Button'
 import { Reveal } from '../components/ui/Reveal'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
+
+const pruebas = [
+  {
+    title: 'Una instancia real de n8n',
+    text: 'Importo el flujo tal como lo copias tú y lo ejecuto de principio a fin. El sello guarda la fecha y la versión de n8n de esa prueba.',
+  },
+  {
+    title: 'Datos ficticios',
+    text: 'Clientes, correos, facturas y empleados inventados, o alias de mi propio correo. Nunca datos de otras personas, y el sello dice qué datos se usaron.',
+  },
+  {
+    title: 'Casos trampa',
+    text: 'Además del caso feliz, busco lo que rompe: una bandeja vacía, una fecha que ya pasó, un recordatorio que cae en fin de semana, un correo que intenta darle órdenes a la IA o un bot que no está en el canal.',
+  },
+  {
+    title: 'Lo que falla queda escrito',
+    text: 'Cada error que encuentro se corrige en la plantilla y se documenta en «Problemas frecuentes» (síntoma y solución). Lo que la plantilla no resuelve va en «Limitaciones».',
+  },
+]
 
 const principles = [
   { icon: BadgeCheck, title: 'Claro sobre las pruebas', text: 'Si una plantilla se probó en n8n, muestra la fecha y la versión. Si todavía no, se marca «Sin probar».' },
@@ -21,6 +41,7 @@ const principles = [
 
 export default function About() {
   useDocumentTitle('Acerca')
+  const probadas = templates.filter((t) => t.probado).length
   return (
     <div className="mx-auto max-w-4xl px-4 pt-10 sm:pt-16">
       <Reveal>
@@ -63,6 +84,47 @@ export default function About() {
           cualquier página de Nexus puedes volver a Moss.
         </p>
       </Reveal>
+
+      <section className="mt-16" aria-labelledby="sello">
+        <Reveal>
+          <h2 id="sello" className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
+            <BadgeCheck size={24} className="text-moss" aria-hidden /> Qué significa el sello «Probado»
+          </h2>
+          <p className="mt-4 text-ink-soft">
+            Una plantilla con el sello se ejecutó completa en una instancia real de n8n. Hoy lo tienen{' '}
+            <strong className="text-ink">
+              {probadas} de {templates.length}
+            </strong>{' '}
+            plantillas. Las demás muestran «Sin probar»: se revisaron, pero todavía no pasaron por esta prueba, así que son un punto de
+            partida.
+          </p>
+        </Reveal>
+        <ol className="mt-6 grid gap-4 sm:grid-cols-2">
+          {pruebas.map((p, i) => (
+            <Reveal as="li" key={p.title} delay={i * 0.06} className="glass rounded-3xl p-6">
+              <span className="font-mono text-xs text-moss">0{i + 1}</span>
+              <h3 className="mt-2 font-semibold">{p.title}</h3>
+              <p className="mt-1.5 text-sm text-ink-soft">{p.text}</p>
+            </Reveal>
+          ))}
+        </ol>
+        <Reveal>
+          <p className="mt-6 text-sm text-ink-soft">
+            Si cambio una plantilla probada, repito una prueba corta antes de actualizar la fecha del sello. El sello indica que el flujo
+            funcionó en esa prueba concreta; no garantiza que funcione con otras versiones de n8n ni con tu configuración (ver{' '}
+            <Link to="/terminos#plantillas" className="text-nexus underline-offset-2 hover:underline">
+              términos
+            </Link>
+            ).
+          </p>
+          <Link
+            to="/plantillas?probadas=1"
+            className="mt-4 inline-flex min-h-10 items-center gap-1 text-sm font-medium text-nexus underline-offset-2 hover:underline"
+          >
+            Ver solo las plantillas probadas <ArrowRight size={14} aria-hidden />
+          </Link>
+        </Reveal>
+      </section>
 
       <section className="mt-16">
         <Reveal>
