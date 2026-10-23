@@ -44,11 +44,14 @@ export function ExampleBadge() {
   )
 }
 
+/** La frase que acompaña a la etiqueta «Sin probar» en la tarjeta y en la ficha */
+export const UNTESTED_TEXT = 'Esta plantilla se revisó, pero aún no se probó en una instancia real. Úsala como punto de partida.'
+
 /** Plantilla publicada sin probar todavía en una instancia real de n8n */
 export function UntestedBadge() {
   return (
-    <span className="inline-flex items-center gap-1 text-xs font-medium text-amber">
-      <CircleDashed size={14} aria-hidden />
+    <span className="inline-flex items-center gap-1 rounded-full border border-amber/50 bg-amber/[0.08] px-2 py-0.5 text-xs font-semibold text-amber">
+      <CircleDashed size={13} aria-hidden />
       Sin probar
     </span>
   )
@@ -59,8 +62,7 @@ export function UntestedNotice() {
     <p className="flex items-start gap-3 rounded-2xl border border-dashed border-amber/50 bg-amber/[0.06] px-4 py-3 text-sm text-ink-soft">
       <CircleDashed size={18} className="mt-0.5 shrink-0 text-amber" aria-hidden />
       <span>
-        <strong className="text-amber">Sin probar.</strong> Este flujo aún no se ha probado en una instancia real de n8n. Revísalo y
-        pruébalo antes de usarlo con datos reales.
+        <strong className="text-amber">Sin probar.</strong> {UNTESTED_TEXT} Pruébalo antes de usarlo con datos reales.
       </span>
     </p>
   )

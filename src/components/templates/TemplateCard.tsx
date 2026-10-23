@@ -2,7 +2,7 @@ import { ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { getCategory } from '../../data/categories'
 import type { Template } from '../../lib/types'
-import { DifficultyBadge, ExampleBadge, TestedSeal, TimeBadge, UntestedBadge } from '../ui/Badges'
+import { DifficultyBadge, ExampleBadge, TestedSeal, TimeBadge, UNTESTED_TEXT, UntestedBadge } from '../ui/Badges'
 import { ToolStack } from '../ui/ToolIcon'
 
 /** Tarjeta de la galería. Toda la tarjeta es un enlace; el brillo sigue al puntero (solo con ratón). */
@@ -39,6 +39,7 @@ export function TemplateCard({ template: t, headingLevel = 3 }: { template: Temp
       </div>
       <H className="relative mt-1.5 text-[17px] font-semibold leading-snug text-balance">{t.titulo}</H>
       <p className="relative mb-5 mt-2 line-clamp-2 text-sm text-ink-soft">{t.resumen}</p>
+      {!t.probado && <p className="relative -mt-2 mb-5 border-l-2 border-amber/60 pl-2.5 text-xs text-ink-soft">{UNTESTED_TEXT}</p>}
 
       <div className="relative mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-line pt-4">
         <DifficultyBadge value={t.dificultad} />

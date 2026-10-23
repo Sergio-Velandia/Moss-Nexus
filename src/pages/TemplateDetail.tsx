@@ -6,7 +6,7 @@ import { getTool } from '../data/tools'
 import { FlowMap } from '../components/diagram/FlowMap'
 import { CopyFlowButton } from '../components/templates/CopyFlowButton'
 import { TemplateCard } from '../components/templates/TemplateCard'
-import { DifficultyBadge, ExampleBadge, TestedSeal, TimeBadge, UntestedBadge, UntestedNotice } from '../components/ui/Badges'
+import { DifficultyBadge, ExampleBadge, TestedSeal, TimeBadge, UNTESTED_TEXT, UntestedBadge, UntestedNotice } from '../components/ui/Badges'
 import { Reveal } from '../components/ui/Reveal'
 import { ToolIcon } from '../components/ui/ToolIcon'
 import { getTemplate, relatedTemplates } from '../lib/templates'
@@ -83,6 +83,7 @@ export default function TemplateDetail() {
             <TimeBadge minutes={t.tiempoEstimado} />
             {t.probado ? <TestedSeal fecha={t.probado.fecha} version={t.probado.versionN8n} compact /> : <UntestedBadge />}
           </div>
+          {!t.probado && <p className="mt-3 max-w-2xl border-l-2 border-amber/60 pl-3 text-sm text-ink-soft">{UNTESTED_TEXT}</p>}
         </div>
       </header>
 
