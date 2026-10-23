@@ -6,6 +6,17 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.9.1] - 2026-10-22
+
+Repaso del sitio antes de la v1.0.0: inicio, catálogo, formulario, legales, accesibilidad, rendimiento, SEO y enlaces.
+
+### Añadido
+- Imagen de vista previa para redes sociales (`og.png`, 1200×630). Estaba declarada en Open Graph y Twitter Card, pero el archivo nunca se había publicado. Una prueba comprueba que existe y que su tamaño coincide con el declarado.
+- Pruebas de la sección del sello en Acerca, y de canonical y `og:url` con el dominio del sitio.
+
+### Cambiado
+- El inicio muestra cuántas plantillas están probadas en n8n, calculado desde los datos, en lugar del número de niveles.
+
 ## [0.9.0] - 2026-10-22
 
 Honestidad visible: se distingue a simple vista qué plantillas se probaron y cuáles no.
@@ -284,7 +295,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.9.0...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.9.1...HEAD
+[0.9.1]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.3...v0.9.0
 [0.8.3]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.1...v0.8.2
