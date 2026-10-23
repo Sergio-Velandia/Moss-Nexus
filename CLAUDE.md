@@ -48,6 +48,10 @@ Orden acordado. Cada fase empieza solo cuando el usuario la pide y con un plan c
   - Aclarar en el inicio que cada plantilla es un punto de partida y puede requerir personalizaciones y ajustes según la persona o la empresa (sus datos, columnas, reglas de negocio y herramientas).
   - No inventar cifras ni funciones. Pedir al usuario lo que falte.
   - Proponer PATCH o MINOR al final.
+- **Camino a v1.0.0 (hecho, v0.8.3 a v1.0.0):** auditoría «registrar primero, avisar después» en las 13 plantillas (v0.8.3), «Sin probar» visible con filtro «Solo probadas» y sello explicado en Acerca (v0.9.0), repaso del sitio con `og.png` propia (v0.9.1) y lanzamiento (v1.0.0). Desde aquí el proyecto está en **mantenimiento**: SemVer normal (MINOR por plantilla o función nueva, PATCH por correcciones, sellos y documentación).
+  - **Registrar primero:** en toda plantilla que registra algo, el registro va antes de cualquier aviso (Slack, Gmail, Calendar). Si una acción externa debe ir antes (subir a Drive, enviar el cobro), su error sale por `continueErrorOutput` y también se registra.
+  - Al cambiar una plantilla probada, el CHANGELOG lo marca y el sello conserva su fecha hasta que el usuario repita una prueba corta.
+  - La tabla de plantillas del README tiene una prueba (`src/lib/readme.test.ts`): al sumar una plantilla o un sello, actualiza su fila.
 - **Propón un flujo (hecha, v0.8.0):** `/propon-un-flujo` con dos pestañas, «Propón un flujo» y «Habla conmigo» (`?formulario=habla-conmigo`). Campos y validación en `src/lib/contact-form.ts`; envío con la API REST de EmailJS vía `fetch`, sin SDK. Las IDs públicas están en `site.emailjs`; el correo de destino se configura solo en la plantilla de EmailJS, nunca en el código. Campo trampa `sitio_web` contra bots. Si cambian los campos o el servicio, actualizar antes `/privacidad#formularios` y `site.legalUpdated`.
 
 ## Stack
