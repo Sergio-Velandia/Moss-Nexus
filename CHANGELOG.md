@@ -6,6 +6,18 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.9.0] - 2026-10-22
+
+Honestidad visible: se distingue a simple vista qué plantillas se probaron y cuáles no.
+
+### Añadido
+- Filtro «Solo probadas» en el catálogo, con el número de plantillas probadas. Se guarda en la URL (`?probadas=1`) y por defecto se ven todas.
+- Sección «Qué significa el sello «Probado»» en Acerca: cuántas plantillas lo tienen (calculado), y cómo se prueba cada una (instancia real de n8n, datos ficticios, casos trampa, problemas y limitaciones documentados).
+- Pruebas que fallan si un sello no tiene fecha real, versión de n8n o tipo de datos, o si una plantilla sin sello dice en sus textos que está probada.
+
+### Cambiado
+- La etiqueta «Sin probar» es más visible en la tarjeta y en la ficha, y va acompañada de la línea «Esta plantilla se revisó, pero aún no se probó en una instancia real. Úsala como punto de partida.»
+
 ## [0.8.3] - 2026-10-22
 
 Auditoría transversal: ¿un aviso o una acción secundaria que falla puede impedir el registro? Se revisaron las 13 plantillas; 11 ya registraban antes de avisar o no registran nada.
@@ -272,7 +284,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.3...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.3...v0.9.0
 [0.8.3]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.0...v0.8.1

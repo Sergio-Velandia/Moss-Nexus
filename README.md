@@ -39,6 +39,7 @@ Librería de flujos de automatización para **n8n**, ya armados, explicados y li
 | Fase Legal: términos, privacidad, contacto y licencia | ✅ Completa (v0.6.0) |
 | Fase Repaso: coherencia del inicio y la información general | ✅ Completa (v0.7.0) |
 | Propón un flujo: formularios de propuesta y contacto | ✅ Completa (v0.8.0) |
+| Auditoría de registro y sin probar visible: filtro «Solo probadas» y sello explicado en Acerca | ✅ Completa (v0.8.3 y v0.9.0) |
 
 Historial completo en el [CHANGELOG](CHANGELOG.md).
 
