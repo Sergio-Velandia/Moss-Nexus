@@ -2,7 +2,7 @@
   "slug": "facturas-gmail-a-drive",
   "titulo": "Facturas de proveedores de Gmail a Google Drive con registro",
   "resumen": "Guarda en Drive cada factura que llega por correo (PDF, XML, ZIP o captura), ignora logos y firmas, y la anota en una hoja con su enlace.",
-  "problema": "Las facturas de proveedores llegan al correo y ahí se quedan. A fin de mes, contabilidad pide los soportes y hay que buscar adjunto por adjunto, descargarlos y renombrarlos. Este flujo detecta los correos etiquetados como facturas, sube a una carpeta de Drive cada PDF, XML o ZIP (la factura electrónica suele llegar así) y las capturas de pantalla de facturas, con un nombre del tipo fecha_proveedor_archivo, y lo registra en una hoja con el enlace directo. Los logos, firmas e íconos que traen los correos se descartan.",
+  "problema": "Las facturas de proveedores llegan al correo y ahí se quedan. A fin de mes, contabilidad pide los soportes y hay que buscar adjunto por adjunto, descargarlos y renombrarlos. Este flujo detecta los correos etiquetados como facturas, sube a una carpeta de Drive cada PDF, XML o ZIP (la factura electrónica suele llegar así) y las capturas de pantalla de facturas, con un nombre del tipo fecha_proveedor_archivo, y lo registra en una hoja con el enlace directo. Los logos, firmas e íconos que traen los correos se descartan. Si Drive falla, la factura se registra igual con el motivo, para que no se pierda.",
   "categoria": "finanzas",
   "herramientas": [
     "gmail",
@@ -60,7 +60,9 @@
   "limitaciones": [
     "El filtro de imágenes es una aproximación: un logo de más de 50 KB con un nombre poco común podría subirse. Se prefiere subir de más antes que perder una factura.",
     "No hay deduplicación: si ejecutas a mano el mismo correo, el archivo y la fila se crean de nuevo.",
-    "Revisa el correo cada 5 minutos: no es instantáneo."
+    "Revisa el correo cada 5 minutos: no es instantáneo.",
+    "Si falla la subida a Drive (permisos, carpeta borrada, cuota), la fila se registra con «No se subió a Drive: …» en la columna Enlace y el archivo no queda en la carpeta: súbelo a mano desde el correo.",
+    "Si lo que falla es la hoja, el archivo ya quedó en Drive pero sin fila. El error queda a la vista para que lo detecte la plantilla de alertas de errores."
   ],
   "probado": {
     "fecha": "2026-10-15",

@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Facturas de Gmail → Google Drive\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. En Gmail, crea la etiqueta **facturas** y un filtro que la aplique a los correos de tus proveedores.\n2. Cuenta de Gmail en «Correo con factura».\n3. Cuenta de Google y URL de la carpeta en «Subir a Drive».\n4. URL de tu hoja en «Registrar factura»: debe ser un **Google Sheet nativo** (no un .xlsx) con la pestaña **Registro** y los encabezados Fecha, Remitente, Asunto, Archivo, Enlace.\n\n**Adjuntos:** PDF, XML y ZIP siempre se suben. Las imágenes, solo si pesan al menos `MIN_KB_IMAGEN` (50 KB, ajustable en «Separar adjuntos») y su nombre no parece un logo o una firma.",
+        "content": "## Facturas de Gmail → Google Drive\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. En Gmail, crea la etiqueta **facturas** y un filtro que la aplique a los correos de tus proveedores.\n2. Cuenta de Gmail en «Correo con factura».\n3. Cuenta de Google y URL de la carpeta en «Subir a Drive».\n4. URL de tu hoja en «Registrar factura»: debe ser un **Google Sheet nativo** (no un .xlsx) con la pestaña **Registro** y los encabezados Fecha, Remitente, Asunto, Archivo, Enlace.\n\n**Adjuntos:** PDF, XML y ZIP siempre se suben. Las imágenes, solo si pesan al menos `MIN_KB_IMAGEN` (50 KB, ajustable en «Separar adjuntos») y su nombre no parece un logo o una firma.\n\nSi falla la subida a Drive, la factura se registra igual y la columna Enlace explica el motivo.",
         "height": 380,
         "width": 400
       },
@@ -84,7 +84,8 @@
       "position": [
         440,
         0
-      ]
+      ],
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -106,7 +107,7 @@
             "Remitente": "={{ $('Separar adjuntos').item.json.remitente }}",
             "Asunto": "={{ $('Separar adjuntos').item.json.asunto }}",
             "Archivo": "={{ $('Separar adjuntos').item.json.nombreArchivo }}",
-            "Enlace": "={{ $json.webViewLink }}"
+            "Enlace": "={{ $json.webViewLink || 'No se subió a Drive: ' + ((typeof $json.error === 'string' ? $json.error : $json.error?.message) || 'error desconocido') }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -166,7 +167,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        660,
+        700,
         0
       ]
     }
@@ -196,6 +197,13 @@
     },
     "Subir a Drive": {
       "main": [
+        [
+          {
+            "node": "Registrar factura",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "Registrar factura",
