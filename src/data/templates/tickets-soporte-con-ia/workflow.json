@@ -80,7 +80,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Lee la clasificación de la IA. Si la respuesta no es válida, el ticket no se pierde:\n// queda como urgencia media y categoría «otro» para revisión humana.\nconst URGENCIAS = ['alta', 'media', 'baja'];\nconst CATEGORIAS = ['facturacion', 'tecnico', 'cuenta', 'comercial', 'otro'];\n\nreturn $input.all().map((item, i) => {\n  const correo = $('Correo de soporte').all()[i]?.json ?? {};\n  let ia = {};\n  try {\n    // Gemini a veces envuelve el JSON en un bloque de código\n    ia = JSON.parse(String(item.json.text ?? '{}').replace(/```json|```/g, '').trim());\n  } catch (error) {\n    ia = {};\n  }\n  const urgencia = URGENCIAS.includes(ia.urgencia) ? ia.urgencia : 'media';\n  return {\n    json: {\n      urgencia,\n      categoria: CATEGORIAS.includes(ia.categoria) ? ia.categoria : 'otro',\n      resumen: String(ia.resumen || correo.subject || 'Sin resumen').slice(0, 280),\n      de: correo.from?.text || correo.from?.value?.[0]?.address || 'desconocido',\n      asunto: correo.subject || '(sin asunto)',\n      enlace: correo.threadId ? 'https://mail.google.com/mail/u/0/#all/' + correo.threadId : '',\n      revisada: URGENCIAS.includes(ia.urgencia),\n    },\n  };\n});"
+        "jsCode": "// Lee la clasificación de la IA. Si la respuesta no es válida, el ticket no se pierde:\n// queda como urgencia media y categoría «otro» para revisión humana.\nconst URGENCIAS = ['alta', 'media', 'baja'];\nconst CATEGORIAS = ['facturacion', 'tecnico', 'cuenta', 'comercial', 'otro'];\n\nreturn $input.all().map((item, i) => {\n  const correo = $('Correo de soporte').all()[i]?.json ?? {};\n  let ia = {};\n  try {\n    // Gemini a veces envuelve el JSON en un bloque de código\n    ia = JSON.parse(String(item.json.text ?? '{}').replace(/```json|```/g, '').trim());\n  } catch (error) {\n    ia = {};\n  }\n  const urgencia = URGENCIAS.includes(ia.urgencia) ? ia.urgencia : 'media';\n  return {\n    json: {\n      urgencia,\n      categoria: CATEGORIAS.includes(ia.categoria) ? ia.categoria : 'otro',\n      resumen: String(ia.resumen || correo.subject || 'Sin resumen').slice(0, 280),\n      de: String(correo.from?.text || correo.from?.value?.[0]?.address || 'desconocido').replace(/\"/g, ''),\n      asunto: correo.subject || '(sin asunto)',\n      enlace: correo.threadId ? 'https://mail.google.com/mail/u/0/#all/' + correo.threadId : '',\n      revisada: URGENCIAS.includes(ia.urgencia),\n    },\n  };\n});"
       },
       "id": "02e030cc-3c76-4250-87a0-88cd1212e315",
       "name": "Leer clasificación",
@@ -145,7 +145,9 @@
         },
         "text": "=<!here> :red_circle: *Ticket urgente* · {{ $('Leer clasificación').item.json.categoria }}\n*{{ $('Leer clasificación').item.json.asunto }}* — {{ $('Leer clasificación').item.json.de }}\n> {{ $('Leer clasificación').item.json.resumen }}\n{{ $('Leer clasificación').item.json.enlace ? '<' + $('Leer clasificación').item.json.enlace + '|Abrir en Gmail>' : '' }}",
         "otherOptions": {
-          "includeLinkToWorkflow": false
+          "includeLinkToWorkflow": false,
+          "unfurl_links": false,
+          "unfurl_media": false
         }
       },
       "id": "c57ece08-dec2-45ef-852d-d88aee604f65",
@@ -167,7 +169,9 @@
         },
         "text": "=:large_{{ $('Leer clasificación').item.json.urgencia === 'media' ? 'yellow' : 'green' }}_circle: Ticket {{ $('Leer clasificación').item.json.urgencia }} · {{ $('Leer clasificación').item.json.categoria }}\n*{{ $('Leer clasificación').item.json.asunto }}* — {{ $('Leer clasificación').item.json.de }}\n> {{ $('Leer clasificación').item.json.resumen }}\n{{ $('Leer clasificación').item.json.enlace ? '<' + $('Leer clasificación').item.json.enlace + '|Abrir en Gmail>' : '' }}",
         "otherOptions": {
-          "includeLinkToWorkflow": false
+          "includeLinkToWorkflow": false,
+          "unfurl_links": false,
+          "unfurl_media": false
         }
       },
       "id": "1c07a773-7798-4272-8d67-a9eb2938e868",
