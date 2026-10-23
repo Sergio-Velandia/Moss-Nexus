@@ -6,6 +6,27 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [1.0.0] - 2026-10-22
+
+**Moss Nexus estable.** 13 plantillas de n8n en español, 9 con el sello «Probado» en una instancia real (n8n 2.43.5) y 4 marcadas «Sin probar» de forma visible.
+
+El camino hasta aquí:
+- **Fases 1 a 3 (v0.1.0 a v0.5.0):** estructura, diseño y mapa generado; las primeras plantillas reales y después 12 para entornos profesionales, por nivel.
+- **Fase Legal (v0.6.0) y Repaso (v0.7.0):** términos, privacidad, contacto y licencias MIT, MIT-0 y CC BY 4.0; cifras calculadas desde los datos, Open Graph y una página estática por ruta.
+- **Sellos «Probado» (v0.7.x a v0.8.2):** 9 plantillas probadas con datos ficticios y casos trampa. Cada prueba dejó correcciones reales y quedó documentada en «Problemas frecuentes» y «Limitaciones».
+- **Propón un flujo (v0.8.0):** formularios de propuesta y contacto con EmailJS.
+- **Camino a la v1.0.0 (v0.8.3 a v0.9.1):** auditoría de registro, «Sin probar» visible con filtro «Solo probadas», el sello explicado en Acerca y repaso del sitio.
+
+Hallazgos que cambiaron las plantillas:
+- **Registrar primero, avisar después.** Un aviso de Slack o Gmail que fallaba dejaba registros sin hacer: se corrigió en alertas, cobranza, onboarding, tickets, facturas y aprobación de gastos.
+- **Probar con casos trampa.** Fines de semana, fechas pasadas, bandejas vacías e inyección de instrucciones a la IA encontraron errores que el caso feliz no mostraba.
+- **El trigger de Gmail** trae un solo correo con «Execute»: para probar varios hay que publicar el flujo.
+- **IA intercambiable.** Las plantillas de IA usan un Basic LLM Chain con Gemini por defecto; para cambiar de proveedor basta con cambiar el sub-nodo del modelo.
+
+### Cambiado
+- README final: qué es, plantillas probadas frente a sin probar (con una prueba que lo mantiene al día), cómo se prueba cada plantilla, cómo contribuir y enlace en vivo.
+- El proyecto pasa a mantenimiento con versionado SemVer normal.
+
 ## [0.9.1] - 2026-10-22
 
 Repaso del sitio antes de la v1.0.0: inicio, catálogo, formulario, legales, accesibilidad, rendimiento, SEO y enlaces.
@@ -295,7 +316,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.9.1...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.9.1...v1.0.0
 [0.9.1]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.3...v0.9.0
 [0.8.3]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.2...v0.8.3
