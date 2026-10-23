@@ -4,7 +4,12 @@
   "resumen": "Guarda a cada persona que te escribe por WhatsApp en una hoja y te avisa por correo si es nueva.",
   "problema": "Te escriben clientes por WhatsApp y sus datos se quedan en el chat: no sabes quién te contactó la semana pasada ni puedes hacerle seguimiento. Pasarlos a mano a una hoja es tedioso y siempre se escapa alguno. Este flujo lleva cada contacto a Google Sheets sin duplicados, actualiza su último mensaje y te avisa por correo solo cuando escribe alguien nuevo.",
   "categoria": "atencion",
-  "herramientas": ["whatsapp", "n8n", "google-sheets", "gmail"],
+  "herramientas": [
+    "whatsapp",
+    "n8n",
+    "google-sheets",
+    "gmail"
+  ],
   "dificultad": "media",
   "tiempoEstimado": 40,
   "requisitos": [
@@ -28,5 +33,25 @@
     "Activa el flujo: n8n registra el webhook en tu app de Meta. Cada app admite un solo webhook, así que si ya la usas en otro flujo, crea una app aparte.",
     "Escribe al número desde otro teléfono y revisa que aparezca la fila nueva y que te llegue el correo."
   ],
-  "destacado": true
+  "limitaciones": [
+    "Los contactos se identifican por número de teléfono: si alguien cambia de número, aparece como contacto nuevo.",
+    "Solo guarda el último mensaje de cada contacto, no el historial de la conversación.",
+    "Los mensajes que no son de texto (audios, imágenes, ubicaciones) se guardan con su tipo entre paréntesis, sin el contenido.",
+    "Solo avisa por correo cuando escribe alguien nuevo; los mensajes de contactos existentes solo actualizan su fila."
+  ],
+  "destacado": true,
+  "guias": [
+    {
+      "titulo": "Moss: entender webhooks y triggers en n8n",
+      "url": "https://sergio-velandia.dev/Moss/manual/n8n/entender-webhooks-y-triggers"
+    },
+    {
+      "titulo": "Moss: conectar cuentas de Google a n8n con OAuth 2",
+      "url": "https://sergio-velandia.dev/Moss/manual/n8n/oauth2-de-google-en-n8n"
+    },
+    {
+      "titulo": "Moss Nexus: alertas cuando falla cualquier flujo de n8n",
+      "url": "https://sergio-velandia.dev/Moss-Nexus/plantillas/alertas-de-errores-n8n/"
+    }
+  ]
 }

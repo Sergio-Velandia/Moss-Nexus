@@ -33,5 +33,29 @@
     "Envía un lead de prueba, y luego el mismo con el correo en mayúsculas: en HubSpot debe quedar un solo contacto actualizado.",
     "¿No usas Slack? Cambia solo «Avisar a ventas» por el nodo de Gmail u Outlook, Microsoft Teams, Telegram, Discord o WhatsApp (vía su API) y pega en él el mismo texto; el resto del flujo no cambia. El texto usa marcas propias de Slack (*negrita* y emojis como :wave:): ajústalas al formato del nuevo canal. Esas alternativas tampoco están probadas."
   ],
-  "destacado": false
+  "limitaciones": [
+    "Los duplicados se evitan solo por el correo: el mismo cliente con dos correos distintos queda dos veces.",
+    "Si HubSpot falla (token vencido, límite de uso), el lead no queda guardado en ningún otro lado: revisa el error en n8n o usa la plantilla de alertas de errores.",
+    "La validación del correo solo revisa la forma (nombre@dominio.algo), no que el buzón exista.",
+    "El webhook responde «recibido» apenas llega el lead, antes de guardarlo: el formulario no se entera si después falla HubSpot."
+  ],
+  "destacado": false,
+  "guias": [
+    {
+      "titulo": "Moss: sincronizar un formulario con el CRM sin duplicados",
+      "url": "https://sergio-velandia.dev/Moss/manual/n8n/sincronizar-formulario-con-crm"
+    },
+    {
+      "titulo": "Moss: webhook básico en n8n",
+      "url": "https://sergio-velandia.dev/Moss/manual/n8n/webhook-basico"
+    },
+    {
+      "titulo": "Moss: conectar Slack a n8n con un bot (token xoxb)",
+      "url": "https://sergio-velandia.dev/Moss/manual/n8n/slack-en-n8n"
+    },
+    {
+      "titulo": "Moss Nexus: alertas cuando falla cualquier flujo de n8n",
+      "url": "https://sergio-velandia.dev/Moss-Nexus/plantillas/alertas-de-errores-n8n/"
+    }
+  ]
 }
