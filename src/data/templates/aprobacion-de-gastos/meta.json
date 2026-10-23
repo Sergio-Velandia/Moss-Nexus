@@ -26,7 +26,7 @@
   "pasos": [
     "Crea la hoja con la pestaña «Gastos» y sus columnas, empezando por ID: la decisión busca la fila por ese ID para actualizarla.",
     "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
-    "En «Configuración», define el monto a partir del cual se pide aprobación y el correo de quien aprueba.",
+    "En «Configuración», define el monto en COP a partir del cual se pide aprobación (500.000 por defecto) y el correo de quien aprueba. Los correos muestran el monto como «$ 1.500.000»; si usas otra moneda, cambia «COP» en el campo montoTexto.",
     "Conecta Gmail en «Pedir aprobación» y «Avisar al solicitante», y Google en «Registrar solicitud» y «Registrar decisión» con la URL de la hoja.",
     "Ajusta los centros de costo del formulario a los de tu empresa.",
     "Activa el flujo y envía dos solicitudes de prueba: una bajo el umbral (se aprueba sola) y otra por encima (te llega el correo para aprobar)."

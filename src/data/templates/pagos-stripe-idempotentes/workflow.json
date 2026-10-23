@@ -159,6 +159,12 @@
               "name": "fecha",
               "value": "={{ DateTime.fromSeconds($('Pago recibido').item.json.created).toFormat('yyyy-MM-dd HH:mm') }}",
               "type": "string"
+            },
+            {
+              "id": "9d4a2e7f-1b6c-4f3a-8e5d-2c7b0a9f4e18",
+              "name": "montoTexto",
+              "value": "={{ (() => { const o = $('Pago recibido').item.json.data.object; const moneda = String(o.currency ?? 'cop').toUpperCase(); return new Intl.NumberFormat('es-CO', { style: 'currency', currency: moneda, maximumFractionDigits: moneda === 'COP' ? 0 : 2 }).format(o.amount_total / 100); })() }}",
+              "type": "string"
             }
           ]
         },
@@ -284,9 +290,9 @@
     {
       "parameters": {
         "sendTo": "={{ $('Preparar pedido').item.json.correo }}",
-        "subject": "=Recibimos tu pago de {{ $('Preparar pedido').item.json.monto }} {{ $('Preparar pedido').item.json.moneda }}",
+        "subject": "=Recibimos tu pago de {{ $('Preparar pedido').item.json.montoTexto }}",
         "emailType": "text",
-        "message": "=Hola, {{ $('Preparar pedido').item.json.cliente }}:\n\nConfirmamos tu pago de {{ $('Preparar pedido').item.json.monto }} {{ $('Preparar pedido').item.json.moneda }} del {{ $('Preparar pedido').item.json.fecha }}. Ya estamos preparando tu pedido.\n\nReferencia: {{ $('Preparar pedido').item.json.sesion }}\n\nGracias por tu compra.",
+        "message": "=Hola, {{ $('Preparar pedido').item.json.cliente }}:\n\nConfirmamos tu pago de {{ $('Preparar pedido').item.json.montoTexto }} del {{ $('Preparar pedido').item.json.fecha }}. Ya estamos preparando tu pedido.\n\nReferencia: {{ $('Preparar pedido').item.json.sesion }}\n\nGracias por tu compra.",
         "options": {
           "appendAttribution": false
         }
@@ -309,7 +315,7 @@
           "value": "#ventas",
           "mode": "name"
         },
-        "text": "=:moneybag: Nuevo pago: *{{ $('Preparar pedido').item.json.monto }} {{ $('Preparar pedido').item.json.moneda }}* de {{ $('Preparar pedido').item.json.cliente }} ({{ $('Preparar pedido').item.json.correo }})",
+        "text": "=:moneybag: Nuevo pago: *{{ $('Preparar pedido').item.json.montoTexto }}* de {{ $('Preparar pedido').item.json.cliente }} ({{ $('Preparar pedido').item.json.correo }})",
         "otherOptions": {
           "includeLinkToWorkflow": false
         }

@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Aprobación de gastos\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. En «Configuración», el monto a partir del cual se pide aprobación y el correo de quien aprueba.\n2. Cuenta de Gmail en «Pedir aprobación» y «Avisar al solicitante».\n3. Cuenta de Google y URL de la hoja en «Registrar solicitud» y «Registrar decisión» (pestaña **Gastos**, con una columna **ID** al inicio).\n\nCada solicitud se registra como «Pendiente» antes de pedir la aprobación; la decisión actualiza esa misma fila.\n\nRequiere una versión de n8n con la operación «Send and Wait for Response» de Gmail.",
+        "content": "## Aprobación de gastos\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. En «Configuración», el monto en COP a partir del cual se pide aprobación (500.000 por defecto) y el correo de quien aprueba. Si usas otra moneda, cambia «COP» en el campo montoTexto.\n2. Cuenta de Gmail en «Pedir aprobación» y «Avisar al solicitante».\n3. Cuenta de Google y URL de la hoja en «Registrar solicitud» y «Registrar decisión» (pestaña **Gastos**, con una columna **ID** al inicio).\n\nCada solicitud se registra como «Pendiente» antes de pedir la aprobación; la decisión actualiza esa misma fila.\n\nRequiere una versión de n8n con la operación «Send and Wait for Response» de Gmail.",
         "height": 320,
         "width": 400
       },
@@ -98,13 +98,19 @@
             {
               "id": "90fe40a3-b1c6-4866-8b64-23b9b3216f6a",
               "name": "umbral",
-              "value": 500,
+              "value": 500000,
               "type": "number"
             },
             {
               "id": "eb8e2f74-4e9e-4277-831e-3be866824429",
               "name": "aprobador",
               "value": "aprobador@tu-empresa.com",
+              "type": "string"
+            },
+            {
+              "id": "2a6f9c41-7d3e-4b58-a1c0-8e5d2f7b3c96",
+              "name": "montoTexto",
+              "value": "={{ new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(Number($json.Monto)) }}",
               "type": "string"
             }
           ]
@@ -284,8 +290,8 @@
       "parameters": {
         "operation": "sendAndWait",
         "sendTo": "={{ $('Configuración').item.json.aprobador }}",
-        "subject": "=Aprobar gasto de {{ $('Configuración').item.json.Nombre }}: {{ $('Configuración').item.json.Concepto }} ({{ $('Configuración').item.json.Monto }})",
-        "message": "=Hay un gasto que necesita tu aprobación.\n\nSolicitante: {{ $('Configuración').item.json.Nombre }} ({{ $('Configuración').item.json.Correo }})\nConcepto: {{ $('Configuración').item.json.Concepto }}\nMonto: {{ $('Configuración').item.json.Monto }}\nCentro de costo: {{ $('Configuración').item.json['Centro de costo'] }}\nFecha del gasto: {{ $('Configuración').item.json['Fecha del gasto'] }}\nDetalle: {{ $('Configuración').item.json.Detalle || 'Sin detalle' }}",
+        "subject": "=Aprobar gasto de {{ $('Configuración').item.json.Nombre }}: {{ $('Configuración').item.json.Concepto }} ({{ $('Configuración').item.json.montoTexto }})",
+        "message": "=Hay un gasto que necesita tu aprobación.\n\nSolicitante: {{ $('Configuración').item.json.Nombre }} ({{ $('Configuración').item.json.Correo }})\nConcepto: {{ $('Configuración').item.json.Concepto }}\nMonto: {{ $('Configuración').item.json.montoTexto }}\nCentro de costo: {{ $('Configuración').item.json['Centro de costo'] }}\nFecha del gasto: {{ $('Configuración').item.json['Fecha del gasto'] }}\nDetalle: {{ $('Configuración').item.json.Detalle || 'Sin detalle' }}",
         "approvalOptions": {
           "values": {
             "approvalType": "double",
@@ -360,6 +366,12 @@
               "name": "decidio",
               "value": "={{ $('Configuración').item.json.aprobador }}",
               "type": "string"
+            },
+            {
+              "id": "7c3e1b9a-4f2d-4e6a-9b8c-0d5f1a2e6c47",
+              "name": "montoTexto",
+              "value": "={{ $('Configuración').item.json.montoTexto }}",
+              "type": "string"
             }
           ]
         },
@@ -424,6 +436,12 @@
               "id": "9c7d2231-85bc-4be0-8eff-19b782159e47",
               "name": "decidio",
               "value": "Regla de monto",
+              "type": "string"
+            },
+            {
+              "id": "7c3e1b9a-4f2d-4e6a-9b8c-0d5f1a2e6c47",
+              "name": "montoTexto",
+              "value": "={{ $('Configuración').item.json.montoTexto }}",
               "type": "string"
             }
           ]
@@ -567,7 +585,7 @@
         "sendTo": "={{ $json.correo }}",
         "subject": "=Tu gasto «{{ $json.concepto }}»: {{ $json.estado }}",
         "emailType": "text",
-        "message": "=Hola, {{ $json.nombre }}:\n\nTu solicitud de gasto por {{ $json.monto }} ({{ $json.concepto }}) quedó en estado: {{ $json.estado }}.\n\nSi tienes dudas sobre la decisión, responde a este correo.",
+        "message": "=Hola, {{ $json.nombre }}:\n\nTu solicitud de gasto por {{ $json.montoTexto }} ({{ $json.concepto }}) quedó en estado: {{ $json.estado }}.\n\nSi tienes dudas sobre la decisión, responde a este correo.",
         "options": {
           "appendAttribution": false
         }
