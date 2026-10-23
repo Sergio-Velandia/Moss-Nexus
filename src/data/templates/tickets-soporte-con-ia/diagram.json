@@ -7,15 +7,9 @@
       "tipo": "disparador"
     },
     {
-      "id": "config",
-      "etiqueta": "Configuración",
-      "herramienta": "n8n",
-      "tipo": "logica"
-    },
-    {
       "id": "clasificar",
       "etiqueta": "Clasificar con IA",
-      "herramienta": "openai",
+      "herramienta": "gemini",
       "tipo": "accion"
     },
     {
@@ -52,10 +46,6 @@
   "conexiones": [
     {
       "origen": "correo",
-      "destino": "config"
-    },
-    {
-      "origen": "config",
       "destino": "clasificar"
     },
     {
