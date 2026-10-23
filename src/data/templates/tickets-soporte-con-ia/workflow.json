@@ -106,7 +106,7 @@
                 "conditions": [
                   {
                     "id": "c23ffe13-d01c-4568-8290-2b739c05025e",
-                    "leftValue": "={{ $json.urgencia }}",
+                    "leftValue": "={{ $('Leer clasificación').item.json.urgencia }}",
                     "rightValue": "alta",
                     "operator": {
                       "type": "string",
@@ -131,7 +131,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        660,
+        880,
         0
       ]
     },
@@ -143,7 +143,7 @@
           "value": "#soporte-urgente",
           "mode": "name"
         },
-        "text": "=<!here> :red_circle: *Ticket urgente* · {{ $json.categoria }}\n*{{ $json.asunto }}* — {{ $json.de }}\n> {{ $json.resumen }}\n{{ $json.enlace ? '<' + $json.enlace + '|Abrir en Gmail>' : '' }}",
+        "text": "=<!here> :red_circle: *Ticket urgente* · {{ $('Leer clasificación').item.json.categoria }}\n*{{ $('Leer clasificación').item.json.asunto }}* — {{ $('Leer clasificación').item.json.de }}\n> {{ $('Leer clasificación').item.json.resumen }}\n{{ $('Leer clasificación').item.json.enlace ? '<' + $('Leer clasificación').item.json.enlace + '|Abrir en Gmail>' : '' }}",
         "otherOptions": {
           "includeLinkToWorkflow": false
         }
@@ -153,7 +153,7 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
       "position": [
-        900,
+        1120,
         -100
       ]
     },
@@ -165,7 +165,7 @@
           "value": "#soporte",
           "mode": "name"
         },
-        "text": "=:large_{{ $json.urgencia === 'media' ? 'yellow' : 'green' }}_circle: Ticket {{ $json.urgencia }} · {{ $json.categoria }}\n*{{ $json.asunto }}* — {{ $json.de }}\n> {{ $json.resumen }}\n{{ $json.enlace ? '<' + $json.enlace + '|Abrir en Gmail>' : '' }}",
+        "text": "=:large_{{ $('Leer clasificación').item.json.urgencia === 'media' ? 'yellow' : 'green' }}_circle: Ticket {{ $('Leer clasificación').item.json.urgencia }} · {{ $('Leer clasificación').item.json.categoria }}\n*{{ $('Leer clasificación').item.json.asunto }}* — {{ $('Leer clasificación').item.json.de }}\n> {{ $('Leer clasificación').item.json.resumen }}\n{{ $('Leer clasificación').item.json.enlace ? '<' + $('Leer clasificación').item.json.enlace + '|Abrir en Gmail>' : '' }}",
         "otherOptions": {
           "includeLinkToWorkflow": false
         }
@@ -175,8 +175,8 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
       "position": [
-        900,
-        60
+        1120,
+        100
       ]
     },
     {
@@ -280,7 +280,7 @@
       "typeVersion": 4.5,
       "position": [
         660,
-        200
+        0
       ]
     }
   ],
@@ -322,12 +322,18 @@
       "main": [
         [
           {
-            "node": "Según la urgencia",
+            "node": "Registrar ticket",
             "type": "main",
             "index": 0
-          },
+          }
+        ]
+      ]
+    },
+    "Registrar ticket": {
+      "main": [
+        [
           {
-            "node": "Registrar ticket",
+            "node": "Según la urgencia",
             "type": "main",
             "index": 0
           }

@@ -19,16 +19,16 @@
       "tipo": "logica"
     },
     {
-      "id": "segun",
-      "etiqueta": "Según la urgencia",
-      "herramienta": "n8n",
-      "tipo": "logica"
-    },
-    {
       "id": "registrar",
       "etiqueta": "Registrar ticket",
       "herramienta": "google-sheets",
       "tipo": "accion"
+    },
+    {
+      "id": "segun",
+      "etiqueta": "Según la urgencia",
+      "herramienta": "n8n",
+      "tipo": "logica"
     },
     {
       "id": "urgente",
@@ -54,11 +54,11 @@
     },
     {
       "origen": "leer",
-      "destino": "segun"
+      "destino": "registrar"
     },
     {
-      "origen": "leer",
-      "destino": "registrar"
+      "origen": "registrar",
+      "destino": "segun"
     },
     {
       "origen": "segun",
