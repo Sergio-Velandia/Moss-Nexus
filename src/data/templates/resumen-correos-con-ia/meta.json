@@ -31,7 +31,8 @@
     "Conecta Gmail en «Correos sin leer» y Slack en «Enviar resumen» y «Bandeja al día», con tu canal privado.",
     "Para probar sin enviar tus correos reales a la IA, crea en Gmail una etiqueta (por ejemplo «prueba-ia»), ponle algunos correos ficticios sin leer y cambia la búsqueda de «Correos sin leer» a «is:unread label:prueba-ia». Pulsa «Execute workflow» y revisa el resumen en Slack.",
     "Cuando esté bien, vuelve a la búsqueda original (o ajústala con la sintaxis del buscador de Gmail) y publica el flujo.",
-    "Para usar OpenAI, Anthropic u otro proveedor, borra «Google Gemini Chat Model» y conecta el sub-nodo del modelo que prefieras a «Resumir con IA». El prompt y el resto del flujo no cambian."
+    "Para usar OpenAI, Anthropic u otro proveedor, borra «Google Gemini Chat Model» y conecta el sub-nodo del modelo que prefieras a «Resumir con IA». El prompt y el resto del flujo no cambian.",
+    "¿No usas Slack? Cambia solo «Enviar resumen» y «Bandeja al día» por el nodo de Gmail u Outlook, Microsoft Teams, Telegram, Discord o WhatsApp (vía su API); el texto sigue viniendo de la misma expresión ({{ $json.text }}). El prompt pide negrita de Slack, así que cambia también esta frase del mensaje de sistema de «Resumir con IA»: «Usa formato de Slack: negrita con un solo asterisco (*así*), nunca con dos.» Para Teams o Discord: «Usa Markdown: negrita con dos asteriscos (**así**).» Para correo: «Usa texto plano, sin asteriscos ni otros símbolos de formato.» Estas alternativas no están probadas: el sello «Probado» cubre solo Slack."
   ],
   "problemas": [
     {

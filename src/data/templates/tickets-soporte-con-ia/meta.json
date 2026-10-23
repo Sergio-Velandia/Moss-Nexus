@@ -34,7 +34,8 @@
     "En Slack, crea #soporte-urgente y #soporte, invita el bot a los dos (escribe /invite @tu-bot en cada canal) y conecta Slack en «Avisar urgente» y «Avisar al equipo».",
     "Si tus categorías son otras, cámbialas en el mensaje de sistema de «Clasificar con IA» y en la lista CATEGORIAS de «Leer clasificación».",
     "Para probar un correo, envíalo con la etiqueta y pulsa «Execute workflow»: el trigger trae solo el correo más reciente como muestra. Para probar varios a la vez, publica el flujo y después envía los correos: el trigger solo toma los que llegan después de activarlo y puede traer varios en una misma ejecución. Revisa Slack y la hoja, y despublica el flujo al terminar si era una prueba.",
-    "Para usar OpenAI, Anthropic u otro proveedor, borra «Google Gemini Chat Model» y conecta el sub-nodo del modelo que prefieras a «Clasificar con IA». El prompt y el resto del flujo no cambian."
+    "Para usar OpenAI, Anthropic u otro proveedor, borra «Google Gemini Chat Model» y conecta el sub-nodo del modelo que prefieras a «Clasificar con IA». El prompt y el resto del flujo no cambian.",
+    "¿No usas Slack? Cambia solo «Avisar urgente» y «Avisar al equipo» por el nodo de Gmail u Outlook, Microsoft Teams, Telegram, Discord o WhatsApp (vía su API), y pega en él el mismo texto del aviso; la clasificación, el registro y el Switch no cambian. El texto usa marcas propias de Slack (<!here>, *negrita*, :red_circle: y <enlace|texto>): ajústalas al formato del nuevo canal. Estas alternativas no están probadas: el sello «Probado» cubre solo Slack."
   ],
   "problemas": [
     {
