@@ -6,6 +6,21 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [0.8.2] - 2026-10-22
+
+### Añadido
+- Pruebas del repositorio para tickets de soporte: lectura de la clasificación (JSON limpio, con bloque de código, inválido y en lote), remitente, orden de registro y avisos sin vista previa.
+- **resumen-correos-con-ia** y **tickets-soporte-con-ia**: paso «¿No usas Slack?» para cambiar solo los nodos de aviso por Gmail, Outlook, Teams, Telegram, Discord o WhatsApp. Esas alternativas no están probadas; el sello cubre solo Slack.
+
+### Cambiado
+- **tickets-soporte-con-ia**: la IA pasa a un Basic LLM Chain con el sub-nodo Google Gemini Chat Model (Flash-Lite con alias «latest», temperatura 0). Para usar OpenAI o Anthropic basta con cambiar ese sub-nodo. Se elimina el nodo «Configuración» y el prompt trata el correo como datos, nunca como instrucciones.
+- **tickets-soporte-con-ia**: sello «Probado» (22 oct 2026, n8n 2.43.5), con Gemini Flash-Lite y correos ficticios. La página destaca qué datos llegan al proveedor de IA, explica cómo probar el trigger de Gmail con uno o varios correos, la etiqueta de prueba y los canales de Slack, y documenta 3 problemas frecuentes y 5 limitaciones.
+
+### Corregido
+- **tickets-soporte-con-ia**: si fallaba un aviso de Slack, los tickets de ese lote podían quedar sin registrar. Ahora todo el lote se registra en la hoja antes de enviar cualquier aviso.
+- **tickets-soporte-con-ia**: los avisos de Slack ya no muestran la vista previa del enlace de Gmail, y el remitente aparece sin comillas.
+- **tickets-soporte-con-ia**: Gemini a veces envolvía el JSON en un bloque de código; ahora se limpia antes de leerlo.
+
 ## [0.8.1] - 2026-10-21
 
 ### Añadido
@@ -242,7 +257,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.1...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.2...HEAD
+[0.8.2]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.9...v0.8.0
 [0.7.9]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.7.8...v0.7.9
