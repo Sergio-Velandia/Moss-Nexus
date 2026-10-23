@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Aprobación de gastos\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. En «Configuración», el monto a partir del cual se pide aprobación y el correo de quien aprueba.\n2. Cuenta de Gmail en «Pedir aprobación» y «Avisar al solicitante».\n3. Cuenta de Google y URL de la hoja en «Registrar gasto» (pestaña **Gastos**).\n\nRequiere una versión de n8n con la operación «Send and Wait for Response» de Gmail.",
+        "content": "## Aprobación de gastos\nPlantilla de **Moss Nexus**.\n\n**Antes de activar:**\n1. En «Configuración», el monto a partir del cual se pide aprobación y el correo de quien aprueba.\n2. Cuenta de Gmail en «Pedir aprobación» y «Avisar al solicitante».\n3. Cuenta de Google y URL de la hoja en «Registrar solicitud» y «Registrar decisión» (pestaña **Gastos**, con una columna **ID** al inicio).\n\nCada solicitud se registra como «Pendiente» antes de pedir la aprobación; la decisión actualiza esa misma fila.\n\nRequiere una versión de n8n con la operación «Send and Wait for Response» de Gmail.",
         "height": 320,
         "width": 400
       },
@@ -125,6 +125,128 @@
     },
     {
       "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Gastos",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $execution.id }}",
+            "Fecha de solicitud": "={{ $now.toFormat('yyyy-MM-dd HH:mm') }}",
+            "Solicitante": "={{ $json.Nombre }}",
+            "Concepto": "={{ $json.Concepto }}",
+            "Monto": "={{ $json.Monto }}",
+            "Centro de costo": "={{ $json['Centro de costo'] }}",
+            "Fecha del gasto": "={{ $json['Fecha del gasto'] }}",
+            "Estado": "Pendiente",
+            "Decidió": ""
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha de solicitud",
+              "displayName": "Fecha de solicitud",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Solicitante",
+              "displayName": "Solicitante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Concepto",
+              "displayName": "Concepto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Monto",
+              "displayName": "Monto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Centro de costo",
+              "displayName": "Centro de costo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha del gasto",
+              "displayName": "Fecha del gasto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Decidió",
+              "displayName": "Decidió",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5e2b7c1a-9f3d-4a8e-b6c2-1d7f0a4e9b35",
+      "name": "Registrar solicitud",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
         "conditions": {
           "options": {
             "caseSensitive": true,
@@ -135,7 +257,7 @@
           "conditions": [
             {
               "id": "0c263306-235c-4206-81fb-9162c2f0035d",
-              "leftValue": "={{ Number($json.Monto) > Number($json.umbral) }}",
+              "leftValue": "={{ Number($('Configuración').item.json.Monto) > Number($('Configuración').item.json.umbral) }}",
               "rightValue": "",
               "operator": {
                 "type": "boolean",
@@ -154,16 +276,16 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        440,
+        660,
         0
       ]
     },
     {
       "parameters": {
         "operation": "sendAndWait",
-        "sendTo": "={{ $json.aprobador }}",
-        "subject": "=Aprobar gasto de {{ $json.Nombre }}: {{ $json.Concepto }} ({{ $json.Monto }})",
-        "message": "=Hay un gasto que necesita tu aprobación.\n\nSolicitante: {{ $json.Nombre }} ({{ $json.Correo }})\nConcepto: {{ $json.Concepto }}\nMonto: {{ $json.Monto }}\nCentro de costo: {{ $json['Centro de costo'] }}\nFecha del gasto: {{ $json['Fecha del gasto'] }}\nDetalle: {{ $json.Detalle || 'Sin detalle' }}",
+        "sendTo": "={{ $('Configuración').item.json.aprobador }}",
+        "subject": "=Aprobar gasto de {{ $('Configuración').item.json.Nombre }}: {{ $('Configuración').item.json.Concepto }} ({{ $('Configuración').item.json.Monto }})",
+        "message": "=Hay un gasto que necesita tu aprobación.\n\nSolicitante: {{ $('Configuración').item.json.Nombre }} ({{ $('Configuración').item.json.Correo }})\nConcepto: {{ $('Configuración').item.json.Concepto }}\nMonto: {{ $('Configuración').item.json.Monto }}\nCentro de costo: {{ $('Configuración').item.json['Centro de costo'] }}\nFecha del gasto: {{ $('Configuración').item.json['Fecha del gasto'] }}\nDetalle: {{ $('Configuración').item.json.Detalle || 'Sin detalle' }}",
         "approvalOptions": {
           "values": {
             "approvalType": "double",
@@ -180,7 +302,7 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        680,
+        900,
         -120
       ],
       "webhookId": "14ed538f-7069-4bb3-8084-55d47a1b412d",
@@ -248,7 +370,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        900,
+        1120,
         -120
       ]
     },
@@ -313,13 +435,13 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        680,
+        900,
         120
       ]
     },
     {
       "parameters": {
-        "operation": "append",
+        "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
           "value": "",
@@ -333,7 +455,7 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Fecha de solicitud": "={{ $now.toFormat('yyyy-MM-dd HH:mm') }}",
+            "ID": "={{ $execution.id }}",
             "Solicitante": "={{ $json.nombre }}",
             "Concepto": "={{ $json.concepto }}",
             "Monto": "={{ $json.monto }}",
@@ -342,8 +464,19 @@
             "Estado": "={{ $json.estado }}",
             "Decidió": "={{ $json.decidio }}"
           },
-          "matchingColumns": [],
+          "matchingColumns": [
+            "ID"
+          ],
           "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
             {
               "id": "Fecha de solicitud",
               "displayName": "Fecha de solicitud",
@@ -421,11 +554,11 @@
         "options": {}
       },
       "id": "e41e5f19-4b74-42e1-849f-f7a1da7c53bf",
-      "name": "Registrar gasto",
+      "name": "Registrar decisión",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        1140,
+        1360,
         -60
       ]
     },
@@ -444,7 +577,7 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        1140,
+        1360,
         100
       ],
       "webhookId": "e0926791-d66a-4719-812e-3903f4356b70"
@@ -463,6 +596,17 @@
       ]
     },
     "Configuración": {
+      "main": [
+        [
+          {
+            "node": "Registrar solicitud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar solicitud": {
       "main": [
         [
           {
@@ -506,7 +650,7 @@
       "main": [
         [
           {
-            "node": "Registrar gasto",
+            "node": "Registrar decisión",
             "type": "main",
             "index": 0
           },
@@ -522,7 +666,7 @@
       "main": [
         [
           {
-            "node": "Registrar gasto",
+            "node": "Registrar decisión",
             "type": "main",
             "index": 0
           },

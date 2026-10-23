@@ -2,7 +2,7 @@
   "slug": "aprobacion-de-gastos",
   "titulo": "Aprobación de gastos por correo con registro en Google Sheets",
   "resumen": "Los gastos grandes esperan la aprobación de un responsable con un clic en el correo; los pequeños se aprueban solos. Todo queda registrado.",
-  "problema": "Los gastos se aprueban por chat o de palabra, nadie sabe quién autorizó qué y a fin de mes contabilidad persigue soportes. Este flujo recibe cada solicitud por un formulario, aplica la regla de la empresa (por debajo de cierto monto se aprueba sola) y, si hace falta, envía al responsable un correo con botones «Aprobar» y «Rechazar». El flujo espera la respuesta, registra la decisión con quién la tomó y avisa al solicitante.",
+  "problema": "Los gastos se aprueban por chat o de palabra, nadie sabe quién autorizó qué y a fin de mes contabilidad persigue soportes. Este flujo recibe cada solicitud por un formulario, aplica la regla de la empresa (por debajo de cierto monto se aprueba sola) y, si hace falta, envía al responsable un correo con botones «Aprobar» y «Rechazar». Cada solicitud queda registrada como «Pendiente» antes de pedir la aprobación; el flujo espera la respuesta, actualiza esa fila con la decisión con quién la tomó y avisa al solicitante.",
   "categoria": "finanzas",
   "herramientas": [
     "form",
@@ -16,7 +16,7 @@
     "Una instancia de n8n accesible desde internet, porque los botones del correo vuelven a n8n",
     "Una versión de n8n con la operación «Send and Wait for Response» en el nodo de Gmail",
     "Una cuenta de Google con acceso a Gmail y Google Sheets",
-    "Una hoja con la pestaña «Gastos» y las columnas Fecha de solicitud, Solicitante, Concepto, Monto, Centro de costo, Fecha del gasto, Estado y Decidió"
+    "Una hoja con la pestaña «Gastos» y las columnas ID, Fecha de solicitud, Solicitante, Concepto, Monto, Centro de costo, Fecha del gasto, Estado y Decidió"
   ],
   "escenarios": [
     "Empresa con equipos que compran insumos o servicios y necesitan autorización",
@@ -24,10 +24,10 @@
     "Equipos remotos donde las aprobaciones se pierden entre chats"
   ],
   "pasos": [
-    "Crea la hoja con la pestaña «Gastos» y sus columnas.",
+    "Crea la hoja con la pestaña «Gastos» y sus columnas, empezando por ID: la decisión busca la fila por ese ID para actualizarla.",
     "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
     "En «Configuración», define el monto a partir del cual se pide aprobación y el correo de quien aprueba.",
-    "Conecta Gmail en «Pedir aprobación» y «Avisar al solicitante», y Google en «Registrar gasto» con la URL de la hoja.",
+    "Conecta Gmail en «Pedir aprobación» y «Avisar al solicitante», y Google en «Registrar solicitud» y «Registrar decisión» con la URL de la hoja.",
     "Ajusta los centros de costo del formulario a los de tu empresa.",
     "Activa el flujo y envía dos solicitudes de prueba: una bajo el umbral (se aprueba sola) y otra por encima (te llega el correo para aprobar)."
   ],

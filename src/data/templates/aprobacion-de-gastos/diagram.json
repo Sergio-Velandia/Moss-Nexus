@@ -13,6 +13,12 @@
       "tipo": "logica"
     },
     {
+      "id": "solicitud",
+      "etiqueta": "Registrar solicitud",
+      "herramienta": "google-sheets",
+      "tipo": "accion"
+    },
+    {
       "id": "supera",
       "etiqueta": "¿Supera el umbral?",
       "herramienta": "n8n",
@@ -38,7 +44,7 @@
     },
     {
       "id": "registrar",
-      "etiqueta": "Registrar gasto",
+      "etiqueta": "Registrar decisión",
       "herramienta": "google-sheets",
       "tipo": "accion"
     },
@@ -56,6 +62,10 @@
     },
     {
       "origen": "config",
+      "destino": "solicitud"
+    },
+    {
+      "origen": "solicitud",
       "destino": "supera"
     },
     {
