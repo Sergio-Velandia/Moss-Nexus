@@ -2,7 +2,7 @@
   "slug": "tickets-soporte-con-ia",
   "titulo": "Tickets de soporte clasificados con IA y repartidos en Slack",
   "resumen": "La IA lee cada correo de soporte, define su urgencia y categoría, y lo envía al canal correcto con un resumen. Todo queda registrado.",
-  "problema": "El buzón de soporte se atiende por orden de llegada: el cliente con el servicio caído espera detrás de diez consultas sin prisa. Clasificar a mano cada correo consume a la persona más experimentada del equipo. Este flujo usa IA para leer cada correo nuevo, decidir su urgencia y su categoría y resumirlo en una frase. Los urgentes llegan a un canal con aviso inmediato y el resto al canal del equipo. Si la IA responde algo inválido, el ticket no se pierde: entra como urgencia media para revisión humana.",
+  "problema": "El buzón de soporte se atiende por orden de llegada: el cliente con el servicio caído espera detrás de diez consultas sin prisa. Clasificar a mano cada correo consume a la persona más experimentada del equipo. Este flujo usa IA para leer cada correo nuevo, decidir su urgencia y su categoría y resumirlo en una frase. Los urgentes llegan a un canal con aviso inmediato y el resto al canal del equipo. Cada ticket queda registrado en la hoja antes de enviar los avisos, y si la IA responde algo inválido, el ticket no se pierde: entra como urgencia media para revisión humana. Usa Gemini por defecto, pero puedes cambiar a OpenAI o Anthropic sustituyendo un solo sub-nodo.",
   "categoria": "atencion",
   "herramientas": [
     "gmail",
@@ -14,10 +14,11 @@
   "dificultad": "avanzada",
   "tiempoEstimado": 30,
   "requisitos": [
+    "Privacidad: el flujo envía al proveedor de IA el asunto y hasta 4.000 caracteres del cuerpo de cada correo. En el nivel gratuito de Gemini, Google puede usar esos datos para mejorar sus productos. Para tickets reales de clientes, usa un plan con mejores condiciones de datos e infórmalo en tu política de privacidad.",
     "Una instancia de n8n (cloud o autoalojada)",
-    "Una clave de API de Gemini de Google AI Studio (el nivel gratuito alcanza), u otro proveedor de IA compatible con n8n",
+    "Una clave de API de Gemini creada en Google AI Studio. Para quedarte en el nivel gratuito, no actives la facturación (tiene límites de uso por minuto y por día). También sirve otro proveedor de IA compatible con n8n",
     "Una cuenta de Google con Gmail (con una etiqueta «soporte» aplicada a los correos de ayuda) y Google Sheets",
-    "Un espacio de Slack con dos canales: uno para urgencias y otro para el equipo de soporte",
+    "Un espacio de Slack con los canales #soporte-urgente y #soporte, con el bot invitado a los dos",
     "Una hoja con la pestaña «Tickets» y las columnas Fecha, De, Asunto, Urgencia, Categoría, Resumen y Enlace"
   ],
   "escenarios": [
@@ -26,12 +27,53 @@
     "Equipo de soporte pequeño que necesita métricas de volumen por categoría"
   ],
   "pasos": [
-    "En Gmail, crea la etiqueta «soporte» y un filtro que la aplique a los correos de tu buzón de ayuda.",
+    "En Gmail, crea la etiqueta «soporte» y un filtro que la aplique a los correos de tu buzón de ayuda. Si ya usas «soporte» con correos reales, crea otra para probar (por ejemplo «soporte-prueba») y ponla en la búsqueda de «Correo de soporte».",
     "Pulsa «Copiar flujo» y pégalo con Ctrl + V (Cmd + V en Mac) en un flujo nuevo de n8n.",
-    "Conecta Gmail en «Correo de soporte» y crea la credencial «Google Gemini (PaLM) API» en «Google Gemini Chat Model». Para usar OpenAI o Anthropic, cambia solo ese sub-nodo.",
-    "Conecta Slack en los dos nodos de aviso con tus canales, y Google en «Registrar ticket» con la URL de la hoja.",
-    "Si tus categorías son otras, cámbialas en el mensaje de «Clasificar con IA» y en la lista CATEGORIAS de «Leer clasificación».",
-    "Envía un correo de prueba con la etiqueta, pulsa «Test workflow» y revisa Slack y la hoja. Luego activa el flujo."
+    "Crea una clave en Google AI Studio y, en «Google Gemini Chat Model», crea la credencial «Google Gemini (PaLM) API» con esa clave. El modelo viene con el alias «latest» de Flash-Lite, que sigue funcionando cuando Google retira una versión.",
+    "Conecta Gmail en «Correo de soporte» y Google en «Registrar ticket» con la URL de la hoja.",
+    "En Slack, crea #soporte-urgente y #soporte, invita el bot a los dos (escribe /invite @tu-bot en cada canal) y conecta Slack en «Avisar urgente» y «Avisar al equipo».",
+    "Si tus categorías son otras, cámbialas en el mensaje de sistema de «Clasificar con IA» y en la lista CATEGORIAS de «Leer clasificación».",
+    "Para probar un correo, envíalo con la etiqueta y pulsa «Execute workflow»: el trigger trae solo el correo más reciente como muestra. Para probar varios a la vez, publica el flujo y después envía los correos: el trigger solo toma los que llegan después de activarlo y puede traer varios en una misma ejecución. Revisa Slack y la hoja, y despublica el flujo al terminar si era una prueba.",
+    "Para usar OpenAI, Anthropic u otro proveedor, borra «Google Gemini Chat Model» y conecta el sub-nodo del modelo que prefieras a «Clasificar con IA». El prompt y el resto del flujo no cambian."
   ],
-  "destacado": true
+  "problemas": [
+    {
+      "sintoma": "Con «Execute workflow» solo llega un correo, aunque haya varios con la etiqueta",
+      "solucion": "Es normal: en una ejecución manual el trigger de Gmail trae solo el correo más reciente como muestra. Para probar varios, publica el flujo y envía los correos después de activarlo."
+    },
+    {
+      "sintoma": "Slack responde «not_in_channel»",
+      "solucion": "El bot no está en ese canal. Entra a #soporte-urgente y a #soporte y escribe /invite @tu-bot. El ticket ya quedó registrado en la hoja: solo faltó el aviso."
+    },
+    {
+      "sintoma": "El aviso de Slack trae un bloque de vista previa de Gmail («accounts.google.com — Gmail is email that’s intuitive…»)",
+      "solucion": "Slack desplegaba el enlace «Abrir en Gmail». La plantilla ya desactiva la vista previa de enlaces y de medios en los dos avisos; si la ves, revisa en el nodo de Slack que «Unfurl Links» y «Unfurl Media» estén apagados."
+    }
+  ],
+  "limitaciones": [
+    "Los correos de tus clientes pasan por el proveedor de IA: en el nivel gratuito de Gemini, Google puede usarlos para mejorar sus productos. Para tickets reales, usa un plan con mejores condiciones de datos e infórmalo en tu política de privacidad.",
+    "La IA puede equivocarse al clasificar. Por eso la respuesta se valida y, si no es válida, el ticket entra como «media · otro» para revisión humana.",
+    "Un correo ambiguo puede caer en categorías distintas en días distintos.",
+    "Los correos que solo traen adjuntos o no tienen texto se clasifican por el asunto.",
+    "Si falla un aviso de Slack, el ticket ya está en la hoja, pero los avisos que faltaban de ese lote no se envían. El error queda a la vista para que lo detecte la plantilla de alertas de errores."
+  ],
+  "destacado": true,
+  "guias": [
+    {
+      "titulo": "Moss: conectar cuentas de Google a n8n con OAuth 2",
+      "url": "https://sergio-velandia.dev/Moss/manual/n8n/oauth2-de-google-en-n8n"
+    },
+    {
+      "titulo": "Moss: conectar Slack a n8n con un bot (token xoxb)",
+      "url": "https://sergio-velandia.dev/Moss/manual/n8n/slack-en-n8n"
+    },
+    {
+      "titulo": "Google AI for Developers: crear y usar claves de API de Gemini",
+      "url": "https://ai.google.dev/gemini-api/docs/api-key"
+    },
+    {
+      "titulo": "Moss Nexus: alertas cuando falla cualquier flujo de n8n",
+      "url": "https://sergio-velandia.dev/Moss-Nexus/plantillas/alertas-de-errores-n8n/"
+    }
+  ]
 }
