@@ -58,6 +58,12 @@
     "Los correos que solo traen adjuntos o no tienen texto se clasifican por el asunto.",
     "Si falla un aviso de Slack, el ticket ya está en la hoja, pero los avisos que faltaban de ese lote no se envían. El error queda a la vista para que lo detecte la plantilla de alertas de errores."
   ],
+  "probado": {
+    "fecha": "2026-10-22",
+    "versionN8n": "2.43.5",
+    "datos": "ficticios",
+    "nota": "Probado con Gemini Flash-Lite (nivel gratuito) y correos ficticios con una etiqueta de prueba. Los avisos se probaron solo con Slack."
+  },
   "destacado": true,
   "guias": [
     {
