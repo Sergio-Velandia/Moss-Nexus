@@ -96,6 +96,7 @@ export function toolUsage(pool: Template[] = templates) {
 export function libraryStats(pool: Template[] = templates) {
   return {
     plantillas: pool.length,
+    probadas: pool.filter((t) => t.probado).length,
     niveles: new Set(pool.map((t) => t.dificultad)).size,
     categorias: new Set(pool.map((t) => t.categoria)).size,
     // Servicios externos (Gmail, Slack…), sin contar la lógica propia de n8n

@@ -204,7 +204,8 @@ describe('relatedTemplates y toolUsage', () => {
     expect(balancedFeatured(lote, 2).map((t) => t.slug)).toEqual(['f1', 'f2', 'm1', 'a1', 'a2'])
   })
   it('calcula las cifras de la librería sin repetir', () => {
-    expect(libraryStats(pool)).toEqual({ plantillas: 4, niveles: 1, categorias: 2, apps: 2 })
+    expect(libraryStats(pool)).toEqual({ plantillas: 4, probadas: 4, niveles: 1, categorias: 2, apps: 2 })
+    expect(libraryStats([pool[0], { ...pool[1], probado: undefined }]).probadas).toBe(1)
     expect(libraryStats([{ ...pool[0], herramientas: ['webhook', 'n8n', 'gmail'] }]).apps).toBe(1)
   })
   it('cuenta el uso de cada herramienta', () => {

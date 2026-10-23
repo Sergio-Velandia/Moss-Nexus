@@ -88,7 +88,7 @@ export function Hero() {
           <dl className="mx-auto mt-8 grid max-w-xl grid-cols-2 gap-3 sm:grid-cols-4">
             {[
               [stats.plantillas, 'plantillas'],
-              [stats.niveles, 'niveles'],
+              [stats.probadas, 'probadas en n8n'],
               [stats.categorias, 'categorías'],
               [stats.apps, 'apps conectadas'],
             ].map(([n, label]) => (
