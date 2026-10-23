@@ -9,21 +9,21 @@ Librería de flujos de automatización para **n8n**, ya armados, explicados y li
 <table>
   <tr>
     <td align="center" width="50%">
-      <a href="docs/img/inicio.png"><img src="docs/img/inicio.png" alt="Inicio de Moss Nexus: buscador y lienzo con un flujo animado" width="400"></a>
+      <a href="docs/img/inicio.png"><img src="docs/img/inicio.png" alt="Inicio de Moss Nexus: buscador y cifras de la librería" width="400"></a>
       <br><sub><b>Inicio</b></sub>
     </td>
     <td align="center" width="50%">
-      <a href="docs/img/plantillas.png"><img src="docs/img/plantillas.png" alt="Galería de plantillas con búsqueda y filtros" width="400"></a>
+      <a href="docs/img/plantillas.png"><img src="docs/img/plantillas.png" alt="Galería de plantillas con filtros por herramienta, categoría y dificultad" width="400"></a>
       <br><sub><b>Plantillas</b></sub>
     </td>
   </tr>
   <tr>
     <td align="center" width="50%">
-      <a href="docs/img/acerca.png"><img src="docs/img/acerca.png" alt="Página Acerca: qué es Nexus y su relación con Moss" width="400"></a>
-      <br><sub><b>Acerca</b></sub>
+      <a href="docs/img/propon.png"><img src="docs/img/propon.png" alt="Página Propón un flujo: formulario para proponer un flujo o escribir directamente" width="400"></a>
+      <br><sub><b>Propón un flujo</b></sub>
     </td>
     <td align="center" width="50%">
-      <a href="docs/img/ejemplo.png"><img src="docs/img/ejemplo.png" alt="Detalle de una plantilla con su mapa del flujo" width="400"></a>
+      <a href="docs/img/ejemplo.png"><img src="docs/img/ejemplo.png" alt="Mapa del flujo de la plantilla de alertas de errores, con el registro antes de los avisos" width="400"></a>
       <br><sub><b>Ejemplo</b></sub>
     </td>
   </tr>
