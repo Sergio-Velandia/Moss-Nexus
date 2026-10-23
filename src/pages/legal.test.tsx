@@ -71,6 +71,16 @@ describe('propón un flujo', () => {
   })
 })
 
+describe('acerca', () => {
+  it('explica el sello «Probado» con la cifra calculada y enlaza al filtro', async () => {
+    const html = await renderRoute('/acerca')
+    expect(h1s(html)).toHaveLength(1)
+    expect(html).toContain('id="sello"')
+    expect(html).toMatch(/\d+<!-- --> de <!-- -->\d+/)
+    expect(html).toContain('href="/plantillas?probadas=1"')
+  })
+})
+
 describe('footer', () => {
   it('enlaza a términos, privacidad, contacto y licencia, con el aviso de n8n y el año', async () => {
     const html = await renderRoute('/')
