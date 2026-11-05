@@ -6,6 +6,12 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [1.1.0] - 2026-11-05
+
+### Añadido
+- Pantalla de entrada de 2,6 s, de la misma familia que Moss Taste: los granos forman la marca, el nombre se condensa del vapor con el lema «Del problema al flujo en minutos» y todo se difumina. Sale al llegar de afuera, también desde Moss, y se salta con un toque o una tecla. No aparece al recargar, al navegar dentro del sitio ni con movimiento reducido. No guarda nada en el navegador, así que la política de privacidad no cambia.
+- Pruebas de la pantalla de entrada: cuándo aparece y cuándo se va, el límite de 3 s, que solo anime `transform` y `opacity`, y el contraste de sus colores.
+
 ## [1.0.0] - 2026-10-22
 
 **Moss Nexus estable.** 13 plantillas de n8n en español, 9 con el sello «Probado» en una instancia real (n8n 2.43.5) y 4 marcadas «Sin probar» de forma visible.
@@ -316,7 +322,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v1.0.0...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.9.1...v1.0.0
 [0.9.1]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.8.3...v0.9.0
