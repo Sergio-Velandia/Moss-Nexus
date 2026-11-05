@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./styles/entrada.css" layer(components);
 
 /* Moss Nexus — tokens de diseño.
    Base verde musgo heredada de Moss + coral inspirado en n8n como acento.
@@ -45,6 +46,19 @@
   --glow-moss: rgb(156 175 136 / 0.28);
   --glow-nexus: rgb(242 100 122 / 0.12);
   --shadow-card: 0 10px 30px -14px rgb(47 58 44 / 0.25);
+}
+
+/* Pantalla de entrada: es igual en los dos temas */
+:root {
+  --c-entrada-fondo: #5a2430;
+  --c-entrada-medio: #2a1a1e;
+  --c-entrada-borde: #0e130e;
+  --c-entrada-texto: #e9efe0;
+  --c-entrada-lema: #e9efe0;
+  --c-entrada-grano: #ff9aa9;
+  --c-entrada-vapor: rgb(233 239 224 / 0.16);
+  --c-entrada-musgo: #8fb079;
+  --c-entrada-coral: #f2647a;
 }
 
 @theme inline {
