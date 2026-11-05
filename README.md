@@ -5,6 +5,7 @@ Librería de flujos de automatización para **n8n**, ya armados, explicados y li
 **[Ver el sitio en vivo →](https://sergio-velandia.dev/Moss-Nexus/)** · Proyecto hermano de **[Moss](https://sergio-velandia.dev/Moss/)**: en Moss se aprende el porqué; en Nexus se copia el flujo y se usa.
 
 - **[Ver las plantillas](https://sergio-velandia.dev/Moss-Nexus/plantillas/):** cada una dice si ya se probó en una instancia real de n8n.
+- **[Primeros pasos](https://sergio-velandia.dev/Moss-Nexus/primeros-pasos/):** monta n8n con Docker e importa tu primera plantilla.
 - **[Qué significa el sello «Probado»](https://sergio-velandia.dev/Moss-Nexus/acerca/#sello)** y cómo se prueba cada plantilla.
 
 ## Vista previa
