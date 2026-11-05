@@ -25,6 +25,11 @@ export const STATIC_PAGES: StaticPage[] = [
     title: pagina('Plantillas'),
     description: 'Galería de plantillas de n8n listas para copiar: busca y filtra por herramienta, categoría o nivel.',
   },
+  {
+    path: 'primeros-pasos/',
+    title: pagina('Primeros pasos'),
+    description: 'Monta n8n con Docker e importa tu primera plantilla, paso a paso, con los tropiezos reales y cómo resolverlos.',
+  },
   { path: 'acerca/', title: pagina('Acerca'), description: 'Qué es Moss Nexus, cómo se relaciona con Moss y los principios de la librería.' },
   { path: 'terminos/', title: pagina('Términos y condiciones'), description: 'Términos de uso de Moss Nexus y de sus plantillas.' },
   { path: 'privacidad/', title: pagina('Política de privacidad'), description: 'Qué hace Moss Nexus con tus datos: sin cuentas, cookies ni analítica.' },
