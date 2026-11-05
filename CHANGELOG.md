@@ -6,6 +6,20 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [1.2.0] - 2026-11-05
+
+### Añadido
+- Página «Primeros pasos» (`/primeros-pasos`), una sola ruta con índice de anclas, que empieza con la elección entre «Empiezo de cero» y «Ya tengo n8n». Trae un `docker-compose.yml` con la versión de n8n fijada, el volumen con una comprobación de que funciona, la zona horaria, la clave de cifrado y cómo importar una plantilla. Cada paso tiene botón de copiar y cierra con «Qué deberías estar viendo». Aclara que la instalación es local y no está pensada para exponerla a internet. La guía se probó desde cero en n8n 2.43.5, con un proyecto de Compose aparte.
+- Secciones «Si no levanta» y «Esto me pasó», con los tropiezos reales en síntoma, causa y qué hacer, cada uno con su propia ancla.
+- Enlaces a la guía desde el menú, el inicio, el pie y cada ficha («¿Aún no tienes n8n?»), y desde las plantillas hacia el tropiezo que les corresponde.
+
+### Cambiado
+- El menú de escritorio aparece desde 1024 px: con un enlace más, a 768 px se partía en dos líneas.
+- `ROADMAP.md` anota el nombre del botón de n8n por unificar en `alertas-de-errores-n8n`, y el README, qué hacer si PowerShell bloquea `npm`.
+
+### Corregido
+- Abrir un enlace con #ancla no siempre bajaba hasta ella en las páginas con carga perezosa. Ahora funciona en todo el sitio, y el ancla ya no queda debajo del encabezado fijo.
+
 ## [1.1.1] - 2026-11-05
 
 ### Añadido
@@ -337,7 +351,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v1.1.1...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.9.1...v1.0.0
