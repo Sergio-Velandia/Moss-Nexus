@@ -31,7 +31,7 @@ Librería de flujos de automatización para **n8n**, ya armados, explicados y li
 
 ## Estado
 
-**Estable: v1.0.0.** La librería ya no crece por fases: se actualiza con plantillas sueltas, correcciones y nuevos sellos «Probado». Historial completo en el [CHANGELOG](CHANGELOG.md).
+**Estable: v1.1.0.** La librería ya no crece por fases: se actualiza con plantillas sueltas, correcciones y nuevos sellos «Probado». Historial completo en el [CHANGELOG](CHANGELOG.md).
 
 ## Plantillas
 
@@ -155,6 +155,8 @@ Añádela en [`src/data/tools.ts`](src/data/tools.ts) o en [`src/data/categories
 ## Stack
 
 React 19, Vite, TypeScript, Tailwind CSS 4, React Router, Motion, Lucide y Vitest/oxlint. Sin backend: las plantillas viven en el repositorio y el formulario «Propón un flujo» envía los mensajes con EmailJS. Se publica en GitHub Pages con una página estática por ruta y `sitemap.xml`.
+
+Al llegar de afuera, el sitio muestra una pantalla de entrada de 2,6 s, de la misma familia que Moss Taste y Moss. Vive en `index.html`, sin React: no retrasa la carga, se salta con un toque o una tecla y no guarda nada en el navegador. No aparece al recargar, al navegar dentro del sitio ni con movimiento reducido.
 
 ## Licencia
 

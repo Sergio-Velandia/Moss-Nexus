@@ -54,6 +54,8 @@ Orden acordado. Cada fase empieza solo cuando el usuario la pide y con un plan c
   - La tabla de plantillas del README tiene una prueba (`src/lib/readme.test.ts`): al sumar una plantilla o un sello, actualiza su fila.
 - **Propón un flujo (hecha, v0.8.0):** `/propon-un-flujo` con dos pestañas, «Propón un flujo» y «Habla conmigo» (`?formulario=habla-conmigo`). Campos y validación en `src/lib/contact-form.ts`; envío con la API REST de EmailJS vía `fetch`, sin SDK. Las IDs públicas están en `site.emailjs`; el correo de destino se configura solo en la plantilla de EmailJS, nunca en el código. Campo trampa `sitio_web` contra bots. Si cambian los campos o el servicio, actualizar antes `/privacidad#formularios` y `site.legalUpdated`.
 
+- **Pantalla de entrada (hecha, v1.1.0):** misma familia que Moss Taste y Moss. Plantilla y script en `index.html` (sin React, el build la copia a cada ruta), estilos en `src/styles/entrada.css` y tokens `--c-entrada-*`. Dura 2,6 s, con un seguro de 3 s; solo anima `transform` y `opacity`. Solo aparece al llegar de afuera, según el tipo de navegación y el referente: no guarda nada en el navegador, y no hay que cambiarlo a `sessionStorage` sin preguntar, porque habría que declararlo en `/privacidad`. Las pruebas están en `scripts/entrada.test.ts`, con un DOM simulado para no sumar jsdom.
+
 ## Stack
 React 19 + Vite + TypeScript estricto, Tailwind CSS 4 (tokens en variables CSS, en `src/index.css`), React Router 7, `motion`, `lucide-react`, Vitest y oxlint. Se usa npm. Se despliega en GitHub Pages bajo `/Moss-Nexus/` y se genera `404.html` para las rutas de la SPA. No añadir dependencias sin preguntar.
 
