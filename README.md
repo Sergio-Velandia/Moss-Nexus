@@ -51,6 +51,8 @@ npm run lint
 npm run build      # typecheck + build de producción
 ```
 
+En Windows, si PowerShell bloquea `npm` porque la ejecución de scripts está deshabilitada, usa `npm.cmd`, por ejemplo `npm.cmd run dev`.
+
 Cada push a `main` se publica en GitHub Pages (`.github/workflows/deploy.yml`).
 
 ## Stack
