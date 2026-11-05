@@ -69,6 +69,14 @@
     {
       "titulo": "Moss: conectar cuentas de Google a n8n con OAuth 2",
       "url": "https://sergio-velandia.dev/Moss/manual/n8n/oauth2-de-google-en-n8n"
+    },
+    {
+      "titulo": "Primeros pasos: Google Sheets rechaza un .xlsx",
+      "url": "https://sergio-velandia.dev/Moss-Nexus/primeros-pasos/#sheets-xlsx"
+    },
+    {
+      "titulo": "Primeros pasos: la hora está equivocada",
+      "url": "https://sergio-velandia.dev/Moss-Nexus/primeros-pasos/#hora-equivocada"
     }
   ]
 }
