@@ -88,6 +88,8 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     scroll-behavior: smooth;
+    /* Para que un #ancla no quede debajo del encabezado fijo */
+    scroll-padding-top: 5.5rem;
   }
 
   body {

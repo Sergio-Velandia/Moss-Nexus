@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { Menu, Sprout, X } from 'lucide-react'
 import { site } from '../../data/site'
 import { Footer } from './Footer'
+import { ScrollToHash } from './ScrollToHash'
 import { Logo } from './Logo'
 import { ThemeToggle } from './ThemeToggle'
 
@@ -151,6 +152,7 @@ export default function Layout() {
       <main id="contenido" ref={mainRef} tabIndex={-1} className="flex-1 outline-none">
         <Suspense fallback={null}>
           <Outlet />
+          <ScrollToHash />
         </Suspense>
       </main>
 
