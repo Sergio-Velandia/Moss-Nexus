@@ -6,6 +6,21 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Sin publicar]
 
+## [1.1.1] - 2026-11-05
+
+### Añadido
+- `CONTRIBUTING.md` con la guía para agregar plantillas, que ahora incluye el campo `prueba`, y `ROADMAP.md` con los pendientes.
+
+### Cambiado
+- El README se acorta: la lista de plantillas y cómo se prueban quedan en el sitio, con enlaces, y ya no repite cifras, fechas ni versiones.
+- Capturas de Inicio y Plantillas actualizadas.
+
+### Corregido
+- El ejemplo de `meta.json` usaba una plantilla real con datos que no le correspondían (nivel y sello); ahora es un ejemplo genérico.
+
+### Eliminado
+- La prueba que comparaba la tabla de plantillas del README con los datos, porque la tabla ya no existe.
+
 ## [1.1.0] - 2026-11-05
 
 ### Añadido
@@ -322,7 +337,8 @@ Fase 1: estructura y diseño del sitio.
 - Tema oscuro por defecto y tema claro opcional, con la paleta musgo de Moss y acento coral.
 - Despliegue automático en GitHub Pages con cada push a `main`.
 
-[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v1.1.0...HEAD
+[Sin publicar]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.9.1...v1.0.0
 [0.9.1]: https://github.com/Sergio-Velandia/Moss-Nexus/compare/v0.9.0...v0.9.1
