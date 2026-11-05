@@ -85,7 +85,8 @@
   display: flex;
   gap: 0.28em;
   font-family: var(--font-sans);
-  font-size: clamp(3.2rem, 11vw, 6.5rem);
+  /* «Moss Nexus» mide 277 px con el mínimo de 3rem: cabe en los 288 px útiles de una pantalla de 320. */
+  font-size: clamp(3rem, 11vw, 6.5rem);
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.03em;
