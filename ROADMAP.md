@@ -1,6 +1,6 @@
 # Hoja de ruta
 
-Pendientes de Moss Nexus. Lo hecho se registra en el [CHANGELOG](./CHANGELOG.md).
+Pendientes de Moss Nexus. Lo hecho se registra en el [CHANGELOG](./CHANGELOG.md). La librería ya no crece por fases: se actualiza con plantillas sueltas, correcciones y nuevos sellos «Probado».
 
 ## Corregir
 
@@ -9,3 +9,4 @@ Pendientes de Moss Nexus. Lo hecho se registra en el [CHANGELOG](./CHANGELOG.md)
 ## Plantillas
 
 - Probar en una instancia real las 4 que siguen «Sin probar»: **aprobacion-de-gastos**, **pagos-stripe-idempotentes**, **leads-a-hubspot-sin-duplicados** y **whatsapp-a-sheets**.
+- Repetir la prueba corta de **facturas-gmail-a-drive**: su flujo cambió en la v0.8.3 y el sello conserva la fecha anterior hasta entonces.
