@@ -36,6 +36,8 @@ export interface Paso {
   /** Advertencia que no se puede pasar por alto */
   aviso?: string
   enlaces?: Enlace[]
+  /** Capturas en public/, con datos ficticios */
+  imagenes?: { src: string; alt: string; ancho: number; alto: number }[]
   verificar: string
 }
 
@@ -102,19 +104,22 @@ export const pasosDesdeCero: Paso[] = [
   {
     id: 'cuenta',
     titulo: 'Crea tu cuenta de propietario',
-    texto: ['Es una cuenta local de esta instalación, no una cuenta en n8n.io. Guarda la contraseña: la necesitas cada vez que entres.'],
-    verificar: 'Entraste a n8n y ves el panel de flujos.',
+    texto: [
+      'Es una cuenta local de esta instalación, no una cuenta en n8n.io. Guarda la contraseña: la necesitas cada vez que entres.',
+      'Después, n8n muestra un cuestionario, «Customize n8n to you». Puedes pulsar «Get started» sin llenarlo.',
+    ],
+    verificar: 'Entraste a n8n. En el menú de la izquierda, «Overview» es donde quedan tus flujos.',
   },
   {
     id: 'comprobar-volumen',
     titulo: 'Comprueba que el volumen funciona',
     texto: [
       'Este paso es el que más caro sale saltarse: si el volumen está mal, no lo descubres hasta que pierdes tus flujos.',
-      'Crea un flujo cualquiera, ponle de nombre «Prueba del volumen» y guárdalo. Después baja el contenedor y vuelve a levantarlo:',
+      'En «Overview», pulsa «Create workflow», ponle de nombre «Prueba del volumen», agrega cualquier nodo y guárdalo. Después baja el contenedor y vuelve a levantarlo:',
     ],
     bloques: [{ codigo: 'docker compose down\ndocker compose up -d' }],
     aviso: 'No uses `docker compose down -v` para reiniciar: la `-v` borra el volumen, con todos tus flujos y credenciales.',
-    verificar: 'Recargas `http://localhost:5678`, entras, y «Prueba del volumen» sigue ahí. Si no sigue, el volumen está mal: revisa que el compose esté igual al del paso 2 antes de crear nada más.',
+    verificar: 'Espera unos segundos, recarga `http://localhost:5678` y entra a «Overview»: «Prueba del volumen» sigue ahí. Si no sigue, el volumen está mal: revisa que el compose esté igual al del paso 2 antes de crear nada más.',
   },
   {
     id: 'comprobar-hora',
@@ -136,22 +141,39 @@ export const pasosImportar: Paso[] = [
   {
     id: 'pegar',
     titulo: 'Pégala en n8n',
-    texto: ['En n8n, crea un flujo nuevo, haz clic en el lienzo vacío y pega con `Ctrl + V` (`Cmd + V` en Mac).'],
-    verificar: 'Aparecen los nodos ya conectados, con una nota que explica qué configurar antes de activarla.',
+    texto: [
+      'En n8n, crea un flujo nuevo, haz clic en el lienzo vacío y pega con `Ctrl + V` (`Cmd + V` en Mac).',
+      '**Va a salir un cuadro: «Pasting this from an AI tool?».** Pulsa «Skip». Hasta que no lo hagas, el lienzo sigue vacío.',
+    ],
+    imagenes: [
+      {
+        src: 'img/primeros-pasos/lienzo-vacio.png',
+        alt: 'Flujo nuevo en n8n, antes de pegar: un lienzo vacío con un recuadro que dice «Add first step».',
+        ancho: 1440,
+        alto: 860,
+      },
+      {
+        src: 'img/primeros-pasos/flujo-pegado.png',
+        alt: 'Plantilla de facturas pegada en n8n: una nota con los pasos a la izquierda y cuatro nodos conectados, tres de ellos con un triángulo rojo.',
+        ancho: 1440,
+        alto: 860,
+      },
+    ],
+    verificar: 'Aparecen los nodos ya conectados y una nota con lo que hay que configurar antes de activarla.',
   },
   {
     id: 'credenciales',
     titulo: 'Conecta tus credenciales',
     texto: [
-      'Las plantillas no traen credenciales. Abre cada nodo que marque un aviso y elige o crea la tuya. Los datos que faltan, como la URL de una hoja, están en los pasos de la ficha de la plantilla.',
+      'Las plantillas no traen credenciales: por eso los nodos muestran un triángulo rojo. Abre cada uno y elige o crea la tuya. Los datos que faltan, como la URL de una hoja, están en los pasos de la ficha de la plantilla.',
     ],
-    verificar: 'Ningún nodo muestra un aviso de credenciales.',
+    verificar: 'Ningún nodo muestra el triángulo rojo.',
   },
   {
     id: 'probar',
     titulo: 'Pruébala con datos ficticios',
     texto: [
-      'Pulsa «Execute workflow» con datos de prueba, nunca con datos reales la primera vez. La ficha dice en qué versión de n8n se probó: si la tuya es otra, la plantilla puede necesitar ajustes.',
+      'Pulsa el botón naranja de abajo con datos de prueba, nunca con datos reales la primera vez. Dice «Execute workflow» o solo «Execute», según el nodo con el que empieza el flujo. La ficha dice en qué versión de n8n se probó: si la tuya es otra, la plantilla puede necesitar ajustes.',
     ],
     verificar: 'Los nodos terminan en verde y el resultado llega donde debe. Si algo falla, busca el mensaje en «Esto me pasó», más abajo.',
   },
@@ -175,7 +197,7 @@ export const noLevanta: Tropiezo[] = [
   {
     id: 'puerto-ocupado',
     titulo: 'El puerto está ocupado',
-    sintoma: '`port is already allocated` u `only one usage of each socket address` al levantar.',
+    sintoma: 'Al levantar: `ports are not available` con `Only one usage of each socket address` en Windows, o `port is already allocated`.',
     causa: 'Otro programa, u otro n8n, ya usa el puerto 5678 de tu equipo.',
     queHacer:
       'En `docker-compose.yml`, cambia solo el primer número: `"127.0.0.1:5679:5678"`. Vuelve a ejecutar `docker compose up -d` y abre `http://localhost:5679`.',
@@ -183,19 +205,26 @@ export const noLevanta: Tropiezo[] = [
   {
     id: 'contenedor-se-reinicia',
     titulo: 'El contenedor se reinicia solo',
-    sintoma: '`docker compose ps` muestra `Restarting`, y `http://localhost:5678` no abre.',
+    sintoma: '`docker compose ps` muestra `Restarting`, o `Up` con solo unos segundos cada vez que lo miras, y `http://localhost:5678` no abre.',
     causa: 'n8n arranca, falla y Docker lo vuelve a intentar. El motivo está en los registros. El más común es `Mismatching encryption keys`: el `.env` tiene una clave distinta a la que usó ese volumen.',
     queHacer:
-      'Ejecuta `docker compose logs n8n --tail 50` y lee el último error. Si es el de la clave, recupera la original de tu copia y ponla en el `.env`.',
+      'Ejecuta `docker compose logs n8n --tail 50` y busca la línea que empieza por `Error:`. Si es la de la clave, recupera la original de tu copia, ponla en el `.env` y vuelve a ejecutar `docker compose up -d`.',
   },
 ]
 
 export const estoMePaso: Tropiezo[] = [
   {
+    id: 'pegar-lienzo-vacio',
+    titulo: 'Pegué la plantilla y el lienzo sigue vacío',
+    sintoma: 'Al pegar sale «Pasting this from an AI tool?» y los nodos no aparecen, así que parece que el pegado falló.',
+    causa: 'n8n ofrece su conector para herramientas de IA, y no pega el flujo hasta que respondas. No hace falta conectar nada.',
+    queHacer: 'Pulsa «Skip». Los nodos aparecen enseguida. El cuadro vuelve a salir en cada pegado.',
+  },
+  {
     id: 'flujos-de-error-manual',
     titulo: 'La alerta de error nunca llega',
-    sintoma: 'Ejecuto con «Execute workflow» un flujo que falla, la alerta no llega y parece que el flujo de alertas está roto.',
-    causa: 'n8n solo dispara el flujo de errores en ejecuciones automáticas. Una ejecución con «Execute workflow» no cuenta.',
+    sintoma: 'Ejecuto a mano, con «Execute workflow» o «Execute», un flujo que falla: la alerta no llega y parece que el flujo de alertas está roto.',
+    causa: 'n8n solo dispara el flujo de errores en ejecuciones automáticas. Una ejecución manual no cuenta.',
     queHacer: 'Publica el flujo vigilado y espera a que falle en una ejecución automática, o usa el flujo de prueba de la plantilla de alertas.',
     enlaces: [{ texto: 'Plantilla de alertas de errores', a: '/plantillas/alertas-de-errores-n8n' }],
   },

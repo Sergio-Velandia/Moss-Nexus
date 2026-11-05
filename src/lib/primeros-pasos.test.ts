@@ -54,6 +54,20 @@ describe('primeros pasos: los pasos', () => {
     expect(aviso).toContain('nunca se sube a un repositorio')
   })
 
+  it('avisa del cuadro de n8n al pegar, porque sin pulsar «Skip» el lienzo sigue vacío', () => {
+    expect(paso('pegar').texto.join(' ')).toContain('«Skip»')
+    expect(estoMePaso.find((t) => t.id === 'pegar-lienzo-vacio')?.queHacer).toContain('«Skip»')
+  })
+
+  it('las capturas tienen texto alternativo y viven en la carpeta de la guía', () => {
+    const imagenes = paso('pegar').imagenes ?? []
+    expect(imagenes).toHaveLength(2)
+    for (const img of imagenes) {
+      expect(img.alt.length, img.src).toBeGreaterThan(20)
+      expect(img.src).toMatch(/^img\/primeros-pasos\//)
+    }
+  })
+
   it('no enlaza a Moss: esta guía es la única fuente de verdad', () => {
     expect(JSON.stringify([pasos, tropiezos])).not.toMatch(/\/Moss\/|Moss:/)
   })

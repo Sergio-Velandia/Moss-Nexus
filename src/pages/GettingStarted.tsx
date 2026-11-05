@@ -109,6 +109,17 @@ function PasoCard({ paso, numero }: { paso: Paso; numero: number }) {
       ))}
       {paso.bloques?.map((b) => <Bloque key={b.codigo} etiqueta={b.etiqueta} codigo={b.codigo} />)}
       <Enlaces enlaces={paso.enlaces} />
+      {paso.imagenes?.map((img) => (
+        <img
+          key={img.src}
+          src={`${import.meta.env.BASE_URL}${img.src}`}
+          alt={img.alt}
+          width={img.ancho}
+          height={img.alto}
+          loading="lazy"
+          className="mt-4 h-auto w-full rounded-2xl border border-line-strong"
+        />
+      ))}
       {paso.aviso && (
         <p className="mt-4 flex items-start gap-3 rounded-2xl border border-amber/50 bg-amber/[0.08] px-4 py-3 text-sm leading-relaxed text-ink-soft">
           <TriangleAlert size={18} className="mt-0.5 shrink-0 text-amber" aria-hidden />
