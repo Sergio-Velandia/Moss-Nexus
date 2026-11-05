@@ -34,6 +34,9 @@ export function Footer() {
             <Link to="/plantillas" className={linkCls}>Todas las plantillas</Link>
           </li>
           <li>
+            <Link to="/primeros-pasos" className={linkCls}>Primeros pasos</Link>
+          </li>
+          <li>
             <Link to="/acerca" className={linkCls}>Qué es Nexus</Link>
           </li>
           <li>

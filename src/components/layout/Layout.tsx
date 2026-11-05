@@ -10,6 +10,7 @@ import { ThemeToggle } from './ThemeToggle'
 
 const links = [
   { to: '/plantillas', label: 'Plantillas' },
+  { to: '/primeros-pasos', label: 'Primeros pasos' },
   { to: '/acerca', label: 'Acerca' },
   { to: '/propon-un-flujo', label: 'Propón un flujo' },
 ]
@@ -77,7 +78,7 @@ export default function Layout() {
           </Link>
 
           <div className="flex items-center gap-1">
-            <nav aria-label="Principal" className="hidden items-center gap-1 md:flex">
+            <nav aria-label="Principal" className="hidden items-center gap-1 lg:flex">
               {links.map((l) => (
                 <NavLink key={l.to} to={l.to} className={linkClass}>
                   {({ isActive }) => (
@@ -110,7 +111,7 @@ export default function Layout() {
               aria-expanded={menuOpen}
               aria-controls="menu-movil"
               aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-ink-soft transition hover:bg-surface-2 hover:text-ink md:hidden"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-ink-soft transition hover:bg-surface-2 hover:text-ink lg:hidden"
             >
               {menuOpen ? <X size={20} aria-hidden /> : <Menu size={20} aria-hidden />}
             </button>
@@ -126,7 +127,7 @@ export default function Layout() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-              className="glass mx-auto mt-2 flex max-w-6xl flex-col gap-1 rounded-2xl p-2 md:hidden"
+              className="glass mx-auto mt-2 flex max-w-6xl flex-col gap-1 rounded-2xl p-2 lg:hidden"
             >
               <NavLink to="/" end className={({ isActive }) => `rounded-xl px-4 py-3 font-medium ${isActive ? 'bg-surface-2 text-ink' : 'text-ink-soft'}`}>
                 Inicio

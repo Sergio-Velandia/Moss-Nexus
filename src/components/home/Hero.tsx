@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { ArrowRight, ClipboardCheck, Copy, MessageSquareText } from 'lucide-react'
 import { libraryStats } from '../../lib/templates'
@@ -84,6 +84,9 @@ export function Hero() {
             <a href="#como-funciona" className="rounded-lg px-3 py-2 font-medium text-ink-soft transition hover:text-ink">
               Cómo funciona
             </a>
+            <Link to="/primeros-pasos" className="rounded-lg px-3 py-2 font-medium text-ink-soft transition hover:text-ink">
+              ¿Aún no tienes n8n?
+            </Link>
           </div>
           <dl className="mx-auto mt-8 grid max-w-xl grid-cols-2 gap-3 sm:grid-cols-4">
             {[

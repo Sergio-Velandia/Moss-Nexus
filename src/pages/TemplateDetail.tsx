@@ -50,6 +50,13 @@ export default function TemplateDetail() {
         </p>
       )}
 
+      <p className="mt-3 text-sm text-ink-soft">
+        ¿Aún no tienes n8n?{' '}
+        <Link to="/primeros-pasos" className="font-medium text-nexus underline-offset-2 hover:underline">
+          Empieza por los primeros pasos
+        </Link>
+      </p>
+
       {/* 1. Cabecera */}
       <header className="mt-6 grid gap-8 lg:grid-cols-[1fr_20rem] lg:items-end">
         <div>
